@@ -6,19 +6,248 @@
         xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
         
         xmlns:viewModel="clr-namespace:ToDoListApp.MVVM.ViewModel"
+        xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
         
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        
+        WindowStyle="None"
+        Title="MainWindow" Height="450" Width="800"
+        Background="Transparent"
+        AllowsTransparency="True">
 
     <Window.DataContext>
         <viewModel:MainViewModel />
     </Window.DataContext>
-    <Grid>
 
-        <TextBlock Text="{Binding CurrentUserAccount.DisplayName}"
-                   FontSize="36"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"/>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModel:OverviewViewModel}">
+            <local:OverviewView />
+        </DataTemplate>
 
-    </Grid>
+        <DataTemplate DataType="{x:Type viewModel:AllTasksViewModel}">
+            <local:AllTasksView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:ArchiveViewModel}">
+            <local:ArchiveView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:ProfileViewModel}">
+            <local:ProfileView />
+        </DataTemplate>
+    </Window.Resources>
+    
+    <Border
+        CornerRadius="8 8 8 8"
+        Background="#272A45">
+        <Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+
+            <!-- Sidebar -->
+            <Border
+                Grid.Column="0"
+                CornerRadius="8 0 0 8"
+                Background="{DynamicResource Tile}">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="30" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel
+                        Grid.Row="2"
+                        HorizontalAlignment="Left"
+                        Margin="40, 0, 0, 0"
+                        VerticalAlignment="Center">
+
+                        <TextBlock
+                            Text="TuDuLeest"
+                            Style="{StaticResource logoText}" />
+                    </StackPanel>
+
+                    <!-- Sidebar Buttons -->
+
+                    <StackPanel
+                        Grid.Row="3"
+                        Orientation="Vertical"
+                        VerticalAlignment="Center">
+
+                        <!-- Overview -->
+                        <RadioButton
+                            IsChecked="True"
+                            Style="{StaticResource sidebarButton}"
+                            Tag="{StaticResource Highlight}"
+                            Command="{Binding ShowOverviewViewCommand}">
+
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Icon="Home"  Style="{StaticResource sidebarButtonIcon}" />
+                                <TextBlock Text="Overview" Style="{StaticResource sidebarButtonText}" />
+                            </StackPanel>
+                        </RadioButton>
+
+                        <!-- All tasks -->
+                        <RadioButton
+                            Style="{StaticResource sidebarButton}"
+                            Tag="{StaticResource Highlight}"
+                            Command="{Binding ShowAllTasksViewCommand}">
+
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Icon="ListCheck"  Style="{StaticResource sidebarButtonIcon}" />
+                                <TextBlock Text="All tasks" Style="{StaticResource sidebarButtonText}" />
+                            </StackPanel>
+                        </RadioButton>
+
+                        <!-- Archive -->
+                        <RadioButton
+                            Style="{StaticResource sidebarButton}"
+                            Tag="{StaticResource Highlight}"
+                            Command="{Binding ShowArchiveViewCommand}">
+
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Icon="BoxArchive"  Style="{StaticResource sidebarButtonIcon}" />
+                                <TextBlock Text="Archive" Style="{StaticResource sidebarButtonText}" />
+                            </StackPanel>
+                        </RadioButton>
+
+                        <!-- Profile -->
+                        <RadioButton
+                            Style="{StaticResource sidebarButton}"
+                            Tag="{StaticResource Highlight}"
+                            Command="{Binding ShowProfileViewCommand}">
+
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Icon="User"  Style="{StaticResource sidebarButtonIcon}" />
+                                <TextBlock Text="Profile" Style="{StaticResource sidebarButtonText}" />
+                            </StackPanel>
+                        </RadioButton>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Row="4"
+                        Orientation="Vertical"
+                        VerticalAlignment="Center">
+                        <!-- Log Out -->
+                        <Button
+                            Style="{StaticResource logOutButton}"
+                            Tag="{StaticResource Highlight}">
+                            <!--Command="{Binding LogOutCommand}">-->
+
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Icon="RightFromBracket"  Style="{StaticResource logOutButtonIcon}" />
+                                <TextBlock Text="Log out" Style="{StaticResource logOutButtonText}" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+
+                </Grid>
+
+            </Border>
+
+            <!-- Content -->
+            <Border
+                Grid.Column="1"
+                CornerRadius="0 8 8 0"
+                Background="{DynamicResource Background}">
+                
+                
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="10" />
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="10" />
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Control Bar -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel
+                            Background="Transparent"
+                            Grid.Column="0"
+                            Orientation="Horizontal"
+                            FlowDirection="RightToLeft"
+                            VerticalAlignment="Center"
+                            Cursor="Hand"
+                            x:Name="pnlControlBar"
+                            MouseLeftButtonDown="pnlControlBar_MouseLeftButtonDown"
+                            MouseEnter="pnlControlBar_MouseEnter">
+
+                            <Button x:Name="btnClose"
+                                   Style="{StaticResource controlPanelButton}"
+                                    Tag="{StaticResource Highlight}"
+                                    Click="btnClose_Click">
+                                
+                                <fa:IconImage Icon="Xmark"  Style="{StaticResource controlPanelButtonIcon}" />
+                                
+                            </Button>
+
+                            <Button x:Name="btnMaximize"
+                                   Style="{StaticResource controlPanelButton}"
+                                    Tag="{StaticResource Highlight}"
+                                    Click="btnMaximize_Click">
+
+                                <fa:IconImage Icon="WindowMaximize"  Style="{StaticResource controlPanelButtonIcon}" />
+
+                            </Button>
+
+                            <Button x:Name="btnMinimize"
+                                   Style="{StaticResource controlPanelButton}"
+                                    Tag="{StaticResource Highlight}"
+                                    Click="btnMinimize_Click">
+
+                                <fa:IconImage Icon="WindowMinimize" Width="12"  Style="{StaticResource controlPanelButtonIcon}" />
+
+                            </Button>
+
+                        </StackPanel>
+                    </Grid>
+                    
+                    <!-- Page Header -->
+                    <Grid
+                        Grid.Row="2">
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="20" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left">
+                            <TextBlock Text="{Binding Caption}" Style="{StaticResource headerSmallSecondary}"/>
+                        </StackPanel>
+                        
+                        
+                    </Grid>
+
+                    <ContentControl Content="{Binding CurrentChildView}"
+                        Grid.Row="3">
+                        
+                    </ContentControl>
+                </Grid>
+                
+
+
+            </Border>
+        </Grid>
+    </Border>
+    
 </Window>

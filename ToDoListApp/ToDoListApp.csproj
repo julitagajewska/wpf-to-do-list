@@ -14,12 +14,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Remove="Styles\UIColors.xaml" />
+    <Page Remove="Styles\UIContainers.xaml" />
+    <Page Remove="Styles\UILogin.xaml" />
+    <Page Remove="Styles\UITexts.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Fonts\" />
     <Folder Include="Theme\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
+    <PackageReference Include="FontAwesome.Sharp" Version="6.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="System.ObjectModel" Version="4.3.0" />
   </ItemGroup>
@@ -34,6 +41,15 @@
     <Content Include="Images\user-icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Styles\UIColors.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Styles\UIContainers.xaml" />
+    <Resource Include="Styles\UILogin.xaml" />
+    <Resource Include="Styles\UITexts.xaml" />
   </ItemGroup>
 	
 </Project>

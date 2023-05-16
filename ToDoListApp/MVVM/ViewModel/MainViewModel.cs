@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using ToDoListApp.MVVM.Model;
+using ToDoListApp.MVVM.View;
 using ToDoListApp.Repositiories;
 
 namespace ToDoListApp.MVVM.ViewModel
@@ -14,6 +16,8 @@ namespace ToDoListApp.MVVM.ViewModel
     {
         // Fields
         private UserAccountModel _currentUserAccount;
+        private ViewModelBase _currentChildView;
+        private string _caption;
         private IUserRepository userRepository;
         public UserAccountModel CurrentUserAccount
         {
@@ -29,12 +33,92 @@ namespace ToDoListApp.MVVM.ViewModel
             }
         }
 
+        public ViewModelBase CurrentChildView {
+            get
+            {
+                return _currentChildView;
+            }
+            set
+            {
+                _currentChildView = value;
+                OnPropertyChanged(nameof(CurrentChildView));
+            } 
+        }
+        public string Caption
+        {
+            get
+            {
+                return _caption;
+            }
+            set
+            {
+                _caption = value;
+                OnPropertyChanged(nameof(Caption));
+            }
+        }
+
+        // Commands
+        public ICommand ShowOverviewViewCommand { get; set; }
+        public ICommand ShowAllTasksViewCommand { get; set; }
+        public ICommand ShowArchiveViewCommand { get; set; }
+        public ICommand ShowProfileViewCommand { get; set; }
+        public ICommand LogOutCommand { get; set; }
+
         public MainViewModel()
         {
             userRepository = new UserRepository();
             CurrentUserAccount = new UserAccountModel();
+
+            // Initialize commands
+            ShowOverviewViewCommand = new ViewModelCommand(ExecuteShowOverviewViewCommand);
+            ShowAllTasksViewCommand = new ViewModelCommand(ExecuteShowAllTasksViewCommand);
+            ShowArchiveViewCommand = new ViewModelCommand(ExecuteShowArchiveViewCommand);
+            ShowProfileViewCommand = new ViewModelCommand(ExecuteShowProfileViewCommand);
+
+            LogOutCommand = new ViewModelCommand(ExecuteLogOutcommand);
+
+            // Deafult view
+            ExecuteShowOverviewViewCommand(null);
+
             LoadCurrentUserData();
         }
+
+        private void ExecuteLogOutcommand(object obj)
+        {
+            Thread.CurrentPrincipal = null;
+
+            var loginView = new LoginView();
+            loginView.Show();
+
+            var mainView = new MainView();
+            mainView.Close();
+
+        }
+
+        private void ExecuteShowOverviewViewCommand(object obj)
+        {
+            CurrentChildView = new OverviewViewModel();
+            Caption = "Overview";
+        }
+
+        private void ExecuteShowAllTasksViewCommand(object obj)
+        {
+            CurrentChildView = new AllTasksViewModel();
+            Caption = "All tasks";
+        }
+
+        private void ExecuteShowProfileViewCommand(object obj)
+        {
+            CurrentChildView = new ProfileViewModel();
+            Caption = CurrentUserAccount.Username;
+        }
+
+        private void ExecuteShowArchiveViewCommand(object obj)
+        {
+            CurrentChildView = new ArchiveViewModel();
+            Caption = "Archive";
+        }
+
 
         private void LoadCurrentUserData()
         {   
