@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ToDoListApp.Data;
+using ToDoListApp.MVVM.Model;
 
 namespace ToDoListApp.MVVM.View
 {
@@ -22,6 +24,19 @@ namespace ToDoListApp.MVVM.View
         public LoginView()
         {
             InitializeComponent();
+            /*UserModel user = new UserModel
+            {
+                Id = "1",
+                Username = "admin",
+                Password = "123",
+                Email = "admin@test.com",
+                Planner = new Planner()
+            };
+            using (var dbContext = new ToDoDbContext())
+            {
+                dbContext.Users.Add(user);
+                dbContext.SaveChanges();
+            }*/
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

@@ -13,5 +13,6 @@ namespace ToDoListApp.MVVM.Model
         public string Password { get; set; }
         public string Email { get; set; }
         public Planner Planner { get; set; }
+
     }
 }

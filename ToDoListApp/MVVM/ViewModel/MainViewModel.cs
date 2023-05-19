@@ -9,8 +9,8 @@ using System.Windows.Input;
 using ToDoListApp.MVVM.Model;
 using ToDoListApp.MVVM.Model.Interfaces;
 using ToDoListApp.MVVM.View;
-using ToDoListApp.Repositiories;
 using ToDoListApp.MVVM.Model.Services;
+using ToDoListApp.Data;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -20,7 +20,9 @@ namespace ToDoListApp.MVVM.ViewModel
         private UserAccountModel _currentUserAccount;
         private ViewModelBase _currentChildView;
         private string _caption;
-        private IUserRepository userRepository;
+        private IUserRepository _userRepository;
+        private readonly ToDoDbContext _context;
+
         public UserAccountModel CurrentUserAccount
         {
             get
@@ -68,7 +70,8 @@ namespace ToDoListApp.MVVM.ViewModel
 
         public MainViewModel()
         {
-            userRepository = new UserRepository();
+            _context = new ToDoDbContext(); // Create an instance of ToDoDbContext
+            _userRepository = new UserRepository(_context); // Pass the ToDoDbContext instance to the UserRepository constructor
             CurrentUserAccount = new UserAccountModel();
 
             // Initialize commands
@@ -124,7 +127,7 @@ namespace ToDoListApp.MVVM.ViewModel
 
         private void LoadCurrentUserData()
         {   
-            var user = userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             if(user != null)
             {
                 CurrentUserAccount.Username = user.Username;

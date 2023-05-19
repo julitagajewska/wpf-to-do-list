@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Runtime;
 using System.Windows.Interop;
+using ToDoListApp.MVVM.Model;
+using ToDoListApp.Data;
 
 namespace ToDoListApp.MVVM.View
 {

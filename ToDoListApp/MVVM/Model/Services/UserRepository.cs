@@ -5,13 +5,19 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using ToDoListApp.Data;
 using ToDoListApp.MVVM.Model.Interfaces;
-using ToDoListApp.Repositiories;
+
 
 namespace ToDoListApp.MVVM.Model.Services
 {
-    public class UserRepository : RepositoryBase, IUserRepository
+    public class UserRepository : IUserRepository//RepositoryBase, 
     {
+        private readonly ToDoDbContext _context;
+        public UserRepository(ToDoDbContext context)
+        {
+            _context = context;
+        }
         public void Add(UserModel userModel)
         {
             throw new NotImplementedException();
@@ -19,9 +25,9 @@ namespace ToDoListApp.MVVM.Model.Services
 
         public bool AuthenticateUser(NetworkCredential credential)
         {
-            bool validUser;
+            /*bool validUser;
 
-            using (var connection = GetConnection())
+            //using (var connection = GetConnection())
             using (var command = new SqlCommand())
             {
                 connection.Open();
@@ -33,7 +39,9 @@ namespace ToDoListApp.MVVM.Model.Services
                 command.Parameters.Add("@password", System.Data.SqlDbType.NVarChar).Value = credential.Password;
 
                 validUser = command.ExecuteScalar() == null ? false : true;
-            }
+            }*/
+            bool validUser = _context.Users.Any(user =>
+                user.Username == credential.UserName && user.Password == credential.Password);
 
             return validUser;
         }
@@ -60,7 +68,7 @@ namespace ToDoListApp.MVVM.Model.Services
 
         public UserModel GetByUsername(string username)
         {
-            UserModel user = null;
+            /*UserModel user = null;
 
             using (var connection = GetConnection())
             using (var command = new SqlCommand())
@@ -87,8 +95,8 @@ namespace ToDoListApp.MVVM.Model.Services
                     }
                 }
 
-            }
-
+            }*/
+            UserModel user = _context.Users.FirstOrDefault(u => u.Username == username);
             return user;
         }
     }

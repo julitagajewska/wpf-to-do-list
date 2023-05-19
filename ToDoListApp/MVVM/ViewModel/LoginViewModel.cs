@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ToDoListApp.Data;
 using ToDoListApp.MVVM.Model.Interfaces;
 using ToDoListApp.MVVM.Model.Services;
 
@@ -21,8 +22,8 @@ namespace ToDoListApp.MVVM.ViewModel
         private SecureString _password;
         private string _errorMessage;
         private bool _isViewVisible = true;
-
-        private IUserRepository userRepository;
+        private readonly ToDoDbContext _context;
+        private readonly IUserRepository _userRepository;
 
         public string Username
         {
@@ -89,7 +90,8 @@ namespace ToDoListApp.MVVM.ViewModel
         // Constructor
         public LoginViewModel()
         {
-            userRepository = new UserRepository();
+            _context = new ToDoDbContext();
+            _userRepository = new UserRepository(_context);
             LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
             RecoverPasswordCommand = new ViewModelCommand(p => ExecuteRecoverPasswordCommand("", ""));
         }
@@ -112,7 +114,7 @@ namespace ToDoListApp.MVVM.ViewModel
 
         private void ExecuteLoginCommand(object obj)
         {
-            var isValidUser = userRepository.AuthenticateUser(new NetworkCredential(Username, Password));
+            var isValidUser = _userRepository.AuthenticateUser(new NetworkCredential(Username, Password));
 
             if (isValidUser)
             {

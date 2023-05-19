@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ToDoListApp.MVVM.Model
 {
-    public class Task
+    public class MainTask
     {
         [Key]
         public int Id { get; set; }

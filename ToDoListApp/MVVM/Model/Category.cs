@@ -12,7 +12,7 @@ namespace ToDoListApp.MVVM.Model
         [Key]
         public int Id { get; set; }
 
-        public ICollection<Task>? Tasks { get; set; }
+        public ICollection<MainTask>? MainTasks { get; set; }
 
     }
 }
