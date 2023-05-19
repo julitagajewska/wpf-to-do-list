@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ToDoListApp.MVVM.Model
+namespace ToDoListApp.MVVM.Model.Interfaces
 {
     public interface IUserRepository
     {

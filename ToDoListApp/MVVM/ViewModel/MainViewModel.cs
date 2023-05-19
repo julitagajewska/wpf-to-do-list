@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using ToDoListApp.MVVM.Model;
+using ToDoListApp.MVVM.Model.Interfaces;
 using ToDoListApp.MVVM.View;
 using ToDoListApp.Repositiories;
+using ToDoListApp.MVVM.Model.Services;
 
 namespace ToDoListApp.MVVM.ViewModel
 {

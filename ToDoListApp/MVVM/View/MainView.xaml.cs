@@ -25,6 +25,7 @@ namespace ToDoListApp.MVVM.View
         public MainView()
         {
             InitializeComponent();
+            //dodaj, żeby po naciśnięciu X apka się po prostu wyłączała, a nie crashowała.
         }
 
         [DllImport("user32.dll")]
@@ -41,7 +42,7 @@ namespace ToDoListApp.MVVM.View
             //this.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth;
         }
 
-        private void btnClose_Click(object sender, RoutedEventArgs e)
+        private void btnClose_Click(object sender, RoutedEventArgs e) //tu się wysypuje
         {
             Application.Current.Shutdown();
         }

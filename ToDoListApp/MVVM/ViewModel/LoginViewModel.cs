@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using ToDoListApp.MVVM.Model;
-using ToDoListApp.Repositiories;
+using ToDoListApp.MVVM.Model.Interfaces;
+using ToDoListApp.MVVM.Model.Services;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
