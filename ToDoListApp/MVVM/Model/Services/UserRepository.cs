@@ -5,9 +5,10 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using ToDoListApp.MVVM.Model;
+using ToDoListApp.MVVM.Model.Interfaces;
+using ToDoListApp.Repositiories;
 
-namespace ToDoListApp.Repositiories
+namespace ToDoListApp.MVVM.Model.Services
 {
     public class UserRepository : RepositoryBase, IUserRepository
     {
@@ -20,21 +21,21 @@ namespace ToDoListApp.Repositiories
         {
             bool validUser;
 
-            using (var connection=GetConnection())
-            using (var command=new SqlCommand())
+            using (var connection = GetConnection())
+            using (var command = new SqlCommand())
             {
                 connection.Open();
                 command.Connection = connection;
 
                 command.CommandText = "select * from [User] where username=@username and [password]=@password";
 
-                command.Parameters.Add("@username", System.Data.SqlDbType.NVarChar).Value=credential.UserName;
+                command.Parameters.Add("@username", System.Data.SqlDbType.NVarChar).Value = credential.UserName;
                 command.Parameters.Add("@password", System.Data.SqlDbType.NVarChar).Value = credential.Password;
 
-                validUser=command.ExecuteScalar() == null ? false : true;
+                validUser = command.ExecuteScalar() == null ? false : true;
             }
 
-                return validUser;
+            return validUser;
         }
 
         public void Delete(UserModel userModel)
