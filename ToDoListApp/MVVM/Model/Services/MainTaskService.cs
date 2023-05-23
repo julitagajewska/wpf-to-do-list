@@ -21,5 +21,9 @@ namespace ToDoListApp.MVVM.Model.Services
             _context.MainTasks.Add(task);
             _context.SaveChanges();
         }
+        public string ConvertCategoriesToString(ICollection<Category> categories)
+        {
+            return string.Join(", ", categories.Select(c => c.Name));
+        }
     }
 }

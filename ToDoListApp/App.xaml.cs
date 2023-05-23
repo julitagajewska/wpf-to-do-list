@@ -20,10 +20,6 @@ namespace ToDoListApp
     {
         protected void ApplicationStart(object sender, StartupEventArgs e)
         {
-            ToDoDbContext _context = new ToDoDbContext();
-            IMainTaskService _mainTaskService = new MainTaskService(new ToDoDbContext());
-            AllTasksViewModel allTasksViewModel = new AllTasksViewModel(_context,_mainTaskService);
-
             var loginView = new LoginView();
             loginView.Show();
             loginView.IsVisibleChanged += (s, ev) =>

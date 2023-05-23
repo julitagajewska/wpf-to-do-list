@@ -35,6 +35,9 @@
         <DataTemplate DataType="{x:Type viewModel:ProfileViewModel}">
             <local:ProfileView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:CreateTaskViewModel}">
+            <local:CreateTaskView />
+        </DataTemplate>
     </Window.Resources>
     
     <Border

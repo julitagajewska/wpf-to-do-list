@@ -16,6 +16,7 @@ namespace ToDoListApp.MVVM.Model.Interfaces
         UserModel GetById(int id);
         UserModel GetByUsername(string username);
         IEnumerable<UserModel> GetAlll();
+        string GetCurrentUsername();
         // ...
     }
 }

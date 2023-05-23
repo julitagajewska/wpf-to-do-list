@@ -4,9 +4,58 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
+             xmlns:mvvm="clr-namespace:ToDoListApp.MVVM.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <mvvm:AllTasksViewModel />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type mvvm:CreateTaskViewModel}">
+            <local:CreateTaskView />
+        </DataTemplate>
+    </UserControl.Resources>
+
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Button Content="Dodaj zadanie" Command="{Binding ShowCreateTasksViewCommand}" Margin="0,40,0,0" />
+            <ContentControl Content="{Binding CurrentChildView}" />
+        </Grid>
+        <DataGrid ItemsSource="{Binding Tasks}" AutoGenerateColumns="False" 
+          HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+          HeadersVisibility="Column">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Deadline" Binding="{Binding Deadline}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="StartDate" Binding="{Binding StartDate}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="EndDate" Binding="{Binding EndDate}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Priority" Binding="{Binding Priority}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Categories" Binding="{Binding CategoryList}" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
     </Grid>
 </UserControl>

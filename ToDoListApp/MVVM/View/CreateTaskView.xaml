@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="ToDoListApp.MVVM.View.CreateTaskView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
+        xmlns:mvvm="clr-namespace:ToDoListApp.MVVM.ViewModel"
+        mc:Ignorable="d" 
+        d:DesignHeight="450" d:DesignWidth="800" Background="White">
+    <UserControl.DataContext>
+        <mvvm:CreateTaskViewModel />
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Task Name:" VerticalAlignment="Center" Margin="5" />
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding TaskName}" Margin="5" />
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Task Description:" VerticalAlignment="Center" Margin="5" />
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding TaskDescription}" Margin="5" />
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Deadline:" VerticalAlignment="Center" Margin="5" />
+        <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding TaskDeadline}" Margin="5" />
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="StartDate:" VerticalAlignment="Center" Margin="5" />
+        <DatePicker Grid.Row="3" Grid.Column="1" SelectedDate="{Binding TaskStartDate}" Margin="5" />
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="EndDate:" VerticalAlignment="Center" Margin="5" />
+        <DatePicker Grid.Row="4" Grid.Column="1" SelectedDate="{Binding TaskEndDate}" Margin="5" />
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Status:" VerticalAlignment="Center" Margin="5" />
+        <ComboBox Grid.Row="5" Grid.Column="1" SelectedItem="{Binding TaskStatus}" Margin="5">
+            <ComboBoxItem Content="To Do"/>
+            <ComboBoxItem Content="In Progress" />
+            <ComboBoxItem Content="Done" />
+        </ComboBox>
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Priority:" VerticalAlignment="Center" Margin="5" />
+        <ComboBox Grid.Row="6" Grid.Column="1" SelectedItem="{Binding TaskPriority}" Margin="5">
+            <ComboBoxItem Content="Low"/>
+            <ComboBoxItem Content="Medium" />
+            <ComboBoxItem Content="High" />
+        </ComboBox>
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="Categories:" VerticalAlignment="Center" Margin="5" />
+        <ListBox Grid.Row="7" Grid.Column="1" SelectionMode="Multiple" ItemsSource="{Binding TaskCategories}" Margin="5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ItemsControl ItemsSource="{Binding Subtasks}" Margin="5">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="SubTask Name:" VerticalAlignment="Center" Margin="5" />
+                        <TextBox Text="{Binding SubtaskName}" Margin="5" />
+                        <TextBlock Text="SubTask Description:" VerticalAlignment="Center" Margin="5" />
+                        <TextBox Text="{Binding SubtaskDescription}" Margin="5" />
+                        <TextBlock Text="SubTask Status:" VerticalAlignment="Center" Margin="5" />
+                        <ComboBox SelectedItem="{Binding SubtaskStatus}" Margin="5">
+                            <ComboBoxItem Content="To Do"/>
+                            <ComboBoxItem Content="In Progress" />
+                            <ComboBoxItem Content="Done" />
+                        </ComboBox>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Button Grid.Row="8" Grid.Column="0" Content="Add Task" Command="{Binding AddTaskCommand}" Margin="5" />
+        <Button Grid.Row="8" Grid.Column="1" Content="Add SubTask" Command="{Binding AddSubtaskCommand}" Margin="5" />
+        
+    </Grid>
+</UserControl>

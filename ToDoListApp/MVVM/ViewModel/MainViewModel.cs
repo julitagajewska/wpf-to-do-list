@@ -73,7 +73,8 @@ namespace ToDoListApp.MVVM.ViewModel
             _context = new ToDoDbContext(); // Create an instance of ToDoDbContext
             _userRepository = new UserRepository(_context); // Pass the ToDoDbContext instance to the UserRepository constructor
             CurrentUserAccount = new UserAccountModel();
-
+            Messenger.Subscribe("ShowCreateTasksView", ShowCreateTasksView);
+            Messenger.Subscribe("ShowAllTasksView", ExecuteShowAllTasksViewCommand);
             // Initialize commands
             ShowOverviewViewCommand = new ViewModelCommand(ExecuteShowOverviewViewCommand);
             ShowAllTasksViewCommand = new ViewModelCommand(ExecuteShowAllTasksViewCommand);
@@ -123,7 +124,11 @@ namespace ToDoListApp.MVVM.ViewModel
             CurrentChildView = new ArchiveViewModel();
             Caption = "Archive";
         }
-
+        private void ShowCreateTasksView(object parameter)
+        {
+            CurrentChildView = new CreateTaskViewModel();
+            Caption = "Create Task";
+        }
 
         private void LoadCurrentUserData()
         {   

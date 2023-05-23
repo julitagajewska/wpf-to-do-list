@@ -47,9 +47,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Images\key-icon.png">
+    <Resource Include="Images\key-icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Resource>
     <Content Include="Images\login-background.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
