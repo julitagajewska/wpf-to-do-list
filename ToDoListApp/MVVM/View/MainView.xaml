@@ -27,7 +27,9 @@
         <DataTemplate DataType="{x:Type viewModel:AllTasksViewModel}">
             <local:AllTasksView />
         </DataTemplate>
-
+        <DataTemplate DataType="{x:Type viewModel:DetailsTaskViewModel}">
+            <local:DetailsTaskView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:ArchiveViewModel}">
             <local:ArchiveView />
         </DataTemplate>

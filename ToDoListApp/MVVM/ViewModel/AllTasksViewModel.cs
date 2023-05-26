@@ -14,7 +14,9 @@ using ToDoListApp.MVVM.Model;
 using ToDoListApp.MVVM.Model.Interfaces;
 using ToDoListApp.MVVM.Model.Services;
 using ToDoListApp.MVVM.View;
+using Microsoft.EntityFrameworkCore;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -24,6 +26,7 @@ namespace ToDoListApp.MVVM.ViewModel
         private readonly MainTaskService _mainTaskService;
         private string _caption;
         private ObservableCollection<MainTask> _tasks;
+        private UserModel _loggedInUser;
         public string Caption
         {
             get
@@ -46,11 +49,15 @@ namespace ToDoListApp.MVVM.ViewModel
             }
         }
         public ICommand ShowCreateTasksViewCommand { get; set; }
-        public AllTasksViewModel()
+        public ICommand ShowDetailsTaskViewCommand { get; set; }
+
+        public AllTasksViewModel(UserModel loggedInUser)
         {
             _context = new ToDoDbContext(); // Create an instance of ToDoDbContext
             _mainTaskService = new MainTaskService(_context);
+            _loggedInUser = loggedInUser;
             ShowCreateTasksViewCommand = new ViewModelCommand(ExecuteShowCreateTasksViewCommand);
+            ShowDetailsTaskViewCommand = new ViewModelCommand(ExecuteShowDetailsTaskViewCommand);
             // Load tasks from the database
             LoadTasks();
         }
@@ -60,15 +67,32 @@ namespace ToDoListApp.MVVM.ViewModel
             Messenger.Publish("ShowCreateTasksView");
             Caption = "Create Task";
         }
+        private void ExecuteShowDetailsTaskViewCommand(object obj)
+        {
+            if (obj is MainTask selectedTask)
+            {
+                Messenger.Publish("ShowDetailsTaskView", selectedTask);
+                Caption = "Task Details";
+            }
+        }
 
         private void LoadTasks()
         {
-            // Retrieve all tasks from the database
-            Tasks = new ObservableCollection<MainTask>(_context.MainTasks.ToList());
-            foreach (var task in Tasks)
+            if (_loggedInUser != null && _loggedInUser.Planner != null)
             {
-                task.CategoryList = _mainTaskService.ConvertCategoriesToString(task.Categories);
+                // Pobierz zadania związane z plannerm zalogowanego użytkownika
+                Tasks = new ObservableCollection<MainTask>(_context.MainTasks
+                    .Include(t => t.Categories)
+                    .Where(t => t.PlannerId == _loggedInUser.PlannerId)
+                    .ToList());
             }
+            // Retrieve all tasks from the database
+            else
+            {
+                Tasks = new ObservableCollection<MainTask>();
+            }
+            
+            //Tasks = new ObservableCollection<MainTask>(_context.MainTasks.Include(t => t.Categories).ToList());
         }
         
     }   

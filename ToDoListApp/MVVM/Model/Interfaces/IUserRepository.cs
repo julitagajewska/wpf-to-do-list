@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -17,6 +18,9 @@ namespace ToDoListApp.MVVM.Model.Interfaces
         UserModel GetByUsername(string username);
         IEnumerable<UserModel> GetAlll();
         string GetCurrentUsername();
+        void AddCategoryToUser(string username, string newCategoryName);
+        ObservableCollection<Category> GetUserCategories(string username);
+        Planner GetPlannerByUsername(string username);
         // ...
     }
 }

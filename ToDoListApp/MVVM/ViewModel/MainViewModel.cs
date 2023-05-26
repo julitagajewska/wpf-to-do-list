@@ -75,11 +75,13 @@ namespace ToDoListApp.MVVM.ViewModel
             CurrentUserAccount = new UserAccountModel();
             Messenger.Subscribe("ShowCreateTasksView", ShowCreateTasksView);
             Messenger.Subscribe("ShowAllTasksView", ExecuteShowAllTasksViewCommand);
+            Messenger.Subscribe("ShowDetailsTaskView", ShowDetailsTaskView);
             // Initialize commands
             ShowOverviewViewCommand = new ViewModelCommand(ExecuteShowOverviewViewCommand);
             ShowAllTasksViewCommand = new ViewModelCommand(ExecuteShowAllTasksViewCommand);
             ShowArchiveViewCommand = new ViewModelCommand(ExecuteShowArchiveViewCommand);
             ShowProfileViewCommand = new ViewModelCommand(ExecuteShowProfileViewCommand);
+
 
             LogOutCommand = new ViewModelCommand(ExecuteLogOutcommand);
 
@@ -109,7 +111,8 @@ namespace ToDoListApp.MVVM.ViewModel
 
         private void ExecuteShowAllTasksViewCommand(object obj)
         {
-            CurrentChildView = new AllTasksViewModel();
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            CurrentChildView = new AllTasksViewModel(user);
             Caption = "All tasks";
         }
 
@@ -128,6 +131,15 @@ namespace ToDoListApp.MVVM.ViewModel
         {
             CurrentChildView = new CreateTaskViewModel();
             Caption = "Create Task";
+        }
+        private void ShowDetailsTaskView(object payload)
+        {
+            if (payload is MainTask selectedTask)
+            {
+                Caption = selectedTask.Name;
+                CurrentChildView = new DetailsTaskViewModel(selectedTask);
+            }
+            
         }
 
         private void LoadCurrentUserData()

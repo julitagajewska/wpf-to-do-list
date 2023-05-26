@@ -6,11 +6,11 @@
              xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
              xmlns:mvvm="clr-namespace:ToDoListApp.MVVM.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.DataContext>
-        <mvvm:AllTasksViewModel />
-    </UserControl.DataContext>
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model">
+
     <UserControl.Resources>
+        <converters:CategoriesToStringConverter x:Key="CategoriesToStringConverter" />
         <DataTemplate DataType="{x:Type mvvm:CreateTaskViewModel}">
             <local:CreateTaskView />
         </DataTemplate>
@@ -29,11 +29,19 @@
             <Button Content="Dodaj zadanie" Command="{Binding ShowCreateTasksViewCommand}" Margin="0,40,0,0" />
             <ContentControl Content="{Binding CurrentChildView}" />
         </Grid>
-        <DataGrid ItemsSource="{Binding Tasks}" AutoGenerateColumns="False" 
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Tasks}" AutoGenerateColumns="False" 
           HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
           HeadersVisibility="Column">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                <DataGridTemplateColumn Header="Name" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Name}" Command="{Binding DataContext.ShowDetailsTaskViewCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{Binding}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
                 <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
@@ -41,17 +49,17 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Deadline" Binding="{Binding Deadline}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="StartDate" Binding="{Binding StartDate}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="EndDate" Binding="{Binding EndDate}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Deadline" Binding="{Binding Deadline, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="StartDate" Binding="{Binding StartDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="EndDate" Binding="{Binding EndDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Priority" Binding="{Binding Priority}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Categories" Binding="{Binding CategoryList}" IsReadOnly="True">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
+                <DataGridTextColumn Header="Categories" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource CategoriesToStringConverter}">
+                            <Binding Path="Categories" />
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
 
             </DataGrid.Columns>

@@ -40,6 +40,22 @@ namespace ToDoListApp.MVVM.View
                 dbContext.Planners.Add(planner);
                 dbContext.SaveChanges();
             }*/
+            //User2
+            /*var planner = new Planner();
+            UserModel user = new UserModel
+            {
+                Id = "2",
+                Username = "ola",
+                Password = "ola",
+                Email = "ola@test.com",
+                Planner = planner
+            };
+            using (var dbContext = new ToDoDbContext())
+            {
+                dbContext.Users.Add(user);
+                dbContext.Planners.Add(planner);
+                dbContext.SaveChanges();
+            }*/
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

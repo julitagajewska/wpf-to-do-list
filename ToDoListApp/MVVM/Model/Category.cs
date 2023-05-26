@@ -14,6 +14,7 @@ namespace ToDoListApp.MVVM.Model
         [Required]
         public string Name { get; set; }
 
+        public bool IsCustom { get; set; }
         public ICollection<MainTask>? MainTasks { get; set; }
 
     }

@@ -17,6 +17,10 @@ namespace ToDoListApp.MVVM.Model
         [ForeignKey("Planner")]
         public int PlannerId { get; set; }
         public Planner Planner { get; set; }
+        public UserModel()
+        {
+            Planner = new Planner();
+        }
 
     }
 }
