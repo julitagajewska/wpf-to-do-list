@@ -15,6 +15,10 @@ namespace ToDoListApp.MVVM.Model
         public UserModel User { get; set; }
 
         public ICollection<MainTask>? MainTasks { get; set; }
+        public Planner()
+        {
+            MainTasks = new List<MainTask>(); // Dodaj inicjalizację kolekcji MainTasks
+        }
 
     }
 }

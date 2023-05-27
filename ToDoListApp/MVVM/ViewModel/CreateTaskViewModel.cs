@@ -179,8 +179,8 @@ namespace ToDoListApp.MVVM.ViewModel
             SelectionChangedCommand = new ViewModelCommand(ListBoxSelectionChanged);
             //TaskCategories = new ObservableCollection<Category>(_context.Categories.ToList());
             TaskCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(CurrentUsername)
-            .DistinctBy(category => category.Name)
-            .ToList());
+                .DistinctBy(category => category.Name)
+                .ToList());
 
             SelectedCategories = new ObservableCollection<Category>();  // Inicjalizacja
             Subtasks = new ObservableCollection<Subtask>();
