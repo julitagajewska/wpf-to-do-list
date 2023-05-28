@@ -13,7 +13,7 @@ namespace ToDoListApp.MVVM.Model
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-
+        public string Owner { get; set; }
         public bool IsCustom { get; set; }
         public ICollection<MainTask>? MainTasks { get; set; }
 

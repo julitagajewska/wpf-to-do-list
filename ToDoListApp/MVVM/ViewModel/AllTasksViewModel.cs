@@ -20,13 +20,17 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
-    public class AllTasksViewModel :ViewModelBase
+    public class AllTasksViewModel : ViewModelBase
     {
         private readonly ToDoDbContext _context;
+        private readonly IUserRepository _userRepository;
         private readonly MainTaskService _mainTaskService;
         private string _caption;
         private ObservableCollection<MainTask> _tasks;
         private UserModel _loggedInUser;
+
+        private ObservableCollection<Category> _userCategories;
+        private Category _selectedCategory;
         public string Caption
         {
             get
@@ -48,20 +52,43 @@ namespace ToDoListApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(Tasks));
             }
         }
+        public ObservableCollection<Category> UserCategories
+        {
+            get { return _userCategories; }
+            set
+            {
+                _userCategories = value;
+                OnPropertyChanged(nameof(UserCategories));
+            }
+        }
+
+        public Category SelectedCategory
+        {
+            get { return _selectedCategory; }
+            set
+            {
+                _selectedCategory = value;
+                OnPropertyChanged(nameof(SelectedCategory));
+                FilterTasksByCategory();
+            }
+        }
         public ICommand ShowCreateTasksViewCommand { get; set; }
         public ICommand ShowDetailsTaskViewCommand { get; set; }
-
+        public ICommand AllCategoriesButtonCommand { get; set; }
         public AllTasksViewModel(UserModel loggedInUser)
         {
             _context = new ToDoDbContext(); // Create an instance of ToDoDbContext
             _mainTaskService = new MainTaskService(_context);
+            _userRepository = new UserRepository(_context);
             _loggedInUser = loggedInUser;
             ShowCreateTasksViewCommand = new ViewModelCommand(ExecuteShowCreateTasksViewCommand);
             ShowDetailsTaskViewCommand = new ViewModelCommand(ExecuteShowDetailsTaskViewCommand);
+            AllCategoriesButtonCommand = new ViewModelCommand(ExecuteAllCategoriesButtonCommand);
             // Load tasks from the database
             LoadTasks();
+            LoadUserCategories(loggedInUser.Username);
         }
-        
+
         private void ExecuteShowCreateTasksViewCommand(object obj)
         {
             Messenger.Publish("ShowCreateTasksView");
@@ -75,7 +102,11 @@ namespace ToDoListApp.MVVM.ViewModel
                 Caption = "Task Details";
             }
         }
-
+        private void ExecuteAllCategoriesButtonCommand(object obj)
+        {
+            SelectedCategory = null;
+            LoadTasks();
+        }
         private void LoadTasks()
         {
             if (_loggedInUser != null && _loggedInUser.Planner != null)
@@ -91,11 +122,31 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 Tasks = new ObservableCollection<MainTask>();
             }
-            
+
             //Tasks = new ObservableCollection<MainTask>(_context.MainTasks.Include(t => t.Categories).ToList());
         }
-        
-    }   
-    
+        private void LoadUserCategories(string username)
+        {
+            UserCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(username)
+                .DistinctBy(category => category.Name)
+                .ToList());
+        }
+        private void FilterTasksByCategory()
+        {
+            LoadTasks();
+            if (SelectedCategory != null)
+            {
+                // Filtruj zadania po wybranej kategorii
+                Tasks = new ObservableCollection<MainTask>(_tasks
+                    .Where(task => task.Categories.Contains(SelectedCategory))
+                    .ToList());
+            }
+            else
+            {
+                // Jeśli żadna kategoria nie jest wybrana, wyświetl wszystkie zadania
+                LoadTasks();
+            }
+        }
+
+    }
 }
-    

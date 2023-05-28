@@ -64,6 +64,7 @@
 
             </DataGrid.Columns>
         </DataGrid>
-
+        <Button Grid.Row="0" Grid.Column="1" Content="All Categories" Command="{Binding AllCategoriesButtonCommand}" />
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding UserCategories}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory}" />
     </Grid>
 </UserControl>

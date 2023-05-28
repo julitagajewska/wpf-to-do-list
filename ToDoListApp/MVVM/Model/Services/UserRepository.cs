@@ -99,62 +99,22 @@ namespace ToDoListApp.MVVM.Model.Services
             return null;
         }
 
-        public void AddCategoryToUser(string username, string newCategoryName)
-        {
-            UserModel user = GetByUsername(username);
-            Planner planner = GetPlannerByUsername(username);
-            //List<MainTask> tasks = planner.MainTasks?.ToList() ?? new List<MainTask>();
-            List<MainTask> tasks = _context.MainTasks
-                .Include(t => t.Categories)
-                .Where(task => task.PlannerId == planner.Id)
-                .ToList() ?? new List<MainTask>();
-            
-            //Synchronizacja listy tasków
-            planner.MainTasks = tasks;
-
-            if (user != null && planner != null && newCategoryName!=null)
-            {
-                // Sprawdź, czy kategoria już istnieje w plannerze użytkownika
-                ObservableCollection<Category> userCategories = GetUserCategories(username);
-
-                bool categoryExists = userCategories.Any(cat =>
-                    string.Equals(cat.Name, newCategoryName, StringComparison.OrdinalIgnoreCase));
-
-                if (!categoryExists)
-                {
-                    var category = new Category
-                    {
-                        Name = newCategoryName,
-                        IsCustom = true
-                    };
-
-                    planner.MainTasks = planner.MainTasks ?? new List<MainTask>();
-                    foreach (var task in planner.MainTasks)
-                    {
-                        task.Categories = task.Categories ?? new List<Category>();
-                        task.Categories.Add(category);
-                    }
-
-                    _context.Categories.Add(category);
-                    _context.SaveChanges();
-                }
-            }
-        }
-
         public ObservableCollection<Category> GetUserCategories(string username)
         {
             UserModel user = GetByUsername(username);
             if (user != null && user.Planner != null)
             {
-                List<Category> userCategories = _context.MainTasks
+                List<Category> userCategories = _context.MainTasks //Kategorie, które są przypisane do tasków
                     .Include(task => task.Categories)
                     .Where(task => task.PlannerId == user.PlannerId)
                     .SelectMany(task => task.Categories)
+                    .Where(category => category.Owner == user.Id) // Dodatkowe filtrowanie po OwnerId
                     .Distinct()
                     .ToList();
-
+                //customowe kategorie + te, które nie mają tasków
                 List<Category> customCategories = _context.Categories
-                    .Where(category => !category.IsCustom)
+            .       Where(category => (!category.IsCustom && category.Owner == user.Id) ||
+                               (category.MainTasks.Count == 0 && category.Owner == user.Id))
                     .ToList();
 
                 List<Category> allCategories = userCategories.Concat(customCategories).ToList();

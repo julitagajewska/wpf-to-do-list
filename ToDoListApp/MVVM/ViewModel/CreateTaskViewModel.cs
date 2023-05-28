@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -170,12 +171,15 @@ namespace ToDoListApp.MVVM.ViewModel
         public ICommand AddCategoryCommand { get; set; }
         //użytkownik
         public string CurrentUsername { get; set; }
+        private UserModel _loggedInUser;
+
         public CreateTaskViewModel()
         {
             _context = new ToDoDbContext();
             _userRepository = new UserRepository(_context);
             // Pobierz bieżące nazwisko użytkownika
             CurrentUsername = _userRepository.GetCurrentUsername();
+            _loggedInUser = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             SelectionChangedCommand = new ViewModelCommand(ListBoxSelectionChanged);
             //TaskCategories = new ObservableCollection<Category>(_context.Categories.ToList());
             TaskCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(CurrentUsername)
@@ -187,17 +191,17 @@ namespace ToDoListApp.MVVM.ViewModel
             // Przykładowe Kategorie
             if (!TaskCategories.Any(category => category.Name == "School"))
             {
-                TaskCategories.Add(new Category { Name = "School", IsCustom = false });
+                TaskCategories.Add(new Category { Name = "School", IsCustom = false, Owner= _loggedInUser.Id });
             }
 
             if (!TaskCategories.Any(category => category.Name == "Home"))
             {
-                TaskCategories.Add(new Category { Name = "Home", IsCustom = false });
+                TaskCategories.Add(new Category { Name = "Home", IsCustom = false, Owner = _loggedInUser.Id });
             }
 
             if (!TaskCategories.Any(category => category.Name == "Work"))
             {
-                TaskCategories.Add(new Category { Name = "Work", IsCustom = false });
+                TaskCategories.Add(new Category { Name = "Work", IsCustom = false, Owner = _loggedInUser.Id });
             }
             AddSubtaskCommand = new ViewModelCommand(ExecuteAddSubTaskCommand);
             AddTaskCommand = new ViewModelCommand(ExecuteAddTaskCommand);
@@ -211,8 +215,16 @@ namespace ToDoListApp.MVVM.ViewModel
 
             if (!string.IsNullOrEmpty(NewCategoryName) && !categoryExists)
             {
-                TaskCategories.Add(new Category { Name = NewCategoryName, IsCustom = true });
-                _userRepository.AddCategoryToUser(CurrentUsername, NewCategoryName);
+                var category = new Category
+                {
+                    Name = NewCategoryName,
+                    IsCustom = true,
+                    Owner = _loggedInUser.Id // Przypisanie id Usera.
+                };
+
+                TaskCategories.Add(category);
+                _context.Categories.Add(category);
+                _context.SaveChanges();
                 NewCategoryName = string.Empty;
             }
         }
