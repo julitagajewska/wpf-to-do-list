@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,22 +11,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ToDoListApp.MVVM.Model;
 using ToDoListApp.MVVM.ViewModel;
-
 namespace ToDoListApp.MVVM.View
 {
     /// <summary>
-    /// Interaction logic for AllTasksView.xaml
+    /// Interaction logic for CategoryPanelView.xaml
     /// </summary>
-    public partial class AllTasksView : UserControl
+    public partial class CategoryPanelView : UserControl
     {
-        public AllTasksView()
+        public CategoryPanelView()
         {
             InitializeComponent();
         }
-
     }
 }

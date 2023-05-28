@@ -5,7 +5,11 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using ToDoListApp.Data;
+using ToDoListApp.MVVM.Model.Interfaces;
+using ToDoListApp.MVVM.Model.Services;
 using ToDoListApp.MVVM.View;
+using ToDoListApp.MVVM.ViewModel;
 
 namespace ToDoListApp
 {

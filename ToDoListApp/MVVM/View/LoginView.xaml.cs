@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,17 +25,35 @@ namespace ToDoListApp.MVVM.View
         public LoginView()
         {
             InitializeComponent();
-            /*UserModel user = new UserModel
+            /*var planner = new Planner();
+            UserModel user = new UserModel
             {
                 Id = "1",
                 Username = "admin",
                 Password = "123",
                 Email = "admin@test.com",
-                Planner = new Planner()
+                Planner = planner
             };
             using (var dbContext = new ToDoDbContext())
             {
                 dbContext.Users.Add(user);
+                dbContext.Planners.Add(planner);
+                dbContext.SaveChanges();
+            }*/
+            //User2
+            /*var planner = new Planner();
+            UserModel user = new UserModel
+            {
+                Id = "2",
+                Username = "ola",
+                Password = "ola",
+                Email = "ola@test.com",
+                Planner = planner
+            };
+            using (var dbContext = new ToDoDbContext())
+            {
+                dbContext.Users.Add(user);
+                dbContext.Planners.Add(planner);
                 dbContext.SaveChanges();
             }*/
         }

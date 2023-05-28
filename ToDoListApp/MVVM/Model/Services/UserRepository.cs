@@ -1,12 +1,19 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
+using System.Numerics;
+using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ToDoListApp.Data;
 using ToDoListApp.MVVM.Model.Interfaces;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 
 namespace ToDoListApp.MVVM.Model.Services
@@ -20,26 +27,24 @@ namespace ToDoListApp.MVVM.Model.Services
         }
         public void Add(UserModel userModel)
         {
+            //tutaj będzie rejetracja, mniej więcej w taki sposób.
+            /*var user = new User
+            {
+                Username = Username,
+                // inne pola użytkownika
+            };
+
+            var planner = new Planner();
+            user.Planner = planner;
+
+            _context.Users.Add(user);
+            _context.Planners.Add(planner);
+            _context.SaveChanges();*/
             throw new NotImplementedException();
         }
 
         public bool AuthenticateUser(NetworkCredential credential)
         {
-            /*bool validUser;
-
-            //using (var connection = GetConnection())
-            using (var command = new SqlCommand())
-            {
-                connection.Open();
-                command.Connection = connection;
-
-                command.CommandText = "select * from [User] where username=@username and [password]=@password";
-
-                command.Parameters.Add("@username", System.Data.SqlDbType.NVarChar).Value = credential.UserName;
-                command.Parameters.Add("@password", System.Data.SqlDbType.NVarChar).Value = credential.Password;
-
-                validUser = command.ExecuteScalar() == null ? false : true;
-            }*/
             bool validUser = _context.Users.Any(user =>
                 user.Username == credential.UserName && user.Password == credential.Password);
 
@@ -65,39 +70,59 @@ namespace ToDoListApp.MVVM.Model.Services
         {
             throw new NotImplementedException();
         }
+        public string GetCurrentUsername()
+        {
+            IPrincipal user = Thread.CurrentPrincipal;
+            if (user != null && user.Identity != null && user.Identity.IsAuthenticated)
+            {
+                return user.Identity.Name;
+            }
 
+            return null;
+        }
         public UserModel GetByUsername(string username)
         {
-            /*UserModel user = null;
-
-            using (var connection = GetConnection())
-            using (var command = new SqlCommand())
-            {
-                connection.Open();
-                command.Connection = connection;
-
-                command.CommandText = "select * from [User] where username=@username";
-
-                command.Parameters.Add("@username", System.Data.SqlDbType.NVarChar).Value = username;
-
-                using (var reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        user = new UserModel()
-                        {
-                            Id = reader[0].ToString(),
-                            Username = reader[1].ToString(),
-                            Password = string.Empty,
-                            Email = reader[3].ToString()
-                        };
-
-                    }
-                }
-
-            }*/
             UserModel user = _context.Users.FirstOrDefault(u => u.Username == username);
             return user;
+        }
+        public Planner GetPlannerByUsername(string username)
+        {
+            UserModel user = GetByUsername(username);
+
+            if (user != null)
+            {
+                if (user.PlannerId != null)
+                {
+                    return _context.Planners.FirstOrDefault(planner => planner.Id == user.PlannerId);
+                }
+            }
+            return null;
+        }
+
+        public ObservableCollection<Category> GetUserCategories(string username)
+        {
+            UserModel user = GetByUsername(username);
+            if (user != null && user.Planner != null)
+            {
+                List<Category> userCategories = _context.MainTasks //Kategorie, które są przypisane do tasków
+                    .Include(task => task.Categories)
+                    .Where(task => task.PlannerId == user.PlannerId)
+                    .SelectMany(task => task.Categories)
+                    .Where(category => category.Owner == user.Id) // Dodatkowe filtrowanie po OwnerId
+                    .Distinct()
+                    .ToList();
+                //customowe kategorie + te, które nie mają tasków
+                List<Category> customCategories = _context.Categories
+                    .Where(category => (!category.IsCustom && category.Owner == user.Id) ||
+                               (category.MainTasks.Count == 0 && category.Owner == user.Id))
+                    .Distinct()
+                    .ToList();
+
+                List<Category> allCategories = userCategories.Concat(customCategories).Distinct().ToList();
+
+                return new ObservableCollection<Category>(allCategories);
+            }
+            return new ObservableCollection<Category>();
         }
     }
 }

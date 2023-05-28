@@ -27,13 +27,21 @@
         <DataTemplate DataType="{x:Type viewModel:AllTasksViewModel}">
             <local:AllTasksView />
         </DataTemplate>
-
+        <DataTemplate DataType="{x:Type viewModel:DetailsTaskViewModel}">
+            <local:DetailsTaskView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:ArchiveViewModel}">
             <local:ArchiveView />
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type viewModel:ProfileViewModel}">
             <local:ProfileView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:CreateTaskViewModel}">
+            <local:CreateTaskView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:CategoryPanelViewModel}">
+            <local:CategoryPanelView />
         </DataTemplate>
     </Window.Resources>
     

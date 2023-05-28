@@ -11,6 +11,7 @@ using ToDoListApp.MVVM.Model.Interfaces;
 using ToDoListApp.MVVM.View;
 using ToDoListApp.MVVM.Model.Services;
 using ToDoListApp.Data;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -73,12 +74,17 @@ namespace ToDoListApp.MVVM.ViewModel
             _context = new ToDoDbContext(); // Create an instance of ToDoDbContext
             _userRepository = new UserRepository(_context); // Pass the ToDoDbContext instance to the UserRepository constructor
             CurrentUserAccount = new UserAccountModel();
+            Messenger.Subscribe("ShowCreateTasksView", ShowCreateTasksView);
+            Messenger.Subscribe("ShowAllTasksView", ExecuteShowAllTasksViewCommand);
+            Messenger.Subscribe("ShowDetailsTaskView", ShowDetailsTaskView);
+            Messenger.Subscribe("ShowCategoryPanelView", ExecuteShowCategoryPanelView);
 
             // Initialize commands
             ShowOverviewViewCommand = new ViewModelCommand(ExecuteShowOverviewViewCommand);
             ShowAllTasksViewCommand = new ViewModelCommand(ExecuteShowAllTasksViewCommand);
             ShowArchiveViewCommand = new ViewModelCommand(ExecuteShowArchiveViewCommand);
             ShowProfileViewCommand = new ViewModelCommand(ExecuteShowProfileViewCommand);
+
 
             LogOutCommand = new ViewModelCommand(ExecuteLogOutcommand);
 
@@ -108,7 +114,8 @@ namespace ToDoListApp.MVVM.ViewModel
 
         private void ExecuteShowAllTasksViewCommand(object obj)
         {
-            CurrentChildView = new AllTasksViewModel();
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            CurrentChildView = new AllTasksViewModel(user);
             Caption = "All tasks";
         }
 
@@ -123,8 +130,26 @@ namespace ToDoListApp.MVVM.ViewModel
             CurrentChildView = new ArchiveViewModel();
             Caption = "Archive";
         }
-
-
+        private void ShowCreateTasksView(object parameter)
+        {
+            CurrentChildView = new CreateTaskViewModel();
+            Caption = "Create Task";
+        }
+        private void ShowDetailsTaskView(object payload)
+        {
+            if (payload is MainTask selectedTask)
+            {
+                Caption = selectedTask.Name;
+                CurrentChildView = new DetailsTaskViewModel(selectedTask);
+            }
+            
+        }
+        private void ExecuteShowCategoryPanelView(object obj)//TUTAJ OGARNIJ
+        {
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            CurrentChildView = new CategoryPanelViewModel(user);
+            Caption = "Category Panel";
+        }
         private void LoadCurrentUserData()
         {   
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
