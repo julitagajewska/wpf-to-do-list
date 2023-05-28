@@ -88,7 +88,7 @@ namespace ToDoListApp.MVVM.Model.Services
         public Planner GetPlannerByUsername(string username)
         {
             UserModel user = GetByUsername(username);
-            Console.WriteLine($"User: {user}"); // Dodaj tę linię
+
             if (user != null)
             {
                 if (user.PlannerId != null)
@@ -113,11 +113,12 @@ namespace ToDoListApp.MVVM.Model.Services
                     .ToList();
                 //customowe kategorie + te, które nie mają tasków
                 List<Category> customCategories = _context.Categories
-            .       Where(category => (!category.IsCustom && category.Owner == user.Id) ||
+                    .Where(category => (!category.IsCustom && category.Owner == user.Id) ||
                                (category.MainTasks.Count == 0 && category.Owner == user.Id))
+                    .Distinct()
                     .ToList();
 
-                List<Category> allCategories = userCategories.Concat(customCategories).ToList();
+                List<Category> allCategories = userCategories.Concat(customCategories).Distinct().ToList();
 
                 return new ObservableCollection<Category>(allCategories);
             }

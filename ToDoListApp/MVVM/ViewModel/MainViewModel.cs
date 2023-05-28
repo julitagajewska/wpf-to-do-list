@@ -11,6 +11,7 @@ using ToDoListApp.MVVM.Model.Interfaces;
 using ToDoListApp.MVVM.View;
 using ToDoListApp.MVVM.Model.Services;
 using ToDoListApp.Data;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -76,6 +77,8 @@ namespace ToDoListApp.MVVM.ViewModel
             Messenger.Subscribe("ShowCreateTasksView", ShowCreateTasksView);
             Messenger.Subscribe("ShowAllTasksView", ExecuteShowAllTasksViewCommand);
             Messenger.Subscribe("ShowDetailsTaskView", ShowDetailsTaskView);
+            Messenger.Subscribe("ShowCategoryPanelView", ExecuteShowCategoryPanelView);
+
             // Initialize commands
             ShowOverviewViewCommand = new ViewModelCommand(ExecuteShowOverviewViewCommand);
             ShowAllTasksViewCommand = new ViewModelCommand(ExecuteShowAllTasksViewCommand);
@@ -141,7 +144,12 @@ namespace ToDoListApp.MVVM.ViewModel
             }
             
         }
-
+        private void ExecuteShowCategoryPanelView(object obj)//TUTAJ OGARNIJ
+        {
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            CurrentChildView = new CategoryPanelViewModel(user);
+            Caption = "Category Panel";
+        }
         private void LoadCurrentUserData()
         {   
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);

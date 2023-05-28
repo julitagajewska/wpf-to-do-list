@@ -12,6 +12,7 @@ using ToDoListApp.Data;
 using ToDoListApp.MVVM.Model;
 using ToDoListApp.MVVM.Model.Interfaces;
 using ToDoListApp.MVVM.Model.Services;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -169,6 +170,7 @@ namespace ToDoListApp.MVVM.ViewModel
         public ICommand AddSubtaskCommand { get; set; }
         public ICommand AddTaskCommand { get; set; }
         public ICommand AddCategoryCommand { get; set; }
+        public ICommand ShowCategoryPanelCommand { get; set; }
         //użytkownik
         public string CurrentUsername { get; set; }
         private UserModel _loggedInUser;
@@ -206,6 +208,12 @@ namespace ToDoListApp.MVVM.ViewModel
             AddSubtaskCommand = new ViewModelCommand(ExecuteAddSubTaskCommand);
             AddTaskCommand = new ViewModelCommand(ExecuteAddTaskCommand);
             AddCategoryCommand = new ViewModelCommand(ExecuteAddCategoryCommand);
+            ShowCategoryPanelCommand = new ViewModelCommand(ExecuteShowCategoryPanelCommand);
+        }
+        private void ExecuteShowCategoryPanelCommand(object obj)
+        {
+            Messenger.Publish("ShowCategoryPanelView");
+            //Caption = "Category Panel";
         }
         private void ExecuteAddCategoryCommand(object obj)
         {
