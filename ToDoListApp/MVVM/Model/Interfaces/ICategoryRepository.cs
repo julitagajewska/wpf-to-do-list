@@ -9,5 +9,6 @@ namespace ToDoListApp.MVVM.Model.Interfaces
     public interface ICategoryRepository
     {
         void UpdateCategory(Category category);
+        void DeleteCategory(Category category);
     }
 }
