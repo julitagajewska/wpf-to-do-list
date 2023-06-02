@@ -12,6 +12,8 @@ using ToDoListApp.MVVM.Model;
 using System.Windows.Input;
 using System.Windows;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using ToDoListApp.MVVM.Model.Interfaces;
+using ToDoListApp.MVVM.Model.Services;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -19,6 +21,7 @@ namespace ToDoListApp.MVVM.ViewModel
     {
         private MainTask _selectedTask;
         private readonly ToDoDbContext _context;
+        private readonly IMainTaskService _mainTaskService;
         private string _caption;
         public string Caption
         {
@@ -42,12 +45,15 @@ namespace ToDoListApp.MVVM.ViewModel
             }
         }
         public ICommand EditTasksViewCommand { get; set; }
+        public ICommand DeleteTasksViewCommand { get; set; }
         public DetailsTaskViewModel(MainTask selectedTask)
         {
             _context = new ToDoDbContext();
+            _mainTaskService = new MainTaskService(_context);
             SelectedTask = _context.MainTasks.Include(t => t.Categories).FirstOrDefault(t => t.Id == selectedTask.Id);
 
             EditTasksViewCommand = new ViewModelCommand(ShowEditTaskViewCommand);
+            DeleteTasksViewCommand = new ViewModelCommand(ExecuteDeleteTaskCommand);
         }
         private void ShowEditTaskViewCommand(object obj)
         {
@@ -55,6 +61,20 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 Messenger.Publish("ShowEditTasksView", SelectedTask);
                 Caption = "Edit Task";
+            }
+        }
+        private void ExecuteDeleteTaskCommand(object obj)
+        {
+            if (obj is MainTask taskToDelete)
+            {
+                MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this Task?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    _mainTaskService.DeleteTask(taskToDelete);
+                    _context.SaveChanges();
+                    Messenger.Publish("ShowAllTasksView");
+                }
             }
         }
     }

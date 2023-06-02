@@ -11,7 +11,7 @@ namespace ToDoListApp.MVVM.Model.Interfaces
     {
         void CreateMainTask(MainTask task);
         void UpdateMainTask(MainTask task);
-
+        void DeleteTask(MainTask task);
         string ConvertCategoriesToString(ICollection<Category> categories);
     }
 }

@@ -47,6 +47,12 @@ namespace ToDoListApp.MVVM.Model.Services
 
             _context.SaveChanges();
         }
+        public void DeleteTask(MainTask task)
+        {
+
+            _context.MainTasks.Remove(task);
+            _context.SaveChanges();
+        }
         public string ConvertCategoriesToString(ICollection<Category> categories)
         {
             return string.Join(", ", categories.Select(c => c.Name));
