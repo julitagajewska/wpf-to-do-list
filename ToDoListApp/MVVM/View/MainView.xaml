@@ -30,6 +30,9 @@
         <DataTemplate DataType="{x:Type viewModel:DetailsTaskViewModel}">
             <local:DetailsTaskView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:EditTaskViewModel}">
+            <local:EditTaskView />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:ArchiveViewModel}">
             <local:ArchiveView />
         </DataTemplate>

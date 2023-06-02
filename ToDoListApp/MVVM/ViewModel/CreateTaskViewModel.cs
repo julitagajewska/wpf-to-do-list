@@ -183,7 +183,7 @@ namespace ToDoListApp.MVVM.ViewModel
             CurrentUsername = _userRepository.GetCurrentUsername();
             _loggedInUser = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             SelectionChangedCommand = new ViewModelCommand(ListBoxSelectionChanged);
-            //TaskCategories = new ObservableCollection<Category>(_context.Categories.ToList());
+
             TaskCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(CurrentUsername)
                 .DistinctBy(category => category.Name)
                 .ToList());

@@ -78,6 +78,7 @@ namespace ToDoListApp.MVVM.ViewModel
             Messenger.Subscribe("ShowAllTasksView", ExecuteShowAllTasksViewCommand);
             Messenger.Subscribe("ShowDetailsTaskView", ShowDetailsTaskView);
             Messenger.Subscribe("ShowCategoryPanelView", ExecuteShowCategoryPanelView);
+            Messenger.Subscribe("ShowEditTasksView", ExecuteShowEditTasksView);
 
             // Initialize commands
             ShowOverviewViewCommand = new ViewModelCommand(ExecuteShowOverviewViewCommand);
@@ -143,6 +144,15 @@ namespace ToDoListApp.MVVM.ViewModel
                 CurrentChildView = new DetailsTaskViewModel(selectedTask);
             }
             
+        }
+        private void ExecuteShowEditTasksView(object payload)
+        {
+            if (payload is MainTask selectedTask)
+            {
+                Caption = selectedTask.Name;
+                CurrentChildView = new EditTaskViewModel(selectedTask);
+            }
+
         }
         private void ExecuteShowCategoryPanelView(object obj)//TUTAJ OGARNIJ
         {
