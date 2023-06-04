@@ -10,16 +10,20 @@
         d:DesignHeight="450" d:DesignWidth="800" Background="White">
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <ItemsControl ItemsSource="{Binding UserCategories}">
+        <ItemsControl Grid.Row="0" ItemsSource="{Binding UserCategories}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -30,8 +34,12 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-
+        <CheckBox Grid.Row="1" Grid.Column="0" Content="Add New Category" IsChecked="{Binding IsAddCategoryChecked}" Margin="5" Visibility="{Binding IsAddCategoryVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding NewCategoryName}" Margin="5" IsEnabled="{Binding IsAddCategoryChecked}"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5" Visibility="{Binding IsAddCategoryVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        
         <TextBox Text="{Binding SelectedCategory.Name}" Visibility="{Binding SelectedCategory, Converter={StaticResource NullToVisibilityConverter}}" />
+        <TextBlock Grid.Row="2" Grid.Column="0"  Foreground="Red" Margin="5" Visibility="{Binding ValidationString, Converter={StaticResource NullToVisibilityConverter}}"/>
         <Button Grid.Column="0" Grid.Row="1" Content="Save" Command="{Binding SaveCategoryCommand}" CommandParameter="{Binding SelectedCategory}" Visibility="{Binding SelectedCategory, Converter={StaticResource NullToVisibilityConverter}}" />
     </Grid>
 </UserControl>

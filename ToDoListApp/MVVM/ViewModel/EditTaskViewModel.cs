@@ -179,6 +179,14 @@ namespace ToDoListApp.MVVM.ViewModel
                 {
                     errors.Add("At least one category is required.");
                 }
+                //nowa kategoria
+                ObservableCollection<Category> userCategories = _userRepository.GetUserCategories(_userRepository.GetCurrentUsername());
+                bool categoryExists = userCategories.Any(category => category.Name.Equals(NewCategoryName));
+
+                if (categoryExists)
+                {
+                    errors.Add("Category with the same name already exists.");
+                }
             }
             return errors;
         }
@@ -233,7 +241,11 @@ namespace ToDoListApp.MVVM.ViewModel
                     IsCustom = true,
                     Owner = _loggedInUser.Id // Przypisanie id Usera.
                 };
-
+                var otherValidationErrors = GetOtherValidationErrors();
+                if (otherValidationErrors.Any())
+                {
+                    return;
+                }
                 TaskCategories.Add(category);
                 _context.Categories.Add(category);
                 _context.SaveChanges();
@@ -247,12 +259,6 @@ namespace ToDoListApp.MVVM.ViewModel
                 if (!string.IsNullOrEmpty(ValidationString))
                 {
                     // Jeśli istnieją błędy walidacyjne, przerwij wykonanie funkcji
-                    return;
-                }
-                if (ListBoxSelectedItems.Count == 0)
-                {
-                    // Wyświetl powiadomienie o konieczności wybrania kategorii
-                    MessageBox.Show("You must to select a category/ categories", "No Categories", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
                 SelectedTask.Categories.Clear();
