@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -12,11 +13,12 @@ using ToDoListApp.Data;
 using ToDoListApp.MVVM.Model;
 using ToDoListApp.MVVM.Model.Interfaces;
 using ToDoListApp.MVVM.Model.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
-    public class CreateTaskViewModel : ViewModelBase
+    public class CreateTaskViewModel : ViewModelBase, IDataErrorInfo
     {
         private string _taskName;
         private string _taskDescription;
@@ -32,6 +34,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _taskName = value;
                 OnPropertyChanged(nameof(TaskName));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
 
@@ -42,6 +45,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _taskDescription = value;
                 OnPropertyChanged(nameof(TaskDescription));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
 
@@ -52,6 +56,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _taskDeadline = value;
                 OnPropertyChanged(nameof(TaskDeadline));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
         public DateTime? TaskStartDate
@@ -62,6 +67,7 @@ namespace ToDoListApp.MVVM.ViewModel
                 _taskStartDate = value;
 
                 OnPropertyChanged(nameof(TaskStartDate));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
         public DateTime? TaskEndDate
@@ -71,6 +77,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _taskEndDate = value;
                 OnPropertyChanged(nameof(TaskEndDate));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
 
@@ -81,6 +88,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _taskStatus = value;
                 OnPropertyChanged(nameof(TaskStatus));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
         public string TaskPriority
@@ -90,6 +98,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _taskPriority = value;
                 OnPropertyChanged(nameof(TaskPriority));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
         public ObservableCollection<Category> TaskCategories { get; set; }
@@ -108,6 +117,7 @@ namespace ToDoListApp.MVVM.ViewModel
                 _selectedTaskStatusItem = value;
                 TaskStatus = _selectedTaskStatusItem?.Content?.ToString();
                 OnPropertyChanged(nameof(SelectedTaskStatusItem));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
 
@@ -119,6 +129,7 @@ namespace ToDoListApp.MVVM.ViewModel
                 _selectedTaskPriorityItem = value;
                 TaskPriority = _selectedTaskPriorityItem?.Content?.ToString();
                 OnPropertyChanged(nameof(SelectedTaskPriorityItem));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
         public ObservableCollection<Category> SelectedCategories { get; set; }
@@ -130,6 +141,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _isAddCategoryChecked = value;
                 OnPropertyChanged(nameof(IsAddCategoryChecked));
+                OnPropertyChanged(nameof(ValidationString));
                 if (!value)
                 {
                     // Jeśli przycisk został odznaczony, dodaj nową kategorię na liście
@@ -149,6 +161,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _newCategoryName = value;
                 OnPropertyChanged(nameof(NewCategoryName));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
         private ICommand _selectionChangedCommand;
@@ -159,9 +172,10 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _selectionChangedCommand = value;
                 OnPropertyChanged(nameof(SelectionChangedCommand));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
-
+        //SubTaski
         public ObservableCollection<Subtask> Subtasks { get; set; }
         //repository
         private readonly ToDoDbContext _context;
@@ -173,6 +187,71 @@ namespace ToDoListApp.MVVM.ViewModel
         //użytkownik
         public string CurrentUsername { get; set; }
         private UserModel _loggedInUser;
+
+        //Walidacja
+        public string this[string columnName]
+        {
+            get
+            {
+                if (columnName == nameof(TaskName))
+                {
+                    if (string.IsNullOrEmpty(TaskName))
+                    {
+                        return "Task Name is required.";
+                    }
+                }
+                else if (columnName == nameof(TaskPriority))
+                {
+                    if (string.IsNullOrEmpty(TaskPriority))
+                    {
+                        return "Priority is required.";
+                    }
+                }
+                else if (columnName == nameof(TaskStatus))
+                {
+                    if (string.IsNullOrEmpty(TaskStatus))
+                    {
+                        return "Status is required.";
+                    }
+                }
+                return null;
+            }
+        }
+        public string Error => throw new NotImplementedException();
+        public string ValidationString
+        {
+            get
+            {
+                // Sprawdź, czy istnieją jakieś błędy walidacji dla poszczególnych właściwości
+                var propertyErrors = typeof(CreateTaskViewModel)
+                    .GetProperties()
+                    .Where(p => this[p.Name] != null)
+                    .Select(p => this[p.Name]);
+
+                // Sprawdź, czy istnieją błędy walidacji dla innych warunków
+                var otherErrors = GetOtherValidationErrors(); // Zaimplementuj tę metodę, aby zwracała inne błędy walidacji
+
+                // Połącz wszystkie błędy walidacji w jeden ciąg tekstowy
+                var validationErrors = propertyErrors.Concat(otherErrors);
+                return string.Join(Environment.NewLine, validationErrors);
+            }
+        }
+        private IEnumerable<string> GetOtherValidationErrors()
+        {
+            List<string> errors = new List<string>();
+
+            // Sprawdź, czy data zakończenia jest późniejsza niż data rozpoczęcia
+            if (TaskEndDate.HasValue && TaskStartDate.HasValue && TaskEndDate < TaskStartDate)
+            {
+                errors.Add("End date cannot be earlier than start date.");
+            }
+            if (SelectedCategories.Count == 0)
+            {
+                errors.Add("At least one category is required.");
+            }
+
+            return errors;
+        }
 
         public CreateTaskViewModel()
         {
@@ -252,21 +331,26 @@ namespace ToDoListApp.MVVM.ViewModel
             }
 
             OnPropertyChanged(nameof(SelectedCategories));
+            OnPropertyChanged(nameof(ValidationString));
         }
+
+
         private void ExecuteAddTaskCommand(object obj)
-        {   
+        {
+            if (!string.IsNullOrEmpty(ValidationString))
+            {
+                // Jeśli istnieją błędy walidacyjne, przerwij wykonanie funkcji
+                return;
+            }
             var currentUser = _userRepository.GetByUsername(CurrentUsername);
             if (currentUser == null)
             {
-                // Jeśli nie można znaleźć użytkownika, możesz podjąć odpowiednie działania.
                 return;
             }
             var planner = _context.Planners.SingleOrDefault(p => p.User.Id == currentUser.Id);
 
             if (planner == null)
             {
-                // Jeśli Planner nie istnieje, możesz podjąć odpowiednie działania, na przykład utworzyć nowy Planner dla bieżącego użytkownika.
-                // Jeśli nie jest to wymagane, możesz rzucić wyjątek lub zwrócić informację użytkownikowi o braku Plannera.
                 return;
             }
             var task = new MainTask

@@ -87,8 +87,10 @@
         </ItemsControl>
         <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding NewCategoryName}" Visibility="{Binding IsAddCategoryChecked, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="5" />
         <Button Grid.Row="9" Grid.Column="1" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
-        <Button Grid.Row="10" Grid.Column="0" Content="Add Task" Command="{Binding AddTaskCommand}" Margin="5" />
+        <Button Grid.Row="10" Grid.Column="0" Content="Add Task" Command="{Binding AddTaskCommand}" Margin="5"/>
+
         <Button Grid.Row="10" Grid.Column="1" Content="Add SubTask" Command="{Binding AddSubtaskCommand}" Margin="5" />
-        
+        <TextBlock Grid.Row="11" Text="{Binding ValidationString}" Foreground="Red" Margin="5" />
+
     </Grid>
 </UserControl>
