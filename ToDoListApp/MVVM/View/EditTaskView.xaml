@@ -24,24 +24,25 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:"/>
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedTask.Name, Mode=TwoWay}"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedTask.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Description:"/>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedTask.Description, Mode=TwoWay}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding SelectedTask.Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="2" Grid.Column="0" Text="Deadline:"/>
-        <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding SelectedTask.Deadline, Mode=TwoWay}"/>
+        <DatePicker Grid.Row="2" Grid.Column="1" SelectedDate="{Binding SelectedTask.Deadline, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="3" Grid.Column="0" Text="StartDate:"/>
-        <DatePicker Grid.Row="3" Grid.Column="1" SelectedDate="{Binding SelectedTask.StartDate, Mode=TwoWay}"/>
+        <DatePicker Grid.Row="3" Grid.Column="1" SelectedDate="{Binding SelectedTask.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="4" Grid.Column="0" Text="EndDate:"/>
-        <DatePicker Grid.Row="4" Grid.Column="1" SelectedDate="{Binding SelectedTask.EndDate, Mode=TwoWay}"/>
+        <DatePicker Grid.Row="4" Grid.Column="1" SelectedDate="{Binding SelectedTask.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="5" Grid.Column="0" Text="Status:"/>
-        <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding statuses}" SelectedItem="{Binding SelectedTask.Status, Mode=TwoWay}"></ComboBox>
+        <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding statuses}" SelectedItem="{Binding SelectedTask.Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
         <TextBlock Grid.Row="6" Grid.Column="0" Text="Priority:"/>
-        <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding priorities}" SelectedItem="{Binding SelectedTask.Priority, Mode=TwoWay}"></ComboBox>
+        <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding priorities}" SelectedItem="{Binding SelectedTask.Priority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
         <TextBlock Grid.Row="7" Grid.Column="0" Text="Categories:"/>
         <ListBox x:Name="ListBoxCategories" Grid.Row="7" Grid.Column="1" SelectionMode="Extended"
-         ItemsSource="{Binding TaskCategories}" SelectedItem="{Binding ListBoxSelectedItems, Mode=TwoWay}"
+         ItemsSource="{Binding TaskCategories}" SelectedItem="{Binding ListBoxSelectedItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
          IsEnabled="{Binding IsListBoxEnabled}" Loaded="ListBoxCategories_Loaded">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -53,5 +54,6 @@
         <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding NewCategoryName}" Margin="5" IsEnabled="{Binding IsAddCategoryChecked}"/>
         <Button Grid.Row="9" Grid.Column="1" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
         <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Content="Save" Command="{Binding EditTaskCommand}"/>
+        <TextBlock Grid.Row="11" Text="{Binding ValidationString}" Foreground="Red" Margin="5" />
     </Grid>
 </UserControl>

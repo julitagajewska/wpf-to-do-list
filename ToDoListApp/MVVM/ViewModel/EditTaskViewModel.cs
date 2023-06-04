@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -17,7 +18,7 @@ using ToDoListApp.MVVM.Model.Services;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
-    public class EditTaskViewModel : ViewModelBase
+    public class EditTaskViewModel : ViewModelBase, IDataErrorInfo
     {
         private readonly ToDoDbContext _context;
         private readonly IUserRepository _userRepository;
@@ -31,6 +32,18 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _selectedTask = value;
                 OnPropertyChanged(nameof(SelectedTask));
+                OnPropertyChanged(nameof(ValidationString));
+            }
+        }
+         private string _taskName;
+        public string TaskName
+        {
+            get { return _taskName; }
+            set
+            {
+                _taskName = value;
+                OnPropertyChanged(nameof(TaskName));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
         //Status and Priority
@@ -60,6 +73,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _listBoxSelectedItems = value;
                 OnPropertyChanged(nameof(ListBoxSelectedItems));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
         public List<int> SelectedCategoriesIds { get; set; }
@@ -74,6 +88,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _isAddCategoryChecked = value;
                 OnPropertyChanged(nameof(IsAddCategoryChecked));
+                OnPropertyChanged(nameof(ValidationString));
                 if (!value)
                 {
                     // Jeśli przycisk został odznaczony, dodaj nową kategorię na liście
@@ -93,9 +108,82 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 _newCategoryName = value;
                 OnPropertyChanged(nameof(NewCategoryName));
+                OnPropertyChanged(nameof(ValidationString));
             }
         }
         public ICommand AddCategoryCommand { get; set; }
+        //Walidacja
+
+        public string this[string columnName]
+        {
+            get
+            {
+                if (SelectedTask != null)
+                {
+                    if (columnName == "TaskName")
+                    {
+                        if (string.IsNullOrEmpty(SelectedTask.Name))
+                        {
+                            return "Task Name is required.";
+                        }
+                    }
+                    else if (columnName == "TaskPriority")
+                    {
+                        if (string.IsNullOrEmpty(priority))
+                        {
+                            return "Priority is required.";
+                        }
+                    }
+                    else if (columnName == "TaskStatus")
+                    {
+                        if (string.IsNullOrEmpty(status))
+                        {
+                            return "Status is required.";
+                        }
+                    }
+                }
+                
+                return null;
+            }
+        }
+        public string Error => throw new NotImplementedException();
+        public string ValidationString
+        {
+            get
+            {
+                // Sprawdź, czy istnieją jakieś błędy walidacji dla poszczególnych właściwości
+                var propertyErrors = typeof(CreateTaskViewModel)
+                    .GetProperties()
+                    .Where(p => this[p.Name] != null)
+                    .Select(p => this[p.Name]);
+
+                // Sprawdź, czy istnieją błędy walidacji dla innych warunków
+                var otherErrors = GetOtherValidationErrors(); // Zaimplementuj tę metodę, aby zwracała inne błędy walidacji
+
+                // Połącz wszystkie błędy walidacji w jeden ciąg tekstowy
+                var validationErrors = propertyErrors.Concat(otherErrors);
+                return string.Join(Environment.NewLine, validationErrors);
+            }
+        }
+        private IEnumerable<string> GetOtherValidationErrors()
+        {
+            List<string> errors = new List<string>();
+
+            if(SelectedTask != null) {
+                // Sprawdź, czy data zakończenia jest późniejsza niż data rozpoczęcia
+                if (SelectedTask.EndDate.HasValue && SelectedTask.StartDate.HasValue && SelectedTask.EndDate < SelectedTask.StartDate)
+                {
+                    errors.Add("End date cannot be earlier than start date.");
+                }
+                if (ListBoxSelectedItems != null && ListBoxSelectedItems.Count == 0)
+                {
+                    errors.Add("At least one category is required.");
+                }
+            }
+            return errors;
+        }
+
+
         //użytkownik
         private UserModel _loggedInUser;
         public ICommand EditTaskCommand { get; set; }
@@ -156,6 +244,11 @@ namespace ToDoListApp.MVVM.ViewModel
         {
             if (SelectedTask != null)
             {
+                if (!string.IsNullOrEmpty(ValidationString))
+                {
+                    // Jeśli istnieją błędy walidacyjne, przerwij wykonanie funkcji
+                    return;
+                }
                 if (ListBoxSelectedItems.Count == 0)
                 {
                     // Wyświetl powiadomienie o konieczności wybrania kategorii
