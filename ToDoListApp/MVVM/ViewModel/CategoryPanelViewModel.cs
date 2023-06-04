@@ -140,10 +140,10 @@ namespace ToDoListApp.MVVM.ViewModel
         private IEnumerable<string> GetOtherValidationErrors()
         {
             List<string> errors = new List<string>();
-
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             if (SelectedCategory != null)
             {
-                ObservableCollection<Category> userCategories = _userRepository.GetUserCategories(_userRepository.GetCurrentUsername());
+                ObservableCollection<Category> userCategories = _userRepository.GetUserCategories(user);
                 bool categoryExists = userCategories.Any(category => category.Name.Equals(SelectedCategory.Name) && category != SelectedCategory);
 
                 if (categoryExists)
@@ -167,7 +167,8 @@ namespace ToDoListApp.MVVM.ViewModel
             DeleteCategoryCommand = new ViewModelCommand(ExecuteDeleteCategoryCommand);
             SaveCategoryCommand = new ViewModelCommand(ExecuteSaveCategoryCommand, CanExecuteSaveCategoryCommand);
             AddCategoryCommand = new ViewModelCommand(ExecuteAddCategoryCommand);
-            LoadUserCategories();
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            LoadUserCategories(user);
         }
         private void ExecuteAddCategoryCommand(object obj)
         {
@@ -195,10 +196,10 @@ namespace ToDoListApp.MVVM.ViewModel
                 
             }
         }
-        private void LoadUserCategories()
+        private void LoadUserCategories(UserModel user)
         {
-            string username = _loggedInUser.Username;
-            UserCategories = _userRepository.GetUserCategories(username);
+            //string username = _loggedInUser.Username;
+            UserCategories = _userRepository.GetUserCategories(user);
         }
         private void ExecuteEditCategoryCommand(object obj)
         {
@@ -248,7 +249,8 @@ namespace ToDoListApp.MVVM.ViewModel
                     _context.SaveChanges();
                 }
             }
-            LoadUserCategories();
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            LoadUserCategories(user);
         }
     }
 }
