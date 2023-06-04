@@ -23,6 +23,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:"/>
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding SelectedTask.Name, Mode=TwoWay}"/>
@@ -48,6 +49,9 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Content="Save" Command="{Binding EditTaskCommand}"/>
+        <CheckBox Grid.Row="8" Grid.Column="0" Content="Add New Category" IsChecked="{Binding IsAddCategoryChecked}" Margin="5"/>
+        <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding NewCategoryName}" Margin="5" IsEnabled="{Binding IsAddCategoryChecked}"/>
+        <Button Grid.Row="9" Grid.Column="1" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
+        <Button Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Content="Save" Command="{Binding EditTaskCommand}"/>
     </Grid>
 </UserControl>

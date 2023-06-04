@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -62,6 +63,41 @@ namespace ToDoListApp.MVVM.ViewModel
             }
         }
         public List<int> SelectedCategoriesIds { get; set; }
+        //Add new Category
+        private bool _isAddCategoryChecked;
+        private string _newCategoryName;
+        //User Categories
+        public bool IsAddCategoryChecked
+        {
+            get { return _isAddCategoryChecked; }
+            set
+            {
+                _isAddCategoryChecked = value;
+                OnPropertyChanged(nameof(IsAddCategoryChecked));
+                if (!value)
+                {
+                    // Jeśli przycisk został odznaczony, dodaj nową kategorię na liście
+                    if (!string.IsNullOrEmpty(NewCategoryName))
+                    {
+                        TaskCategories.Add(new Category { Name = NewCategoryName, IsCustom = true });
+                        NewCategoryName = string.Empty; // Wyczyść pole tekstowe
+                    }
+                }
+            }
+        }
+        //Add new Category
+        public string NewCategoryName
+        {
+            get { return _newCategoryName; }
+            set
+            {
+                _newCategoryName = value;
+                OnPropertyChanged(nameof(NewCategoryName));
+            }
+        }
+        public ICommand AddCategoryCommand { get; set; }
+        //użytkownik
+        private UserModel _loggedInUser;
         public ICommand EditTaskCommand { get; set; }
         public EditTaskViewModel(MainTask selectedTask)
         {
@@ -69,6 +105,7 @@ namespace ToDoListApp.MVVM.ViewModel
             _mainTaskService = new MainTaskService(_context);
             _userRepository = new UserRepository(_context);
             CurrentUsername = _userRepository.GetCurrentUsername();
+            _loggedInUser = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             SelectedTask = _context.MainTasks.Include(t => t.Categories).FirstOrDefault(t => t.Id == selectedTask.Id);
 
             EditTaskCommand = new ViewModelCommand(EditTask);
@@ -92,6 +129,28 @@ namespace ToDoListApp.MVVM.ViewModel
                 }
             }
             ListBoxSelectedItems = SelectedCategories;
+            AddCategoryCommand = new ViewModelCommand(ExecuteAddCategoryCommand);
+        }
+        private void ExecuteAddCategoryCommand(object obj)
+        {
+            bool categoryExists = TaskCategories.Any(category =>
+            category.Name.Equals(NewCategoryName, StringComparison.OrdinalIgnoreCase) &&
+            category.IsCustom);
+
+            if (!string.IsNullOrEmpty(NewCategoryName) && !categoryExists)
+            {
+                var category = new Category
+                {
+                    Name = NewCategoryName,
+                    IsCustom = true,
+                    Owner = _loggedInUser.Id // Przypisanie id Usera.
+                };
+
+                TaskCategories.Add(category);
+                _context.Categories.Add(category);
+                _context.SaveChanges();
+                NewCategoryName = string.Empty;
+            }
         }
         private void EditTask(object obj)
         {
