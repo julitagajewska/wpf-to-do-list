@@ -180,7 +180,8 @@ namespace ToDoListApp.MVVM.ViewModel
                     errors.Add("At least one category is required.");
                 }
                 //nowa kategoria
-                ObservableCollection<Category> userCategories = _userRepository.GetUserCategories(_userRepository.GetCurrentUsername());
+                var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+                ObservableCollection<Category> userCategories = _userRepository.GetUserCategories(user);
                 bool categoryExists = userCategories.Any(category => category.Name.Equals(NewCategoryName));
 
                 if (categoryExists)
@@ -208,7 +209,8 @@ namespace ToDoListApp.MVVM.ViewModel
             status = selectedTask.Status;
             priority = selectedTask.Priority;
             //Categories
-            TaskCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(CurrentUsername)
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            TaskCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(user)
                 .DistinctBy(category => category.Name)
                 .ToList());
 

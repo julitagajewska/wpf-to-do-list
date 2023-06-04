@@ -18,7 +18,7 @@ namespace ToDoListApp.MVVM.Model.Interfaces
         UserModel GetByUsername(string username);
         IEnumerable<UserModel> GetAlll();
         string GetCurrentUsername();
-        ObservableCollection<Category> GetUserCategories(string username);
+        ObservableCollection<Category> GetUserCategories(UserModel userModel);
         Planner GetPlannerByUsername(string username);
         // ...
     }

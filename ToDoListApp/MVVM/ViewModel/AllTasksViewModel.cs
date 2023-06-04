@@ -84,9 +84,10 @@ namespace ToDoListApp.MVVM.ViewModel
             ShowCreateTasksViewCommand = new ViewModelCommand(ExecuteShowCreateTasksViewCommand);
             ShowDetailsTaskViewCommand = new ViewModelCommand(ExecuteShowDetailsTaskViewCommand);
             AllCategoriesButtonCommand = new ViewModelCommand(ExecuteAllCategoriesButtonCommand);
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             // Load tasks from the database
             LoadTasks();
-            LoadUserCategories(loggedInUser.Username);
+            LoadUserCategories(user);
         }
 
         private void ExecuteShowCreateTasksViewCommand(object obj)
@@ -125,9 +126,9 @@ namespace ToDoListApp.MVVM.ViewModel
 
             //Tasks = new ObservableCollection<MainTask>(_context.MainTasks.Include(t => t.Categories).ToList());
         }
-        private void LoadUserCategories(string username)
+        private void LoadUserCategories(UserModel user)
         {
-            UserCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(username)
+            UserCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(user)
                 .DistinctBy(category => category.Name)
                 .ToList());
         }

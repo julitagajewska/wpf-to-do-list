@@ -10,6 +10,7 @@ using ToDoListApp.MVVM.Model.Services;
 using ToDoListApp.MVVM.Model;
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -77,7 +78,8 @@ namespace ToDoListApp.MVVM.ViewModel
             AllCategoriesButtonCommand = new ViewModelCommand(ExecuteAllCategoriesButtonCommand);
             // Load tasks from the database
             LoadTasks();
-            LoadUserCategories(loggedInUser.Username);
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            LoadUserCategories(user);
         }
         private void ExecuteShowDetailsTaskViewCommand(object obj)
         {
@@ -109,9 +111,9 @@ namespace ToDoListApp.MVVM.ViewModel
 
             //Tasks = new ObservableCollection<MainTask>(_context.MainTasks.Include(t => t.Categories).ToList());
         }
-        private void LoadUserCategories(string username)
+        private void LoadUserCategories(UserModel user)
         {
-            UserCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(username)
+            UserCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(user)
                 .DistinctBy(category => category.Name)
                 .ToList());
         }

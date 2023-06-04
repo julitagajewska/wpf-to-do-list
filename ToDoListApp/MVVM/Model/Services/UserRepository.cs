@@ -99,9 +99,9 @@ namespace ToDoListApp.MVVM.Model.Services
             return null;
         }
 
-        public ObservableCollection<Category> GetUserCategories(string username)
+        public ObservableCollection<Category> GetUserCategories(UserModel user)
         {
-            UserModel user = GetByUsername(username);
+            //UserModel user = GetByUsername(username);
             if (user != null && user.Planner != null)
             {
                 List<Category> userCategories = _context.MainTasks //Kategorie, które są przypisane do tasków
