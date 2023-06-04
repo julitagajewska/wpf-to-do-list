@@ -31,5 +31,16 @@ namespace ToDoListApp.MVVM.Model.Services
             // Zapisz zmiany w bazie danych
             _context.SaveChanges();
         }
+        public void DeleteCategory(Category category)
+        {
+            if (!_context.Categories.Local.Contains(category))
+            {
+                _context.Categories.Attach(category);
+            }
+
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+        }
+
     }
 }

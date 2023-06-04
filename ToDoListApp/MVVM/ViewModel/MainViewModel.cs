@@ -98,6 +98,7 @@ namespace ToDoListApp.MVVM.ViewModel
         public ICommand ShowAllTasksViewCommand { get; set; }
         public ICommand ShowArchiveViewCommand { get; set; }
         public ICommand ShowProfileViewCommand { get; set; }
+        public ICommand ShowCategoryPanelViewCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
 
         public MainViewModel()
@@ -110,13 +111,14 @@ namespace ToDoListApp.MVVM.ViewModel
             Messenger.Subscribe("ShowAllTasksView", ExecuteShowAllTasksViewCommand);
             Messenger.Subscribe("ShowDetailsTaskView", ShowDetailsTaskView);
             Messenger.Subscribe("ShowCategoryPanelView", ExecuteShowCategoryPanelView);
+            Messenger.Subscribe("ShowEditTasksView", ExecuteShowEditTasksView);
 
             // Initialize commands
             ShowOverviewViewCommand = new ViewModelCommand(ExecuteShowOverviewViewCommand);
             ShowAllTasksViewCommand = new ViewModelCommand(ExecuteShowAllTasksViewCommand);
             ShowArchiveViewCommand = new ViewModelCommand(ExecuteShowArchiveViewCommand);
             ShowProfileViewCommand = new ViewModelCommand(ExecuteShowProfileViewCommand);
-
+            ShowCategoryPanelViewCommand = new ViewModelCommand(ExecuteShowCategoryPanelView);
 
             LogOutCommand = new ViewModelCommand(ExecuteLogOutcommand);
 
@@ -174,7 +176,8 @@ namespace ToDoListApp.MVVM.ViewModel
 
         private void ExecuteShowArchiveViewCommand(object obj)
         {
-            CurrentChildView = new ArchiveViewModel();
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            CurrentChildView = new ArchiveViewModel(user);
             Caption = "Archive";
             addTaskVisibility = "Hidden";
             username = CurrentUserAccount.Username;
@@ -195,6 +198,15 @@ namespace ToDoListApp.MVVM.ViewModel
                 CurrentChildView = new DetailsTaskViewModel(selectedTask);
             }
             
+        }
+        private void ExecuteShowEditTasksView(object payload)
+        {
+            if (payload is MainTask selectedTask)
+            {
+                Caption = selectedTask.Name;
+                CurrentChildView = new EditTaskViewModel(selectedTask);
+            }
+
         }
         private void ExecuteShowCategoryPanelView(object obj)//TUTAJ OGARNIJ
         {

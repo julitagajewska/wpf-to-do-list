@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
         xmlns:mvvm="clr-namespace:ToDoListApp.MVVM.ViewModel"
-        xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model"
+        xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model.Converters"
         mc:Ignorable="d" 
         d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -52,7 +52,7 @@
         </TextBlock>
         <TextBlock Grid.Row="8" Grid.Column="0" Text="SubTasks:"/>
         <TextBlock Grid.Row="8" Grid.Column="1"  Text="{Binding SelectedTask.Subtasks}"/>
-        <Button Grid.Row="9" Grid.Column="0" Content="Edit Task" Command="{Binding EditTasksViewCommand}" Margin="0,40,0,0" />
-        <Button Grid.Row="9" Grid.Column="1" Content="Delete Task" Command="{Binding DeleteTasksViewCommand}" Margin="0,40,0,0" />
+        <Button Grid.Row="9" Grid.Column="0" Content="Edit Task" Margin="0,40,0,0" Command="{Binding DataContext.EditTasksViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
+        <Button Grid.Row="9" Grid.Column="1" Content="Delete Task" Margin="0,40,0,0" Command="{Binding DataContext.DeleteTasksViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding SelectedTask}" />
     </Grid>
 </UserControl>

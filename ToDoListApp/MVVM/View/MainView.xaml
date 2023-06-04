@@ -31,7 +31,13 @@
         <DataTemplate DataType="{x:Type viewModel:DetailsTaskViewModel}">
             <local:DetailsTaskView />
         </DataTemplate>
+<<<<<<< HEAD
         
+=======
+        <DataTemplate DataType="{x:Type viewModel:EditTaskViewModel}">
+            <local:EditTaskView />
+        </DataTemplate>
+>>>>>>> Ola
         <DataTemplate DataType="{x:Type viewModel:ArchiveViewModel}">
             <local:ArchiveView />
         </DataTemplate>
@@ -118,7 +124,17 @@
                                 <TextBlock Text="All tasks" Style="{StaticResource sidebarButtonText}" />
                             </StackPanel>
                         </RadioButton>
+                        <!-- Categories -->
+                        <RadioButton
+                            Style="{StaticResource sidebarButton}"
+                            Tag="{StaticResource Highlight}"
+                            Command="{Binding ShowCategoryPanelViewCommand}">
 
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Icon="ListCheck"  Style="{StaticResource sidebarButtonIcon}" />
+                                <TextBlock Text="Categories" Style="{StaticResource sidebarButtonText}" />
+                            </StackPanel>
+                        </RadioButton>
                         <!-- Archive -->
                         <RadioButton
                             Style="{StaticResource sidebarButton}"
