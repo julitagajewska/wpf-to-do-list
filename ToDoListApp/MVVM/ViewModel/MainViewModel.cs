@@ -67,6 +67,7 @@ namespace ToDoListApp.MVVM.ViewModel
         public ICommand ShowAllTasksViewCommand { get; set; }
         public ICommand ShowArchiveViewCommand { get; set; }
         public ICommand ShowProfileViewCommand { get; set; }
+        public ICommand ShowCategoryPanelViewCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
 
         public MainViewModel()
@@ -85,7 +86,7 @@ namespace ToDoListApp.MVVM.ViewModel
             ShowAllTasksViewCommand = new ViewModelCommand(ExecuteShowAllTasksViewCommand);
             ShowArchiveViewCommand = new ViewModelCommand(ExecuteShowArchiveViewCommand);
             ShowProfileViewCommand = new ViewModelCommand(ExecuteShowProfileViewCommand);
-
+            ShowCategoryPanelViewCommand = new ViewModelCommand(ExecuteShowCategoryPanelView);
 
             LogOutCommand = new ViewModelCommand(ExecuteLogOutcommand);
 

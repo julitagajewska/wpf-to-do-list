@@ -117,7 +117,17 @@
                                 <TextBlock Text="All tasks" Style="{StaticResource sidebarButtonText}" />
                             </StackPanel>
                         </RadioButton>
+                        <!-- Categories -->
+                        <RadioButton
+                            Style="{StaticResource sidebarButton}"
+                            Tag="{StaticResource Highlight}"
+                            Command="{Binding ShowCategoryPanelViewCommand}">
 
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Icon="ListCheck"  Style="{StaticResource sidebarButtonIcon}" />
+                                <TextBlock Text="Categories" Style="{StaticResource sidebarButtonText}" />
+                            </StackPanel>
+                        </RadioButton>
                         <!-- Archive -->
                         <RadioButton
                             Style="{StaticResource sidebarButton}"
