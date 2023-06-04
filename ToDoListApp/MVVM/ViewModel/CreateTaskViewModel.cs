@@ -25,7 +25,6 @@ namespace ToDoListApp.MVVM.ViewModel
         private DateTime? _taskDeadline;
         private DateTime? _taskStartDate;
         private DateTime? _taskEndDate;
-        private string _taskStatus;
         private string _taskPriority;
         public string TaskName
         {
@@ -81,16 +80,6 @@ namespace ToDoListApp.MVVM.ViewModel
             }
         }
 
-        public string TaskStatus
-        {
-            get { return _taskStatus; }
-            set
-            {
-                _taskStatus = value;
-                OnPropertyChanged(nameof(TaskStatus));
-                OnPropertyChanged(nameof(ValidationString));
-            }
-        }
         public string TaskPriority
         {
             get { return _taskPriority; }
@@ -104,23 +93,9 @@ namespace ToDoListApp.MVVM.ViewModel
         public ObservableCollection<Category> TaskCategories { get; set; }
         
         //wybór 
-        private ComboBoxItem _selectedTaskStatusItem;
         private ComboBoxItem _selectedTaskPriorityItem;
         private bool _isAddCategoryChecked;
         private string _newCategoryName;
-
-        public ComboBoxItem SelectedTaskStatusItem
-        {
-            get { return _selectedTaskStatusItem; }
-            set
-            {
-                _selectedTaskStatusItem = value;
-                TaskStatus = _selectedTaskStatusItem?.Content?.ToString();
-                OnPropertyChanged(nameof(SelectedTaskStatusItem));
-                OnPropertyChanged(nameof(ValidationString));
-            }
-        }
-
         public ComboBoxItem SelectedTaskPriorityItem
         {
             get { return _selectedTaskPriorityItem; }
@@ -205,13 +180,6 @@ namespace ToDoListApp.MVVM.ViewModel
                     if (string.IsNullOrEmpty(TaskPriority))
                     {
                         return "Priority is required.";
-                    }
-                }
-                else if (columnName == nameof(TaskStatus))
-                {
-                    if (string.IsNullOrEmpty(TaskStatus))
-                    {
-                        return "Status is required.";
                     }
                 }
                 return null;
@@ -371,7 +339,7 @@ namespace ToDoListApp.MVVM.ViewModel
                 Deadline = TaskDeadline,
                 StartDate = TaskStartDate,
                 EndDate = TaskEndDate,
-                Status = TaskStatus,
+                Status = "To Do",
                 Priority = TaskPriority,
                 Categories = SelectedCategories.ToList(),
                 Subtasks = Subtasks.ToList(),
