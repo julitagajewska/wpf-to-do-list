@@ -114,7 +114,7 @@ namespace ToDoListApp.MVVM.ViewModel
                 // Pobierz zadania związane z plannerm zalogowanego użytkownika
                 Tasks = new ObservableCollection<MainTask>(_context.MainTasks
                     .Include(t => t.Categories)
-                    .Where(t => t.PlannerId == _loggedInUser.PlannerId)
+                    .Where(t => t.PlannerId == _loggedInUser.PlannerId && (t.Status == "To Do" || t.Status == "In Progress"))
                     .ToList());
             }
             // Retrieve all tasks from the database

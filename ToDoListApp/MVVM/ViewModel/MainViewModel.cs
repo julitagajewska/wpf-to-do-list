@@ -129,7 +129,8 @@ namespace ToDoListApp.MVVM.ViewModel
 
         private void ExecuteShowArchiveViewCommand(object obj)
         {
-            CurrentChildView = new ArchiveViewModel();
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            CurrentChildView = new ArchiveViewModel(user);
             Caption = "Archive";
         }
         private void ShowCreateTasksView(object parameter)
