@@ -12,6 +12,7 @@ using ToDoListApp.MVVM.View;
 using ToDoListApp.MVVM.Model.Services;
 using ToDoListApp.Data;
 using Microsoft.VisualBasic.ApplicationServices;
+using ToDoListApp.Store;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -19,10 +20,14 @@ namespace ToDoListApp.MVVM.ViewModel
     {
         // Fields
         private UserAccountModel _currentUserAccount;
+        private readonly ToDoDbContext _context;
+        private IUserRepository _userRepository;
         private ViewModelBase _currentChildView;
         private string _caption;
-        private IUserRepository _userRepository;
-        private readonly ToDoDbContext _context;
+        private MainViewStore store;
+
+        private string _addTaskVisibility;
+        private string _username;
 
         public UserAccountModel CurrentUserAccount
         {
@@ -62,6 +67,32 @@ namespace ToDoListApp.MVVM.ViewModel
             }
         }
 
+        public string addTaskVisibility
+        {
+            get
+            {
+                return _addTaskVisibility;
+            }
+            set
+            {
+                _addTaskVisibility = value;
+                OnPropertyChanged(nameof(addTaskVisibility));
+            }
+        }
+
+        public string username
+        {
+            get
+            {
+                return _username;
+            }
+            set
+            {
+                _username = value;
+                OnPropertyChanged(nameof(username));
+            }
+        }
+
         // Commands
         public ICommand ShowOverviewViewCommand { get; set; }
         public ICommand ShowAllTasksViewCommand { get; set; }
@@ -74,6 +105,7 @@ namespace ToDoListApp.MVVM.ViewModel
             _context = new ToDoDbContext(); // Create an instance of ToDoDbContext
             _userRepository = new UserRepository(_context); // Pass the ToDoDbContext instance to the UserRepository constructor
             CurrentUserAccount = new UserAccountModel();
+
             Messenger.Subscribe("ShowCreateTasksView", ShowCreateTasksView);
             Messenger.Subscribe("ShowAllTasksView", ExecuteShowAllTasksViewCommand);
             Messenger.Subscribe("ShowDetailsTaskView", ShowDetailsTaskView);
@@ -88,17 +120,26 @@ namespace ToDoListApp.MVVM.ViewModel
 
             LogOutCommand = new ViewModelCommand(ExecuteLogOutcommand);
 
+            store = new MainViewStore();
+
+            store.AddTaskVisibilityChanged += OnAddTaskVisibilityChanged;
+
             // Deafult view
             ExecuteShowOverviewViewCommand(null);
 
             LoadCurrentUserData();
         }
 
+        private void OnAddTaskVisibilityChanged(string value)
+        {
+            addTaskVisibility = value;
+        }
+
         private void ExecuteLogOutcommand(object obj)
         {
             Thread.CurrentPrincipal = null;
 
-            var loginView = new LoginView();
+            var loginView = new WelcomeView();
             loginView.Show();
 
             var mainView = new MainView();
@@ -110,6 +151,8 @@ namespace ToDoListApp.MVVM.ViewModel
         {
             CurrentChildView = new OverviewViewModel();
             Caption = "Overview";
+            addTaskVisibility = "Visible";
+            username = CurrentUserAccount.Username;
         }
 
         private void ExecuteShowAllTasksViewCommand(object obj)
@@ -117,28 +160,37 @@ namespace ToDoListApp.MVVM.ViewModel
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             CurrentChildView = new AllTasksViewModel(user);
             Caption = "All tasks";
+            addTaskVisibility = "Visible";
+            username = CurrentUserAccount.Username;
         }
 
         private void ExecuteShowProfileViewCommand(object obj)
         {
             CurrentChildView = new ProfileViewModel();
-            Caption = CurrentUserAccount.Username;
+            Caption = "User's profile";
+            addTaskVisibility = "Hidden";
+            username = CurrentUserAccount.Username;
         }
 
         private void ExecuteShowArchiveViewCommand(object obj)
         {
             CurrentChildView = new ArchiveViewModel();
             Caption = "Archive";
+            addTaskVisibility = "Hidden";
+            username = CurrentUserAccount.Username;
         }
         private void ShowCreateTasksView(object parameter)
         {
             CurrentChildView = new CreateTaskViewModel();
             Caption = "Create Task";
+            addTaskVisibility = "Hidden";
+            username = CurrentUserAccount.Username;
         }
         private void ShowDetailsTaskView(object payload)
         {
             if (payload is MainTask selectedTask)
             {
+                addTaskVisibility = "Hidden";
                 Caption = selectedTask.Name;
                 CurrentChildView = new DetailsTaskViewModel(selectedTask);
             }
@@ -149,6 +201,7 @@ namespace ToDoListApp.MVVM.ViewModel
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             CurrentChildView = new CategoryPanelViewModel(user);
             Caption = "Category Panel";
+            addTaskVisibility = "Hidden";
         }
         private void LoadCurrentUserData()
         {   

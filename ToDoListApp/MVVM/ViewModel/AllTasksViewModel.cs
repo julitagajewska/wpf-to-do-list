@@ -17,6 +17,7 @@ using ToDoListApp.MVVM.View;
 using Microsoft.EntityFrameworkCore;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Windows.Controls;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -84,6 +85,7 @@ namespace ToDoListApp.MVVM.ViewModel
             ShowCreateTasksViewCommand = new ViewModelCommand(ExecuteShowCreateTasksViewCommand);
             ShowDetailsTaskViewCommand = new ViewModelCommand(ExecuteShowDetailsTaskViewCommand);
             AllCategoriesButtonCommand = new ViewModelCommand(ExecuteAllCategoriesButtonCommand);
+
             // Load tasks from the database
             LoadTasks();
             LoadUserCategories(loggedInUser.Username);
@@ -131,6 +133,7 @@ namespace ToDoListApp.MVVM.ViewModel
                 .DistinctBy(category => category.Name)
                 .ToList());
         }
+
         private void FilterTasksByCategory()
         {
             LoadTasks();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ToDoListApp.MVVM.Model
 {
@@ -28,6 +29,11 @@ namespace ToDoListApp.MVVM.Model
         {
             if (_subscribers.ContainsKey(message))
                 _subscribers[message]?.Invoke(parameter);
+        }
+
+        internal static void Subscribe(string v, ICommand? showLoginViewCommand)
+        {
+            throw new NotImplementedException();
         }
     }
 }

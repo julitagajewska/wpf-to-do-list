@@ -11,19 +11,23 @@ using System.Windows.Input;
 using ToDoListApp.Data;
 using ToDoListApp.MVVM.Model.Interfaces;
 using ToDoListApp.MVVM.Model.Services;
+using ToDoListApp.Store;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
-    public class LoginViewModel : ViewModelBase
+    internal class LoginViewModel : ViewModelBase
     {
-
         // Fields
         private string _username;
         private SecureString _password;
         private string _errorMessage;
         private bool _isViewVisible = true;
+        private WelcomeViewModel welcomeViewModel;
         private readonly ToDoDbContext _context;
         private readonly IUserRepository _userRepository;
+        private readonly WelcomePageVisibilityStore _visibilityStore;
+
+        //private WelcomeViewModel _parent;
 
         public string Username
         {
@@ -31,7 +35,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 return _username;
             }
-            
+
             set
             {
                 _username = value;
@@ -87,20 +91,25 @@ namespace ToDoListApp.MVVM.ViewModel
         public ICommand ShowPasswordCommand { get; }
         public ICommand RememberPasswordCommand { get; }
 
+
         // Constructor
-        public LoginViewModel()
+        public LoginViewModel(WelcomePageVisibilityStore visibilityStore)
         {
             _context = new ToDoDbContext();
             _userRepository = new UserRepository(_context);
+
             LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
             RecoverPasswordCommand = new ViewModelCommand(p => ExecuteRecoverPasswordCommand("", ""));
+
+            //_parent = parent;
+            _visibilityStore = visibilityStore;
         }
 
         private bool CanExecuteLoginCommand(object obj) // Validation here
         {
             bool validData;
 
-            if(string.IsNullOrWhiteSpace(Username) || Username.Length < 3 || Password == null || Password.Length < 3)
+            if (string.IsNullOrWhiteSpace(Username) || Username.Length < 3 || Password == null || Password.Length < 3)
             {
                 validData = false;
             }
@@ -121,12 +130,14 @@ namespace ToDoListApp.MVVM.ViewModel
                 Thread.CurrentPrincipal = new GenericPrincipal(
                     new GenericIdentity(Username), null);
 
-                IsViewVisible = false;
+                //_parent.IsViewVisible = false;
+                _visibilityStore.ChangeVisibilty(false);
             }
             else
             {
                 ErrorMessage = "Invalid username or password";
-                IsViewVisible = true;
+                //_parent.IsViewVisible = true;
+                _visibilityStore.ChangeVisibilty(true);
             }
         }
 
@@ -134,6 +145,5 @@ namespace ToDoListApp.MVVM.ViewModel
         {
             throw new NotImplementedException();
         }
-
     }
 }

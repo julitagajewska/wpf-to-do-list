@@ -13,22 +13,20 @@ using ToDoListApp.MVVM.ViewModel;
 
 namespace ToDoListApp
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
         protected void ApplicationStart(object sender, StartupEventArgs e)
         {
-            var loginView = new LoginView();
-            loginView.Show();
-            loginView.IsVisibleChanged += (s, ev) =>
+            var welcomeView = new WelcomeView();
+            welcomeView.Show();
+
+            welcomeView.IsVisibleChanged += (s, ev) =>
             {
-                if(loginView.IsVisible == false && loginView.IsLoaded)
+                if(welcomeView.IsVisible == false && welcomeView.IsLoaded)
                 {
                     var mainView = new MainView();
                     mainView.Show();
-                    loginView.Close();
+                    welcomeView.Close();
                 }
             };
         }

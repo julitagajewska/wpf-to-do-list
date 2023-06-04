@@ -27,5 +27,14 @@ namespace ToDoListApp.MVVM.View
             InitializeComponent();
         }
 
+        private void FilteringTextBox_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 }

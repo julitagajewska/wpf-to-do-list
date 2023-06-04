@@ -10,8 +10,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Fonts\**" />
+    <Compile Remove="Models\**" />
+    <Compile Remove="Theme\**" />
+    <EmbeddedResource Remove="Fonts\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Theme\**" />
+    <None Remove="Fonts\**" />
+    <None Remove="Models\**" />
+    <None Remove="Theme\**" />
+    <Page Remove="Fonts\**" />
+    <Page Remove="Models\**" />
+    <Page Remove="Theme\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Images\key-icon.png" />
     <None Remove="Images\login-background.jpg" />
+    <None Remove="Images\profile-picture.jpg" />
     <None Remove="Images\user-icon.png" />
   </ItemGroup>
 
@@ -23,10 +39,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fonts\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Models\" />
-    <Folder Include="Theme\" />
+    <Folder Include="Commands\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,20 +57,24 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="System.ObjectModel" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\profile-picture.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\key-icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="Images\login-background.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\user-icon.png">
+    <Resource Include="Images\user-icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -64,7 +82,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Styles\UIContainers.xaml" />
-    <Resource Include="Styles\UILogin.xaml" />
+    <Resource Include="Styles\UILogin.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Styles\UITexts.xaml" />
   </ItemGroup>
 	
