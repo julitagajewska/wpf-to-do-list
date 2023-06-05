@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ToDoListApp.MVVM.View
+namespace ToDoListApp.CustomControls
 {
     /// <summary>
-    /// Interaction logic for LoginView.xaml
+    /// Interaction logic for CustomComboBox.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class CustomComboBox : UserControl
     {
-        public LoginView()
+        public CustomComboBox()
         {
             InitializeComponent();
         }

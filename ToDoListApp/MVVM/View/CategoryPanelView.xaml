@@ -5,20 +5,74 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
         xmlns:mvvm="clr-namespace:ToDoListApp.MVVM.ViewModel"
+        xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+        xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model.Converters"
         mc:Ignorable="d"
-        d:DesignHeight="450" d:DesignWidth="800" Background="White">
+        d:DesignHeight="450" d:DesignWidth="800" Background="Transparent">
+    
+    <UserControl.Resources>
+        <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
     
     <Grid>
-        <ItemsControl ItemsSource="{Binding UserCategories}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="80"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="80"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Text="Name" Foreground="#80FFFFFF" HorizontalAlignment="Left" />
+            <TextBlock Grid.Column="2" Text="Action" Foreground="#80FFFFFF" HorizontalAlignment="Right" />
+        </Grid>
+
+
+        <ItemsControl Grid.Row="2" Grid.Column="1" ItemsSource="{Binding UserCategories}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" />
-                        <Button Content="Edit" Command="{Binding EditCategoryCommand}" CommandParameter="{Binding}"/>
-                        <Button Content="Delete" Command="{Binding DeleteCategoryCommand}" CommandParameter="{Binding}"/>
-                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Text="{Binding Name}" Grid.Column="0" Foreground="#80FFFFFF" />
+                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                            <Button Style="{StaticResource categoriesEditButton}" Margin="0 0 10 0" Command="{Binding DataContext.EditCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}">
+                                <fa:IconImage Icon="Pen" Width="12"  Style="{StaticResource controlPanelButtonIcon}" />
+                            </Button>
+                            <Button Style="{StaticResource categoriesEditButton}" Command="{Binding DataContext.DeleteCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}">
+                                <fa:IconImage Icon="Trash" Width="12"  Style="{StaticResource controlPanelButtonIcon}" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+        
+        <!--<CheckBox Grid.Row="1" Grid.Column="1" Content="Add New Category" IsChecked="{Binding IsAddCategoryChecked}" Margin="5" Visibility="{Binding IsAddCategoryVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding NewCategoryName}" Margin="5" IsEnabled="{Binding IsAddCategoryChecked}"/>
+        <Button Grid.Row="4" Grid.Column="1" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5" Visibility="{Binding IsAddCategoryVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        
+        <TextBox Text="{Binding SelectedCategory.Name}" Visibility="{Binding SelectedCategory, Converter={StaticResource NullToVisibilityConverter}}" />
+        <TextBlock Grid.Row="5" Grid.Column="1"  Foreground="Red" Margin="5" Visibility="{Binding ValidationString, Converter={StaticResource NullToVisibilityConverter}}"/>
+        <Button Grid.Row="3" Grid.Column="1" Content="Save" Command="{Binding SaveCategoryCommand}" CommandParameter="{Binding SelectedCategory}" Visibility="{Binding SelectedCategory, Converter={StaticResource NullToVisibilityConverter}}" />
     </Grid>
 </UserControl>

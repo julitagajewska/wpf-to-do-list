@@ -5,56 +5,147 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
              xmlns:mvvm="clr-namespace:ToDoListApp.MVVM.ViewModel"
+             xmlns:customcontrols="clr-namespace:ToDoListApp.CustomControls"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model">
+             xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model.Converters" xmlns:ei1="http://schemas.microsoft.com/xaml/behaviors">
 
     <UserControl.Resources>
         <converters:CategoriesToStringConverter x:Key="CategoriesToStringConverter" />
         <DataTemplate DataType="{x:Type mvvm:CreateTaskViewModel}">
             <local:CreateTaskView />
         </DataTemplate>
-    </UserControl.Resources>
+    </UserControl.Resources> 
 
-    <Grid>
+    <Grid Margin="-10,0,10,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="463*" />
+            <ColumnDefinition Width="177*"/>
+            <ColumnDefinition Width="80" />
         </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0">
-            <Button Content="Dodaj zadanie" Command="{Binding ShowCreateTasksViewCommand}" Margin="0,40,0,0" />
-            <ContentControl Content="{Binding CurrentChildView}" />
+
+
+        <!-- Category Tabs -->
+        <!--<StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+            <Button Content="All" Style="{StaticResource tabButton}" BorderBrush="#00CDCF" BorderThickness="0 0 0 2"/>
+            <Button Content="Home" Style="{StaticResource tabButton}" />
+            <Button Content="Work" Style="{StaticResource tabButton}" />
+            <Button Content="University" Style="{StaticResource tabButton}" />
+        </StackPanel>-->
+
+        <!-- Task Count + Filtering -->
+        <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="130" />
+                <ColumnDefinition Width="130" />
+                <ColumnDefinition Width="130" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="150" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="6971 Tasks" Foreground="White" FontSize="16" VerticalAlignment="Center" FontWeight="DemiBold" />
+
+            <Button Grid.Column="1" Style="{StaticResource buttonWithIcon}" Visibility="{Binding addTaskVisibility}" Command="{Binding ShowCreateTasksViewCommand}">
+                <StackPanel  Orientation="Horizontal" VerticalAlignment="Center">
+                    <fa:IconImage Icon="Plus" Width="10" Height="10" Foreground="White" Margin="0 0 10 0" />
+                    <TextBlock Text="New task" />
+                </StackPanel>
+            </Button>
+
+            <!--<Button Grid.Column="2" Style="{StaticResource buttonWithIcon}" Visibility="{Binding addTaskVisibility}" Command="{Binding ShowCreateTasksViewCommand}">
+                <StackPanel  Orientation="Horizontal" VerticalAlignment="Center">
+                    <fa:IconImage Icon="ChevronDown" Width="10" Height="10" Foreground="White" Margin="0 0 10 0" />
+                    <TextBlock Text="Category" />
+                </StackPanel>
+            </Button>-->
+            <Button Grid.Column="2" Style="{StaticResource buttonWithIcon}" Visibility="{Binding addTaskVisibility}" Command="{Binding AllCategoriesButtonCommand}" Click="Button_Click">
+                <StackPanel  Orientation="Horizontal" VerticalAlignment="Center">
+                    <fa:IconImage Icon="CheckDouble" Width="10" Height="10" Foreground="White" Margin="0 0 10 0" />
+                    <TextBlock Text="All tasks" />
+                </StackPanel>
+            </Button>
+
+
+            <Grid Grid.Row="1" Grid.Column="3" VerticalAlignment="Center">
+                <ComboBox x:Name="categoryComboBox" ItemsSource="{Binding UserCategories}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory}" Style="{StaticResource msComboBox}" />
+                <TextBlock x:Name="categoryComboBoxPlaceholder" Text="Select category ..." VerticalAlignment="Center" Margin="10 0 0 0" Foreground="#80FFFFFF"  IsHitTestVisible="False" Opacity="0.5" >
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=categoryComboBox,Path=SelectedItem}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+
+
+            <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <customcontrols:FilteringTextBox PlaceholderText="Filter tasks ..."/>
+            </StackPanel>
+
         </Grid>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Tasks}" AutoGenerateColumns="False" 
-          HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-          HeadersVisibility="Column">
+
+        <!-- Table -->
+        <DataGrid
+            CellStyle="{DynamicResource DataGridCell}"
+            CanUserAddRows="false" RowHeaderWidth="0"
+            GridLinesVisibility="None"
+            RowStyle="{StaticResource DataGridRow}"
+            ColumnHeaderStyle="{DynamicResource AllTasksDataGridHeader}"
+            Grid.Row="3"
+            Grid.Column="1"
+            ItemsSource="{Binding Tasks}"
+            AutoGenerateColumns="False"
+            Style="{StaticResource allTasksGrid}"
+            MouseDoubleClick="DataGrid_MouseDoubleClick" Grid.ColumnSpan="2">
+
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Name" IsReadOnly="True">
+
+                <DataGridTextColumn Header="Status" Width="60" Binding="{Binding Status}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True"/>
+
+                <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="{Binding Name}" Command="{Binding DataContext.ShowDetailsTaskViewCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                    CommandParameter="{Binding}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
+                            <Button
+                                Content="{Binding Name}"
+                                Command="{Binding DataContext.ShowDetailsTaskViewCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                CommandParameter="{Binding}"
+                                Style="{StaticResource cellButton}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Deadline" Binding="{Binding Deadline, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="StartDate" Binding="{Binding StartDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="EndDate" Binding="{Binding EndDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Priority" Binding="{Binding Priority}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Categories" IsReadOnly="True">
+
+                <DataGridTextColumn Header="Deadline" Width="70" Binding="{Binding Deadline, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="StartDate" Width="70" Binding="{Binding StartDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="EndDate" Width="70" Binding="{Binding EndDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+
+                <DataGridTextColumn Header="Categories" Width="*" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource CategoriesToStringConverter}">
                             <Binding Path="Categories" />
@@ -63,8 +154,17 @@
                 </DataGridTextColumn>
 
             </DataGrid.Columns>
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction
+                        Command="{Binding DataContext.ShowDetailsTaskViewCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
         </DataGrid>
-        <Button Grid.Row="0" Grid.Column="1" Content="All Categories" Command="{Binding AllCategoriesButtonCommand}" />
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding UserCategories}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory}" />
+
+        <!-- Pages -->
+
     </Grid>
 </UserControl>

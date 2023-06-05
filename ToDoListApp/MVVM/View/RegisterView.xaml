@@ -1,0 +1,205 @@
+﻿<UserControl x:Class="ToDoListApp.MVVM.View.RegisterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+             xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
+             xmlns:customcontrols="clr-namespace:ToDoListApp.CustomControls"
+             
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="Transparent">
+    <Grid>
+        <StackPanel
+                        VerticalAlignment="Center"
+                        Width="250"
+                        Grid.Row="1"
+                        Orientation="Vertical"
+                        Margin="0,0,0,0">
+
+            <TextBlock
+                        Text="REGISTER"
+                        Style="{StaticResource headerLargePrimary}"/>
+
+            <TextBlock
+                        Text="And let's track some tasks"
+                        Opacity="0.5"
+                        Margin="0 5 0 0"
+                        Style="{StaticResource headerSmallSecondary}"/>
+
+            <!-- Username -->
+            <TextBlock
+                        Text="Username"
+                        Foreground="DarkGray"
+                        FontSize="12"
+                        FontWeight="Regular"
+                        FontFamily="Montserrat"                             
+                        Margin="0, 20,0,0"/>
+
+
+            <TextBox
+                        x:Name="txtUser"
+                        Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                        FontSize="14"
+                        FontWeight="Light"
+                        Foreground="White"
+                        CaretBrush="LightGray"
+                        BorderBrush="DarkGray"
+                        BorderThickness="0, 0, 0, 2"
+                        Height="28"
+                        VerticalContentAlignment="Center"
+                        Margin="0, 5, 0, 0"
+                        Padding="20, 0, 0, 0">
+
+
+
+                <TextBox.Background>
+                    <ImageBrush
+                                ImageSource="../../Images/user-icon.png"
+                                Stretch="None"
+                                AlignmentX="Left" />
+                </TextBox.Background>
+
+            </TextBox>
+
+            <!-- Username -->
+            <TextBlock
+                        Text="E-mail"
+                        Foreground="DarkGray"
+                        FontSize="12"
+                        FontWeight="Regular"
+                        FontFamily="Montserrat"                             
+                        Margin="0, 40,0,0"/>
+
+
+
+            <Border
+                BorderBrush="Transparent"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                Height="40"
+                Width="250">
+
+                <StackPanel
+                    Orientation="Horizontal">
+                    <fa:IconImage Icon="Envelope" Style="{StaticResource inputFieldIcon}" />
+                    <TextBox
+                        x:Name="txtEmail"
+                        Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                        FontSize="14"
+                        FontWeight="Light"
+                        Foreground="White"
+                        CaretBrush="LightGray"
+                        BorderBrush="DarkGray"
+                        Background="Transparent"
+                        BorderThickness="0, 0, 0, 2"
+                        Height="28"
+                        Width="260"
+                        VerticalContentAlignment="Center"
+                        Margin="-20, 5, 0, 0"
+                        Padding="25, 0, 0, 0" TextChanged="txtEmail_TextChanged">
+                    </TextBox>
+                </StackPanel>
+            </Border>
+
+
+            <!-- Password -->
+            <TextBlock
+                        Text="Password"
+                        Foreground="DarkGray"
+                        FontSize="12"
+                        FontWeight="Regular"
+                        FontFamily="Montserrat"                             
+                        Margin="0,40,0,0"/>
+
+            <!-- ??? -->
+            <customcontrols:BindablePasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Height="28"
+                        Padding="0, 0, 0, 0">
+            </customcontrols:BindablePasswordBox>
+
+            <TextBlock
+                        Text="{Binding ErrorMessage}"
+                        Foreground="#D75960"
+                        FontSize="12"
+                        FontWeight="Regular"
+                        FontFamily="Montserrat"                             
+                        Margin="0,20,0,0"
+                        TextWrapping="Wrap"/>
+
+            <!-- Confirm Password -->
+            <TextBlock
+                        Text="Confirm password"
+                        Foreground="DarkGray"
+                        FontSize="12"
+                        FontWeight="Regular"
+                        FontFamily="Montserrat"                             
+                        Margin="0,20,0,0"/>
+
+            <!-- ??? -->
+            <customcontrols:BindablePasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Height="28"
+                        Padding="0, 0, 0, 0">
+            </customcontrols:BindablePasswordBox>
+
+            <TextBlock
+                        Text="{Binding ErrorMessage}"
+                        Foreground="#D75960"
+                        FontSize="12"
+                        FontWeight="Regular"
+                        FontFamily="Montserrat"                             
+                        Margin="0,20,0,0"
+                        TextWrapping="Wrap"/>
+
+            <!-- Log in button -->
+            <Button
+                        x:Name="btnLogin"
+                        Command="{Binding LoginCommand}"
+                        BorderThickness="0"
+                        Content="Register"
+                        Margin="0,10,0,0"
+                        Style="{StaticResource btnPrimary}">
+
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="150" Height="40"
+                                CornerRadius="20"
+                                Background="{TemplateBinding Background}">
+
+                            <ContentPresenter
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+
+            </Button>
+
+            <StackPanel
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                Margin="0 20 0 0">
+                
+                <TextBlock
+                    Text="Already have an account?"
+                    Foreground="White"
+                    Opacity="0.7"
+                    FontSize="12"
+                    FontWeight="Light"/>
+
+                <Button
+                    BorderBrush="Transparent"
+                    Content="Log in"
+                    Foreground="White"
+                    Opacity="0.9"
+                    FontSize="12"
+                    FontWeight="Light"
+                    Margin="20 0 0 0"
+                    Background="Transparent" />
+
+            </StackPanel>
+
+        </StackPanel>
+    </Grid>
+</UserControl>

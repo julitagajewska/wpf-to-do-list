@@ -11,7 +11,7 @@
         mc:Ignorable="d"
         
         WindowStyle="None"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="675" Width="1100"
         Background="Transparent"
         AllowsTransparency="True">
 
@@ -27,8 +27,12 @@
         <DataTemplate DataType="{x:Type viewModel:AllTasksViewModel}">
             <local:AllTasksView />
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewModel:DetailsTaskViewModel}">
             <local:DetailsTaskView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:EditTaskViewModel}">
+            <local:EditTaskView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:ArchiveViewModel}">
             <local:ArchiveView />
@@ -37,9 +41,11 @@
         <DataTemplate DataType="{x:Type viewModel:ProfileViewModel}">
             <local:ProfileView />
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewModel:CreateTaskViewModel}">
             <local:CreateTaskView />
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewModel:CategoryPanelViewModel}">
             <local:CategoryPanelView />
         </DataTemplate>
@@ -114,7 +120,17 @@
                                 <TextBlock Text="All tasks" Style="{StaticResource sidebarButtonText}" />
                             </StackPanel>
                         </RadioButton>
+                        <!-- Categories -->
+                        <RadioButton
+                            Style="{StaticResource sidebarButton}"
+                            Tag="{StaticResource Highlight}"
+                            Command="{Binding ShowCategoryPanelViewCommand}">
 
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Icon="ListCheck"  Style="{StaticResource sidebarButtonIcon}" />
+                                <TextBlock Text="Categories" Style="{StaticResource sidebarButtonText}" />
+                            </StackPanel>
+                        </RadioButton>
                         <!-- Archive -->
                         <RadioButton
                             Style="{StaticResource sidebarButton}"
@@ -229,19 +245,42 @@
                         Grid.Row="2">
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="80" />
                             <ColumnDefinition Width="100" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="80" />
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Left">
-                            <TextBlock Text="{Binding Caption}" Style="{StaticResource headerSmallSecondary}"/>
-                        </StackPanel>
+                        <Grid
+                            Grid.Column="1" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Caption}" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                            </StackPanel>
+
+                            <!--<Button Grid.Column="1" Style="{StaticResource buttonWithIcon}" Visibility="{Binding addTaskVisibility}">
+                                <StackPanel  Orientation="Horizontal" VerticalAlignment="Center">
+                                        <fa:IconImage Icon="Plus" Width="10" Height="10" Foreground="White" Margin="0 0 10 0" />
+                                        <TextBlock Text="New task" />
+                                </StackPanel>
+                            </Button>-->
+
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding username}"  VerticalAlignment="Center" Foreground="White" FontWeight="Thin" FontSize="12" Padding="0 0 10 0"/>
+                                <Border CornerRadius="15 15 15 15" Height="30" Width="30">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="../../Images/profile-picture.jpg" Stretch="UniformToFill" />
+                                    </Border.Background>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
                         
                         
                     </Grid>

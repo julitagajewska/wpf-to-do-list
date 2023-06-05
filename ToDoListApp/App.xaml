@@ -13,6 +13,12 @@
                 <ResourceDictionary Source="/Styles/UIContainers.xaml" />
                 <ResourceDictionary Source="/Styles/UITexts.xaml" />
                 <ResourceDictionary Source="/Styles/UISidebar.xaml" />
+                <ResourceDictionary Source="/Styles/UIWelcome.xaml" />
+                <ResourceDictionary Source="/Styles/UIUserProfile.xaml" />
+                <ResourceDictionary Source="/Styles/UIAllTasks.xaml" />
+                <ResourceDictionary Source="/Styles/UIInputs.xaml" />
+                <ResourceDictionary Source="/Styles/UITable.xaml" />
+                <ResourceDictionary Source="/Styles/UICategories.xaml" />
                 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

@@ -40,7 +40,6 @@
                         </LinearGradientBrush>
                     </Setter.Value>
                 </Setter>
-                
             </Trigger>
 
             <!-- Active -->

@@ -17,6 +17,7 @@ using ToDoListApp.MVVM.View;
 using Microsoft.EntityFrameworkCore;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Windows.Controls;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -84,9 +85,10 @@ namespace ToDoListApp.MVVM.ViewModel
             ShowCreateTasksViewCommand = new ViewModelCommand(ExecuteShowCreateTasksViewCommand);
             ShowDetailsTaskViewCommand = new ViewModelCommand(ExecuteShowDetailsTaskViewCommand);
             AllCategoriesButtonCommand = new ViewModelCommand(ExecuteAllCategoriesButtonCommand);
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             // Load tasks from the database
             LoadTasks();
-            LoadUserCategories(loggedInUser.Username);
+            LoadUserCategories(user);
         }
 
         private void ExecuteShowCreateTasksViewCommand(object obj)
@@ -99,7 +101,7 @@ namespace ToDoListApp.MVVM.ViewModel
             if (obj is MainTask selectedTask)
             {
                 Messenger.Publish("ShowDetailsTaskView", selectedTask);
-                Caption = "Task Details";
+                Caption = "TaskDetails";
             }
         }
         private void ExecuteAllCategoriesButtonCommand(object obj)
@@ -114,7 +116,7 @@ namespace ToDoListApp.MVVM.ViewModel
                 // Pobierz zadania związane z plannerm zalogowanego użytkownika
                 Tasks = new ObservableCollection<MainTask>(_context.MainTasks
                     .Include(t => t.Categories)
-                    .Where(t => t.PlannerId == _loggedInUser.PlannerId)
+                    .Where(t => t.PlannerId == _loggedInUser.PlannerId && (t.Status == "To Do" || t.Status == "In Progress"))
                     .ToList());
             }
             // Retrieve all tasks from the database
@@ -125,12 +127,13 @@ namespace ToDoListApp.MVVM.ViewModel
 
             //Tasks = new ObservableCollection<MainTask>(_context.MainTasks.Include(t => t.Categories).ToList());
         }
-        private void LoadUserCategories(string username)
+        private void LoadUserCategories(UserModel user)
         {
-            UserCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(username)
+            UserCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(user)
                 .DistinctBy(category => category.Name)
                 .ToList());
         }
+
         private void FilterTasksByCategory()
         {
             LoadTasks();

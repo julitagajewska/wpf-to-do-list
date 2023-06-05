@@ -4,9 +4,75 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
+             xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model.Converters"
+             xmlns:mvvm="clr-namespace:ToDoListApp.MVVM.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:CategoriesToStringConverter x:Key="CategoriesToStringConverter" />
+        <DataTemplate DataType="{x:Type mvvm:ArchiveViewModel}">
+            <local:ArchiveView />
+        </DataTemplate>
+    </UserControl.Resources>
+
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="80"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DataGrid
+            Grid.Row="1"
+            Grid.Column="1"
+            Style="{StaticResource allTasksGrid}"
+            ColumnHeaderStyle="{DynamicResource AllTasksDataGridHeader}"
+            RowStyle="{StaticResource DataGridRow}"
+            CellStyle="{DynamicResource DataGridCell}"
+            GridLinesVisibility="None"
+            ItemsSource="{Binding Tasks}"
+            AutoGenerateColumns="False" 
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HeadersVisibility="Column">
             
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Status" Width="60" Binding="{Binding Status}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True"/>
+                <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Name}" Command="{Binding DataContext.ShowDetailsTaskViewCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{Binding}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Deadline" Width="70" Binding="{Binding Deadline, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="StartDate" Width="70" Binding="{Binding StartDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="EndDate" Width="70" Binding="{Binding EndDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Categories" Width="*" IsReadOnly="True">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{StaticResource CategoriesToStringConverter}">
+                            <Binding Path="Categories" />
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+        <!--<Button Grid.Row="0" Grid.Column="1" Content="All Categories" Command="{Binding AllCategoriesButtonCommand}" />
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding UserCategories}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory}" />-->
     </Grid>
 </UserControl>
