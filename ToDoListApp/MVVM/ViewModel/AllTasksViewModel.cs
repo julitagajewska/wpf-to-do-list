@@ -85,11 +85,7 @@ namespace ToDoListApp.MVVM.ViewModel
             ShowCreateTasksViewCommand = new ViewModelCommand(ExecuteShowCreateTasksViewCommand);
             ShowDetailsTaskViewCommand = new ViewModelCommand(ExecuteShowDetailsTaskViewCommand);
             AllCategoriesButtonCommand = new ViewModelCommand(ExecuteAllCategoriesButtonCommand);
-<<<<<<< HEAD
-
-=======
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
->>>>>>> Ola
             // Load tasks from the database
             LoadTasks();
             LoadUserCategories(user);
@@ -105,7 +101,7 @@ namespace ToDoListApp.MVVM.ViewModel
             if (obj is MainTask selectedTask)
             {
                 Messenger.Publish("ShowDetailsTaskView", selectedTask);
-                Caption = "Task Details";
+                Caption = "TaskDetails";
             }
         }
         private void ExecuteAllCategoriesButtonCommand(object obj)

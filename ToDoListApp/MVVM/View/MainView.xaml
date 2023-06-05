@@ -31,13 +31,9 @@
         <DataTemplate DataType="{x:Type viewModel:DetailsTaskViewModel}">
             <local:DetailsTaskView />
         </DataTemplate>
-<<<<<<< HEAD
-        
-=======
         <DataTemplate DataType="{x:Type viewModel:EditTaskViewModel}">
             <local:EditTaskView />
         </DataTemplate>
->>>>>>> Ola
         <DataTemplate DataType="{x:Type viewModel:ArchiveViewModel}">
             <local:ArchiveView />
         </DataTemplate>
@@ -269,12 +265,12 @@
                                 <TextBlock Text="{Binding Caption}" FontSize="16" FontWeight="Medium" Foreground="White"/>
                             </StackPanel>
 
-                            <Button Grid.Column="1" Style="{StaticResource profileBtnChangeImage}" Visibility="{Binding addTaskVisibility}">
+                            <!--<Button Grid.Column="1" Style="{StaticResource buttonWithIcon}" Visibility="{Binding addTaskVisibility}">
                                 <StackPanel  Orientation="Horizontal" VerticalAlignment="Center">
                                         <fa:IconImage Icon="Plus" Width="10" Height="10" Foreground="White" Margin="0 0 10 0" />
                                         <TextBlock Text="New task" />
                                 </StackPanel>
-                            </Button>
+                            </Button>-->
 
                             <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                 <TextBlock Text="{Binding username}"  VerticalAlignment="Center" Foreground="White" FontWeight="Thin" FontSize="12" Padding="0 0 10 0"/>

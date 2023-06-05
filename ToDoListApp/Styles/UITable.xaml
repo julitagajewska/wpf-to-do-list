@@ -17,6 +17,7 @@
     
     <Style x:Key="AllTasksDataGridHeader" TargetType="{x:Type DataGridColumnHeader}">
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0 0 0 10" />
         <Setter Property="Padding" Value="10 5 0 5" />
         <Setter Property="Template">
             <Setter.Value>
@@ -36,6 +37,7 @@
     <SolidColorBrush x:Key="{x:Static DataGrid.FocusBorderBrushKey}" Color="#FF000000"/>
     
     <Style x:Key="DataGridCell" TargetType="{x:Type DataGridCell}">
+        <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Margin" Value="10 5 0 5" />
@@ -74,10 +76,12 @@
     </Style>
 
     <Style x:Key="DataGridRow" TargetType="{x:Type DataGridRow}">
-        <Setter Property="Background" Value="#32365C"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="#2e3254"/>
         <Setter Property="Foreground" Value="#80FFFFFF"/>
-        <Setter Property="Margin" Value="0 10 0 10"/>
-        <Setter Property="Padding" Value="10 5 0 5" />
+        <Setter Property="Margin" Value="0 5 0 5"/>
+        <Setter Property="Padding" Value="5 5 0 5" />
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
@@ -114,6 +118,9 @@
             <Trigger Property="IsNewItem" Value="True">
                 <Setter Property="Margin" Value="{Binding NewItemMargin, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
             </Trigger>
+            <!--<Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#363c70" />
+            </Trigger>-->
         </Style.Triggers>
     </Style>
     
@@ -172,6 +179,32 @@
                 </MultiTrigger.Conditions>
                 <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
             </MultiTrigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <Style  x:Key="cellButton" TargetType="Button">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Regular" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Opacity" Value="0.5" />
+        <Setter Property="Background" Value="#353C76" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" Width="100" Height="20" CornerRadius="8">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value="1" />
+                <Setter Property="Background" Value="#3B448B" />
+            </Trigger>
         </Style.Triggers>
     </Style>
 </ResourceDictionary>

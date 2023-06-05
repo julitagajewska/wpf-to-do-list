@@ -212,7 +212,7 @@ namespace ToDoListApp.MVVM.ViewModel
         {
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             CurrentChildView = new CategoryPanelViewModel(user);
-            Caption = "Category Panel";
+            Caption = "Categories";
             addTaskVisibility = "Hidden";
         }
         private void LoadCurrentUserData()

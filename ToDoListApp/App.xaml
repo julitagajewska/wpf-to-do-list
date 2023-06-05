@@ -18,6 +18,7 @@
                 <ResourceDictionary Source="/Styles/UIAllTasks.xaml" />
                 <ResourceDictionary Source="/Styles/UIInputs.xaml" />
                 <ResourceDictionary Source="/Styles/UITable.xaml" />
+                <ResourceDictionary Source="/Styles/UICategories.xaml" />
                 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

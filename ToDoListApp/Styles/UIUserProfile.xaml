@@ -18,7 +18,7 @@
     </Style>
 
     <!-- Profile - Change image button -->
-    <Style x:Key="profileBtnChangeImage" TargetType="Button">
+    <Style x:Key="buttonWithIcon" TargetType="Button">
         <Setter Property="FontSize" Value="10" />
         <Setter Property="Opacity" Value="0.75" />
         <Setter Property="Foreground" Value="#ffffff" />
@@ -38,6 +38,7 @@
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Opacity" Value="1" />
                 <Setter Property="Background" Value="#3B448B" />
+                <Setter Property="Foreground" Value="#ffffff" />
             </Trigger>
         </Style.Triggers>
     </Style>

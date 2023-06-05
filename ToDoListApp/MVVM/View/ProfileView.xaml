@@ -48,7 +48,7 @@
             </StackPanel>
 
             <StackPanel Grid.Column="3" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Style="{StaticResource profileBtnChangeImage}">
+                <Button Style="{StaticResource buttonWithIcon}">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <fa:IconImage Icon="Plus" Width="10" Height="10" Foreground="White" Margin="0 0 10 0" />
                         <TextBlock Text="Change picture"></TextBlock>

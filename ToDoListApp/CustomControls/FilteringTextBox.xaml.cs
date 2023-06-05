@@ -40,7 +40,7 @@ namespace ToDoListApp.CustomControls
         private void filteringInput_TextChanged(object sender, TextChangedEventArgs e)
         {
             if(string.IsNullOrEmpty(filteringInput.Text))
-                placeholder.Visibility = Visibility.Visible;
+                placeholder.Visibility = Visibility.Visible; 
             else
                 placeholder.Visibility = Visibility.Hidden;
         }

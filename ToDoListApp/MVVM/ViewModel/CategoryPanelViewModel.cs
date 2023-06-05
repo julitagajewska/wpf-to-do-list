@@ -50,7 +50,7 @@ namespace ToDoListApp.MVVM.ViewModel
             }
         }
         //Add New Category
-        private bool _isAddCategoryChecked;
+        private bool _isAddCategoryChecked = true;
         public bool IsAddCategoryChecked
         {
             get { return _isAddCategoryChecked; }

@@ -13,9 +13,12 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="80"/>
         </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -28,31 +31,42 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:"/>
-        <TextBlock Grid.Row="0" Grid.Column="1"  Text="{Binding SelectedTask.Name}"/>
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Description:"/>
-        <TextBlock Grid.Row="1" Grid.Column="1"  Text="{Binding SelectedTask.Description}"/>
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Deadline:"/>
-        <TextBlock Grid.Row="2" Grid.Column="1"  Text="{Binding SelectedTask.Deadline, StringFormat=\{0:dd-MM-yyyy\}}"/>
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="StartDate:"/>
-        <TextBlock Grid.Row="3" Grid.Column="1"  Text="{Binding SelectedTask.StartDate, StringFormat=\{0:dd-MM-yyyy\}}"/>
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="EndDate:"/>
-        <TextBlock Grid.Row="4" Grid.Column="1"  Text="{Binding SelectedTask.EndDate, StringFormat=\{0:dd-MM-yyyy\}}"/>
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="Status:"/>
-        <TextBlock Grid.Row="5" Grid.Column="1"  Text="{Binding SelectedTask.Status}"/>
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="Priority:"/>
-        <TextBlock Grid.Row="6" Grid.Column="1"  Text="{Binding SelectedTask.Priority}"/>
-        <TextBlock Grid.Row="7" Grid.Column="0" Text="Categories:"/>
-        <TextBlock Grid.Row="7" Grid.Column="1">
+        
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="Name:" Foreground="#80FFFFFF" FontWeight="Bold" Width="100"/>
+        <TextBlock Grid.Row="0" Grid.Column="2"  Text="{Binding SelectedTask.Name}" Foreground="#80FFFFFF" />
+
+        <TextBlock Grid.Row="1" Grid.Column="1" Text="Description:"  Foreground="#80FFFFFF" FontWeight="Bold"  Width="100" />
+        <TextBlock Grid.Row="1" Grid.Column="2"  Text="{Binding SelectedTask.Description}" Foreground="#80FFFFFF" />
+
+        <TextBlock Grid.Row="2" Grid.Column="1" Text="Deadline:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
+        <TextBlock Grid.Row="2" Grid.Column="2"  Text="{Binding SelectedTask.Deadline, StringFormat=\{0:dd-MM-yyyy\}}" Foreground="#80FFFFFF" />
+
+        <TextBlock Grid.Row="3" Grid.Column="1" Text="StartDate:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
+        <TextBlock Grid.Row="3" Grid.Column="2"  Text="{Binding SelectedTask.StartDate, StringFormat=\{0:dd-MM-yyyy\}}" Foreground="#80FFFFFF" />
+
+        <TextBlock Grid.Row="4" Grid.Column="1" Text="EndDate:" Foreground="#80FFFFFF" FontWeight="Bold" Width="100"/>
+        <TextBlock Grid.Row="4" Grid.Column="2"  Text="{Binding SelectedTask.EndDate, StringFormat=\{0:dd-MM-yyyy\}}" Foreground="#80FFFFFF" />
+        
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="Status:" Foreground="#80FFFFFF" FontWeight="Bold" Width="100"/>
+        <TextBlock Grid.Row="5" Grid.Column="2"  Text="{Binding SelectedTask.Status}" Foreground="#80FFFFFF" />
+
+        <TextBlock Grid.Row="6" Grid.Column="1" Text="Priority:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
+        <TextBlock Grid.Row="6" Grid.Column="2"  Text="{Binding SelectedTask.Priority}" Foreground="#80FFFFFF" />
+        
+        <TextBlock Grid.Row="7" Grid.Column="1" Text="Categories:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
+        <TextBlock Grid.Row="7" Grid.Column="2"  Foreground="#80FFFFFF" >
             <TextBlock.Text>
                 <MultiBinding Converter="{StaticResource CategoriesToStringConverter}">
                     <Binding Path="SelectedTask.Categories" />
                 </MultiBinding>
             </TextBlock.Text>
         </TextBlock>
-        <TextBlock Grid.Row="8" Grid.Column="0" Text="SubTasks:"/>
-        <TextBlock Grid.Row="8" Grid.Column="1"  Text="{Binding SelectedTask.Subtasks}"/>
-        <Button Grid.Row="9" Grid.Column="0" Content="Edit Task" Margin="0,40,0,0" Command="{Binding DataContext.EditTasksViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
-        <Button Grid.Row="9" Grid.Column="1" Content="Delete Task" Margin="0,40,0,0" Command="{Binding DataContext.DeleteTasksViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding SelectedTask}" />
+        <TextBlock Grid.Row="8" Grid.Column="1" Text="SubTasks:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
+        <TextBlock Grid.Row="8" Grid.Column="2"  Text="{Binding SelectedTask.Subtasks}" Foreground="#80FFFFFF" Width="100"/>
+        
+        <StackPanel Grid.Row="9" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button Content="Edit Task" Margin="0,0,10,0" Width="160" Command="{Binding DataContext.EditTasksViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
+            <Button Content="Delete Task" Margin="10,0,0,0" Width="160" Command="{Binding DataContext.DeleteTasksViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding SelectedTask}" />
+        </StackPanel>
     </Grid>
 </UserControl>
