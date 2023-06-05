@@ -55,7 +55,7 @@
                 <ColumnDefinition Width="150" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="6971 Tasks" Foreground="White" FontSize="16" VerticalAlignment="Center" FontWeight="DemiBold" />
+            <TextBlock Grid.Column="0" Text="{Binding TaskCount, StringFormat='{}{0} Tasks'}" Foreground="White" FontSize="16" VerticalAlignment="Center" FontWeight="DemiBold" />
 
             <Button Grid.Column="1" Style="{StaticResource buttonWithIcon}" Visibility="{Binding addTaskVisibility}" Command="{Binding ShowCreateTasksViewCommand}">
                 <StackPanel  Orientation="Horizontal" VerticalAlignment="Center">
