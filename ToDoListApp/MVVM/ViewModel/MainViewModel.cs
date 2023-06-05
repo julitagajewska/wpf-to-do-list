@@ -216,20 +216,24 @@ namespace ToDoListApp.MVVM.ViewModel
             addTaskVisibility = "Hidden";
         }
         private void LoadCurrentUserData()
-        {   
-            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
-            if(user != null)
-            {
-                CurrentUserAccount.Username = user.Username;
-                CurrentUserAccount.DisplayName = $"Welcome {user.Username}!";
-                CurrentUserAccount.ProfilePicture = null;
+        {
+            var identity = Thread.CurrentPrincipal?.Identity;
+            if(identity != null){
+                var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+                if (user != null)
+                {
+                    CurrentUserAccount.Username = user.Username;
+                    CurrentUserAccount.DisplayName = $"Welcome {user.Username}!";
+                    CurrentUserAccount.ProfilePicture = null;
+                }
+                else
+                {
+                    CurrentUserAccount.DisplayName = "Invalid user, not logged in";
+                    //MessageBox.Show("Invalid user, not logged in");
+                    //Application.Current.Shutdown();
+                }
             }
-            else
-            {
-                CurrentUserAccount.DisplayName = "Invalid user, not logged in";
-                //MessageBox.Show("Invalid user, not logged in");
-                //Application.Current.Shutdown();
-            }
+            
         }
     }
 }

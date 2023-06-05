@@ -107,7 +107,6 @@
             CellStyle="{DynamicResource DataGridCell}"
             CanUserAddRows="false" RowHeaderWidth="0"
             GridLinesVisibility="None"
-            RowStyle="{StaticResource DataGridRow}"
             ColumnHeaderStyle="{DynamicResource AllTasksDataGridHeader}"
             Grid.Row="3"
             Grid.Column="1"
@@ -115,9 +114,13 @@
             AutoGenerateColumns="False"
             Style="{StaticResource allTasksGrid}"
             MouseDoubleClick="DataGrid_MouseDoubleClick" Grid.ColumnSpan="2">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource DataGridRow}">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridRow_PreviewMouseLeftButtonDown"/>
+                </Style>
+            </DataGrid.RowStyle>
 
             <DataGrid.Columns>
-
                 <DataGridTextColumn Header="Status" Width="60" Binding="{Binding Status}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True"/>
 

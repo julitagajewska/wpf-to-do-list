@@ -26,7 +26,7 @@ namespace ToDoListApp
                 {
                     var mainView = new MainView();
                     mainView.Show();
-                    welcomeView.Close();
+                    //welcomeView.Close();
                 }
             };
         }

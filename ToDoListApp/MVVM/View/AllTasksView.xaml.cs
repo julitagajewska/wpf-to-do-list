@@ -32,15 +32,21 @@ namespace ToDoListApp.MVVM.View
 
         }
 
-        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void DataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e) 
         {
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
 
         }
+        private void DataGridRow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var row = sender as DataGridRow;
+            var viewModel = DataContext as AllTasksViewModel;
+            var selectedTask = row.DataContext as MainTask;
 
+            viewModel.ShowDetailsTaskViewCommand.Execute(selectedTask);
+        }
     }
 }
