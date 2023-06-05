@@ -16,6 +16,7 @@ using System.Runtime;
 using System.Windows.Interop;
 using ToDoListApp.MVVM.Model;
 using ToDoListApp.Data;
+using System.Threading;
 
 namespace ToDoListApp.MVVM.View
 {
@@ -28,6 +29,7 @@ namespace ToDoListApp.MVVM.View
         {
             InitializeComponent();
             //dodaj, żeby po naciśnięciu X apka się po prostu wyłączała, a nie crashowała.
+
         }
 
         [DllImport("user32.dll")]
@@ -65,5 +67,7 @@ namespace ToDoListApp.MVVM.View
         {
             this.WindowState = WindowState.Minimized;
         }
+
+
     }
 }

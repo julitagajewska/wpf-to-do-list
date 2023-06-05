@@ -53,6 +53,16 @@ namespace ToDoListApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(Tasks));
             }
         }
+        private int _taskCount;
+        public int TaskCount
+        {
+            get { return _taskCount; }
+            set
+            {
+                _taskCount = value;
+                OnPropertyChanged(nameof(TaskCount));
+            }
+        }
         public ObservableCollection<Category> UserCategories
         {
             get { return _userCategories; }
@@ -109,6 +119,10 @@ namespace ToDoListApp.MVVM.ViewModel
             SelectedCategory = null;
             LoadTasks();
         }
+        private void UpdateTaskCount()
+        {
+            TaskCount = Tasks.Count;
+        }
         private void LoadTasks()
         {
             if (_loggedInUser != null && _loggedInUser.Planner != null)
@@ -124,7 +138,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 Tasks = new ObservableCollection<MainTask>();
             }
-
+            UpdateTaskCount();
             //Tasks = new ObservableCollection<MainTask>(_context.MainTasks.Include(t => t.Categories).ToList());
         }
         private void LoadUserCategories(UserModel user)
