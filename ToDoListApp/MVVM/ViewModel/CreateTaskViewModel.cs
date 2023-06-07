@@ -222,7 +222,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 errors.Add("Category with the same name already exists.");
             }
-            bool subTaskExist = Subtasks.Any(subTask => subTask.Name.Equals(NewName));
+            bool subTaskExist = Subtasks.Any(subTask => subTask.Name.Equals(NewName) && subTask!=SelectedSubtask);
             if (subTaskExist)
             {
                 errors.Add("Subtask with the same name already exists.");
@@ -292,23 +292,36 @@ namespace ToDoListApp.MVVM.ViewModel
         }
         private void ExecuteAddSubTaskCommand(object obj)
         {
+            bool subTaskExist = Subtasks.Any(subTask => subTask.Name.Equals(NewName) && subTask != SelectedSubtask);
+            if (subTaskExist)
+            {
+                return;
+            }
             if (!string.IsNullOrEmpty(NewName))
             {
-
                 Subtasks.Add(new Subtask { Name= NewName, Status="To Do"});
                 NewName = string.Empty;
             }
         }
         private void ExecuteEditSubtaskCommand(object obj)
         {
-            Subtask selectedSubtask = (Subtask)obj; // Pobierz wybrany Subtask z parametru
-                                                    // Znajdź wybrany Subtask w kolekcji Subtasks
-            Subtask subtaskToUpdate = Subtasks.FirstOrDefault(s => s == selectedSubtask);
-            if (subtaskToUpdate != null)
+            bool subTaskExist = Subtasks.Any(subTask => subTask.Name.Equals(NewName) && subTask != SelectedSubtask);
+            if (subTaskExist)
             {
-                subtaskToUpdate.Name = NewName; // Zaktualizuj nazwę Subtaska
-                NewName = string.Empty; // Wyczyść pole tekstowe
+                return;
             }
+            if (!string.IsNullOrEmpty(NewName))
+            {
+                Subtask selectedSubtask = (Subtask)obj; // Pobierz wybrany Subtask z parametru
+                                                        // Znajdź wybrany Subtask w kolekcji Subtasks
+                Subtask subtaskToUpdate = Subtasks.FirstOrDefault(s => s == selectedSubtask);
+                if (subtaskToUpdate != null)
+                {
+                    subtaskToUpdate.Name = NewName; // Zaktualizuj nazwę Subtaska
+                    NewName = string.Empty; // Wyczyść pole tekstowe
+                }
+            }
+            
         }
         private void ExecuteDeleteSubtaskCommand(object obj)
         {

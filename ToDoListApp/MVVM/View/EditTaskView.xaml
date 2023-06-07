@@ -28,6 +28,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="1" Text="Name:" Foreground="#80FFFFFF" />
         <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding SelectedTask.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -53,10 +55,24 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <CheckBox  Foreground="#80FFFFFF"  Grid.Row="8" Grid.Column="1" Content="Add New Category" IsChecked="{Binding IsAddCategoryChecked}" Margin="5"/>
-        <TextBox Grid.Row="8" Grid.Column="2" Text="{Binding NewCategoryName}" Margin="5" IsEnabled="{Binding IsAddCategoryChecked}"/>
-        <Button Grid.Row="9" Grid.Column="2" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
-        <Button Grid.Row="10" Grid.Column="2"  Content="Save" Command="{Binding EditTaskCommand}"/>
-        <TextBlock Grid.Row="11" Text="{Binding ValidationString}" Foreground="Red" Margin="5" />
+        <TextBlock Grid.Row="8" Grid.Column="1" Text="SubTasks:" Foreground="#80FFFFFF" />
+        <ListBox x:Name="subtasksListBox" Grid.Row="8" Grid.Column="2" ItemsSource="{Binding TaskSubTasks}" SelectedItem="{Binding SelectedSubtask}" Margin="5">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" Width="200" />
+                        <Button Content="Edit" Command="{Binding DataContext.EditSubtaskCommand, RelativeSource={RelativeSource AncestorType={x:Type local:EditTaskView}}}" CommandParameter="{Binding}"  Click="RefreshButton_Click"/>
+                        <Button Content="Delete" Command="{Binding DataContext.DeleteSubtaskCommand, RelativeSource={RelativeSource AncestorType={x:Type local:EditTaskView}}}" CommandParameter="{Binding}" Click="RefreshButton_Click"/>
+                        <ComboBox ItemsSource="{Binding DataContext.statusesST, RelativeSource={RelativeSource AncestorType={x:Type local:EditTaskView}}}" SelectedItem="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <TextBox Grid.Row="9" Grid.Column="2" Text="{Binding NewName}" Margin="5"/>
+        <Button Grid.Row="10" Grid.Column="1" Content="Add SubTask" Command="{Binding AddSubtaskCommand}" Margin="5" />
+        <Button Grid.Row="10" Grid.Column="2" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
+        <Button Grid.Row="11" Grid.Column="2"  Content="Save" Command="{Binding EditTaskCommand}"/>
+        <TextBlock Grid.Row="12" Text="{Binding ValidationString}" Foreground="Red" Margin="5" />
     </Grid>
 </UserControl>
