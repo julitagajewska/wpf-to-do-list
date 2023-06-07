@@ -246,8 +246,8 @@ namespace ToDoListApp.MVVM.ViewModel
 
             SelectedCategories = new ObservableCollection<Category>();  // Inicjalizacja
             Subtasks = new ObservableCollection<Subtask>();
-            // Przykładowe Kategorie
-            if (!TaskCategories.Any(category => category.Name == "School"))
+            // Przykładowe Kategorie //Do usunięcia, jak rejestracja zostanie skończona
+            /*if (!TaskCategories.Any(category => category.Name == "School"))
             {
                 TaskCategories.Add(new Category { Name = "School", IsCustom = false, Owner= _loggedInUser.Id });
             }
@@ -260,7 +260,7 @@ namespace ToDoListApp.MVVM.ViewModel
             if (!TaskCategories.Any(category => category.Name == "Work"))
             {
                 TaskCategories.Add(new Category { Name = "Work", IsCustom = false, Owner = _loggedInUser.Id });
-            }
+            }*/
             
             AddTaskCommand = new ViewModelCommand(ExecuteAddTaskCommand);
             AddCategoryCommand = new ViewModelCommand(ExecuteAddCategoryCommand);
