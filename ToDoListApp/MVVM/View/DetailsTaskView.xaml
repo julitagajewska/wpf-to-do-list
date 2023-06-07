@@ -10,6 +10,7 @@
         d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:CategoriesToStringConverter x:Key="CategoriesToStringConverter" />
+        <converters:SubTasksToStringConverter x:Key="SubTasksToStringConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -62,7 +63,14 @@
             </TextBlock.Text>
         </TextBlock>
         <TextBlock Grid.Row="8" Grid.Column="1" Text="SubTasks:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
-        <TextBlock Grid.Row="8" Grid.Column="2"  Text="{Binding SelectedTask.Subtasks}" Foreground="#80FFFFFF" Width="100"/>
+        <TextBlock Grid.Row="8" Grid.Column="2"  Foreground="#80FFFFFF" >
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource SubTasksToStringConverter}">
+                    <Binding Path="SelectedTask.Subtasks" />
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+
         
         <StackPanel Grid.Row="9" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Button Content="Edit Task" Margin="0,0,10,0" Width="160" Command="{Binding DataContext.EditTasksViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
