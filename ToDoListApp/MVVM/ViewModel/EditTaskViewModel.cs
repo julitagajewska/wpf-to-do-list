@@ -152,7 +152,7 @@ namespace ToDoListApp.MVVM.ViewModel
             get
             {
                 // Sprawdź, czy istnieją jakieś błędy walidacji dla poszczególnych właściwości
-                var propertyErrors = typeof(CreateTaskViewModel)
+                var propertyErrors = typeof(EditTaskViewModel)
                     .GetProperties()
                     .Where(p => this[p.Name] != null)
                     .Select(p => this[p.Name]);

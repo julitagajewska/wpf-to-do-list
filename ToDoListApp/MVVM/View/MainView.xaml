@@ -49,6 +49,10 @@
         <DataTemplate DataType="{x:Type viewModel:CategoryPanelViewModel}">
             <local:CategoryPanelView />
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:EditCategoryViewModel}">
+            <local:EditCategoryView />
+        </DataTemplate>
     </Window.Resources>
     
     <Border
