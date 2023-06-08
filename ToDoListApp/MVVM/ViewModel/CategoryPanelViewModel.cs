@@ -82,23 +82,6 @@ namespace ToDoListApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(ValidationString));
             }
         }
-        public ICommand AddCategoryCommand { get; set; }
-
-        private bool _isEditMode;
-        public bool IsEditMode
-        {
-            get { return _isEditMode; }
-            set
-            {
-                _isEditMode = value;
-                OnPropertyChanged(nameof(IsEditMode));
-                OnPropertyChanged(nameof(IsAddCategoryVisible));
-                OnPropertyChanged(nameof(NewCategoryNameEnabled));
-            }
-        }
-
-        public bool IsAddCategoryVisible => !IsEditMode;
-        public bool NewCategoryNameEnabled => !IsEditMode || IsAddCategoryChecked;
 
         //Walidacja
         public string this[string columnName]
@@ -141,22 +124,20 @@ namespace ToDoListApp.MVVM.ViewModel
         {
             List<string> errors = new List<string>();
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
-            if (SelectedCategory != null)
-            {
-                ObservableCollection<Category> userCategories = _userRepository.GetUserCategories(user);
-                bool categoryExists = userCategories.Any(category => category.Name.Equals(SelectedCategory.Name) && category != SelectedCategory);
+            ObservableCollection<Category> userCategories = _userRepository.GetUserCategories(user);
+            bool categoryExists = UserCategories.Any(category =>
+            category.Name.Equals(NewCategoryName, StringComparison.OrdinalIgnoreCase) &&
+            category.IsCustom);
 
-                if (categoryExists)
-                {
-                    errors.Add("Category with the same name already exists.");
-                }
+            if (categoryExists)
+            {
+              errors.Add("Category with the same name already exists.");
             }
             return errors;
         }
-
+        public ICommand AddCategoryCommand { get; set; }
         public ICommand EditCategoryCommand { get; set; }
         public ICommand DeleteCategoryCommand { get; set; }
-        public ICommand SaveCategoryCommand { get; set; }
         public CategoryPanelViewModel(UserModel loggedInUser)
         {
             _context = new ToDoDbContext();
@@ -165,18 +146,15 @@ namespace ToDoListApp.MVVM.ViewModel
             _categoryRepository = new CategoryRepository(_context);
             EditCategoryCommand = new ViewModelCommand(ExecuteEditCategoryCommand);
             DeleteCategoryCommand = new ViewModelCommand(ExecuteDeleteCategoryCommand);
-            SaveCategoryCommand = new ViewModelCommand(ExecuteSaveCategoryCommand, CanExecuteSaveCategoryCommand);
             AddCategoryCommand = new ViewModelCommand(ExecuteAddCategoryCommand);
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             LoadUserCategories(user);
         }
         private void ExecuteAddCategoryCommand(object obj)
         {
-            bool categoryExists = UserCategories.Any(category =>
-            category.Name.Equals(NewCategoryName, StringComparison.OrdinalIgnoreCase) &&
-            category.IsCustom);
+            var otherValidationErrors = GetOtherValidationErrors();
 
-            if (!string.IsNullOrEmpty(NewCategoryName) && !categoryExists)
+            if (!string.IsNullOrEmpty(NewCategoryName) && !otherValidationErrors.Any())
             {
                 var category = new Category
                 {
@@ -184,11 +162,7 @@ namespace ToDoListApp.MVVM.ViewModel
                     IsCustom = true,
                     Owner = _loggedInUser.Id // Przypisanie id Usera.
                 };
-                var otherValidationErrors = GetOtherValidationErrors();
-                if (otherValidationErrors.Any())
-                {
-                    return;
-                }
+                
                 UserCategories.Add(category);
                 _context.Categories.Add(category);
                 _context.SaveChanges();
@@ -196,45 +170,22 @@ namespace ToDoListApp.MVVM.ViewModel
                 
             }
         }
+        private void ExecuteEditCategoryCommand(object obj)
+        {
+            if (obj is Category selectedCategory)
+            {
+                SelectedCategory = selectedCategory;
+                if (SelectedCategory != null)
+                {
+                    Messenger.Publish("ShowEditCategoryView", SelectedCategory);
+                }
+            }
+            
+        }
         private void LoadUserCategories(UserModel user)
         {
             //string username = _loggedInUser.Username;
             UserCategories = _userRepository.GetUserCategories(user);
-        }
-        private void ExecuteEditCategoryCommand(object obj)
-        {
-            IsEditMode = true;
-
-            if (obj is Category selectedCategory)
-            {
-                
-                SelectedCategory = selectedCategory;
-            }
-            
-        }
-
-        private void ExecuteSaveCategoryCommand(object obj)
-        {
-            if (!string.IsNullOrEmpty(ValidationString))
-            {
-                // Jeśli istnieją błędy walidacyjne, przerwij wykonanie funkcji
-                return;
-            }
-            if (SelectedCategory != null)
-            {
-                // Zapisz zmiany nazwy kategorii do bazy danych
-                _categoryRepository.UpdateCategory(SelectedCategory);
-                _context.SaveChanges();
-                SelectedCategory = null;
-                IsEditMode = false;
-                
-            }
-            
-        }
-
-        private bool CanExecuteSaveCategoryCommand(object obj)
-        {
-            return SelectedCategory != null;
         }
 
         private void ExecuteDeleteCategoryCommand(object obj)

@@ -28,6 +28,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
 
@@ -69,10 +70,7 @@
         
         <!--<CheckBox Grid.Row="1" Grid.Column="1" Content="Add New Category" IsChecked="{Binding IsAddCategoryChecked}" Margin="5" Visibility="{Binding IsAddCategoryVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
         <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding NewCategoryName}" Margin="5" IsEnabled="{Binding IsAddCategoryChecked}"/>
-        <Button Grid.Row="4" Grid.Column="1" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5" Visibility="{Binding IsAddCategoryVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        
-        <TextBox Text="{Binding SelectedCategory.Name}" Visibility="{Binding SelectedCategory, Converter={StaticResource NullToVisibilityConverter}}" />
-        <TextBlock Grid.Row="5" Grid.Column="1"  Foreground="Red" Margin="5" Visibility="{Binding ValidationString, Converter={StaticResource NullToVisibilityConverter}}"/>
-        <Button Grid.Row="3" Grid.Column="1" Content="Save" Command="{Binding SaveCategoryCommand}" CommandParameter="{Binding SelectedCategory}" Visibility="{Binding SelectedCategory, Converter={StaticResource NullToVisibilityConverter}}" />
+        <Button Grid.Row="4" Grid.Column="1" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
+        <TextBlock Grid.Row="5" Grid.Column="1"  Foreground="Red" Margin="5" Text="{Binding ValidationString}"/>
     </Grid>
 </UserControl>

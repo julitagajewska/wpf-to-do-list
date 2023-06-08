@@ -15,6 +15,7 @@ using ToDoListApp.MVVM.Model;
 using ToDoListApp.MVVM.Model.Converters;
 using ToDoListApp.MVVM.Model.Interfaces;
 using ToDoListApp.MVVM.Model.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -59,6 +60,12 @@ namespace ToDoListApp.MVVM.ViewModel
             get { return new List<string>() { "Low", "Medium", "High" }; }
             set { Priorities = value; }
         }
+        private List<string> StatusesST;
+        public List<string> statusesST //list
+        {
+            get { return new List<string>() { "To Do","Done" }; }
+            set { StatusesST = value; }
+        }
         public string status { get; set; } //from db
         public string priority { get; set; } //from db
         //Categories
@@ -79,7 +86,7 @@ namespace ToDoListApp.MVVM.ViewModel
         public List<int> SelectedCategoriesIds { get; set; }
         //Add new Category
         private bool _isAddCategoryChecked;
-        private string _newCategoryName;
+        private string _NewName;
         //User Categories
         public bool IsAddCategoryChecked
         {
@@ -92,26 +99,40 @@ namespace ToDoListApp.MVVM.ViewModel
                 if (!value)
                 {
                     // Jeśli przycisk został odznaczony, dodaj nową kategorię na liście
-                    if (!string.IsNullOrEmpty(NewCategoryName))
+                    if (!string.IsNullOrEmpty(NewName))
                     {
-                        TaskCategories.Add(new Category { Name = NewCategoryName, IsCustom = true });
-                        NewCategoryName = string.Empty; // Wyczyść pole tekstowe
+                        TaskCategories.Add(new Category { Name = NewName, IsCustom = true });
+                        NewName = string.Empty; // Wyczyść pole tekstowe
                     }
                 }
             }
         }
         //Add new Category
-        public string NewCategoryName
+        public string NewName
         {
-            get { return _newCategoryName; }
+            get { return _NewName; }
             set
             {
-                _newCategoryName = value;
-                OnPropertyChanged(nameof(NewCategoryName));
+                _NewName = value;
+                OnPropertyChanged(nameof(NewName));
                 OnPropertyChanged(nameof(ValidationString));
             }
         }
         public ICommand AddCategoryCommand { get; set; }
+        //Subtaski
+        public ObservableCollection<Subtask> Subtasks { get; set; }
+        private Subtask _selectedSubtask;
+        public Subtask SelectedSubtask
+        {
+            get { return _selectedSubtask; }
+            set
+            {
+                _selectedSubtask = value;
+                OnPropertyChanged(nameof(SelectedSubtask));
+                NewName = SelectedSubtask?.Name;
+            }
+        }
+        public ObservableCollection<Subtask> TaskSubTasks { get; set; } //List of User Available Categories
         //Walidacja
 
         public string this[string columnName]
@@ -152,7 +173,7 @@ namespace ToDoListApp.MVVM.ViewModel
             get
             {
                 // Sprawdź, czy istnieją jakieś błędy walidacji dla poszczególnych właściwości
-                var propertyErrors = typeof(CreateTaskViewModel)
+                var propertyErrors = typeof(EditTaskViewModel)
                     .GetProperties()
                     .Where(p => this[p.Name] != null)
                     .Select(p => this[p.Name]);
@@ -175,6 +196,10 @@ namespace ToDoListApp.MVVM.ViewModel
                 {
                     errors.Add("End date cannot be earlier than start date.");
                 }
+                if ((SelectedTask.Deadline.HasValue && SelectedTask.Deadline < _loggedInUser.Planner.CurrentDate) || SelectedTask.PlannerDate.HasValue && SelectedTask.PlannerDate < _loggedInUser.Planner.CurrentDate)
+                {
+                    errors.Add("You cannot add date before today.");
+                }
                 if (ListBoxSelectedItems != null && ListBoxSelectedItems.Count == 0)
                 {
                     errors.Add("At least one category is required.");
@@ -182,11 +207,17 @@ namespace ToDoListApp.MVVM.ViewModel
                 //nowa kategoria
                 var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
                 ObservableCollection<Category> userCategories = _userRepository.GetUserCategories(user);
-                bool categoryExists = userCategories.Any(category => category.Name.Equals(NewCategoryName));
+                bool categoryExists = userCategories.Any(category => category.Name.Equals(NewName));
 
                 if (categoryExists)
                 {
                     errors.Add("Category with the same name already exists.");
+                }
+
+                bool subTaskExist = TaskSubTasks.Any(subTask => subTask.Name.Equals(NewName) && subTask!=SelectedSubtask);
+                if (subTaskExist)
+                {
+                    errors.Add("Subtask with the same name already exists.");
                 }
             }
             return errors;
@@ -196,6 +227,9 @@ namespace ToDoListApp.MVVM.ViewModel
         //użytkownik
         private UserModel _loggedInUser;
         public ICommand EditTaskCommand { get; set; }
+        public ICommand AddSubtaskCommand { get; set; }
+        public ICommand EditSubtaskCommand { get; set; }
+        public ICommand DeleteSubtaskCommand { get; set; }
         public EditTaskViewModel(MainTask selectedTask)
         {
             _context = new ToDoDbContext();
@@ -203,11 +237,12 @@ namespace ToDoListApp.MVVM.ViewModel
             _userRepository = new UserRepository(_context);
             CurrentUsername = _userRepository.GetCurrentUsername();
             _loggedInUser = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
-            SelectedTask = _context.MainTasks.Include(t => t.Categories).FirstOrDefault(t => t.Id == selectedTask.Id);
-
+            _loggedInUser.Planner.CurrentDate = DateTime.Now.Date;
+            SelectedTask = _context.MainTasks.Include(t => t.Categories).Include(t => t.Subtasks).FirstOrDefault(t => t.Id == selectedTask.Id);
             EditTaskCommand = new ViewModelCommand(EditTask);
             status = selectedTask.Status;
             priority = selectedTask.Priority;
+            TaskSubTasks = new ObservableCollection<Subtask>(selectedTask.Subtasks);
             //Categories
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             TaskCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(user)
@@ -228,18 +263,21 @@ namespace ToDoListApp.MVVM.ViewModel
             }
             ListBoxSelectedItems = SelectedCategories;
             AddCategoryCommand = new ViewModelCommand(ExecuteAddCategoryCommand);
+            AddSubtaskCommand = new ViewModelCommand(ExecuteAddSubTaskCommand);
+            EditSubtaskCommand = new ViewModelCommand(ExecuteEditSubtaskCommand);
+            DeleteSubtaskCommand = new ViewModelCommand(ExecuteDeleteSubtaskCommand);
         }
         private void ExecuteAddCategoryCommand(object obj)
         {
             bool categoryExists = TaskCategories.Any(category =>
-            category.Name.Equals(NewCategoryName, StringComparison.OrdinalIgnoreCase) &&
+            category.Name.Equals(NewName, StringComparison.OrdinalIgnoreCase) &&
             category.IsCustom);
 
-            if (!string.IsNullOrEmpty(NewCategoryName) && !categoryExists)
+            if (!string.IsNullOrEmpty(NewName) && !categoryExists)
             {
                 var category = new Category
                 {
-                    Name = NewCategoryName,
+                    Name = NewName,
                     IsCustom = true,
                     Owner = _loggedInUser.Id // Przypisanie id Usera.
                 };
@@ -251,7 +289,49 @@ namespace ToDoListApp.MVVM.ViewModel
                 TaskCategories.Add(category);
                 _context.Categories.Add(category);
                 _context.SaveChanges();
-                NewCategoryName = string.Empty;
+                NewName = string.Empty;
+            }
+        }
+        private void ExecuteAddSubTaskCommand(object obj)
+        {
+            bool subTaskExist = TaskSubTasks.Any(subTask => subTask.Name.Equals(NewName) && subTask != SelectedSubtask);
+            if (subTaskExist)
+            {
+                return;
+            }
+            if (!string.IsNullOrEmpty(NewName))
+            {
+                TaskSubTasks.Add(new Subtask { Name = NewName, Status = "To Do" });
+                NewName = string.Empty;
+            }
+        }
+        private void ExecuteEditSubtaskCommand(object obj)
+        {
+            if (!string.IsNullOrEmpty(NewName))
+            {
+                bool subTaskExist = TaskSubTasks.Any(subTask => subTask.Name.Equals(NewName) && subTask != SelectedSubtask);
+                if (subTaskExist)
+                {
+                    return;
+                }
+                Subtask selectedSubtask = (Subtask)obj; // Pobierz wybrany Subtask z parametru
+                                                        // Znajdź wybrany Subtask w kolekcji Subtasks
+                Subtask subtaskToUpdate = TaskSubTasks.FirstOrDefault(s => s == selectedSubtask);
+                if (subtaskToUpdate != null)
+                {
+                    subtaskToUpdate.Name = NewName; // Zaktualizuj nazwę Subtaska
+                    NewName = string.Empty; // Wyczyść pole tekstowe
+                }
+            }
+            
+        }
+        private void ExecuteDeleteSubtaskCommand(object obj)
+        {
+            Subtask selectedSubtask = (Subtask)obj;
+
+            if (selectedSubtask != null)
+            {
+                TaskSubTasks.Remove(selectedSubtask);
             }
         }
         private void EditTask(object obj)
@@ -269,7 +349,11 @@ namespace ToDoListApp.MVVM.ViewModel
                 {
                     SelectedTask.Categories.Add(category);
                 }
-
+                SelectedTask.Subtasks.Clear();
+                foreach (var subTask in TaskSubTasks)
+                {
+                    SelectedTask.Subtasks.Add(subTask);
+                }
                 _mainTaskService.UpdateMainTask(SelectedTask);
                 _context.SaveChanges();
                 SelectedTask = null;

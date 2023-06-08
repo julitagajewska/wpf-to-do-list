@@ -62,6 +62,10 @@ namespace ToDoListApp.MVVM.View
                 }
             }
         }
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            subtasksListBox.Items.Refresh();
+        }
 
     }
 }

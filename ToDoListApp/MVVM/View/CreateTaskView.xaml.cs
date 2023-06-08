@@ -33,6 +33,9 @@ namespace ToDoListApp.MVVM.View
             var viewModel = (CreateTaskViewModel)DataContext;
             viewModel.SelectedCategories = new ObservableCollection<Category>(selectedItems);
         }
-
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            subtasksListBox.Items.Refresh();
+        }
     }
 }

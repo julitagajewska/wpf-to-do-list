@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-//using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
@@ -46,11 +45,12 @@ namespace ToDoListApp.MVVM.ViewModel
         }
         public ICommand EditTasksViewCommand { get; set; }
         public ICommand DeleteTasksViewCommand { get; set; }
+
         public DetailsTaskViewModel(MainTask selectedTask)
         {
             _context = new ToDoDbContext();
             _mainTaskService = new MainTaskService(_context);
-            SelectedTask = _context.MainTasks.Include(t => t.Categories).FirstOrDefault(t => t.Id == selectedTask.Id);
+            SelectedTask = _context.MainTasks.Include(t => t.Categories).Include(t => t.Subtasks).FirstOrDefault(t => t.Id == selectedTask.Id);
 
             EditTasksViewCommand = new ViewModelCommand(ShowEditTaskViewCommand);
             DeleteTasksViewCommand = new ViewModelCommand(ExecuteDeleteTaskCommand);

@@ -12,8 +12,8 @@ using ToDoListApp.Data;
 namespace ToDoListApp.Migrations
 {
     [DbContext(typeof(ToDoDbContext))]
-    [Migration("20230522105659_SubTask")]
-    partial class SubTask
+    [Migration("20230607185151_SubtaskNewNew")]
+    partial class SubtaskNewNew
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,7 +48,14 @@ namespace ToDoListApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("IsCustom")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Owner")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -120,9 +127,6 @@ namespace ToDoListApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("MainTaskId")
                         .HasColumnType("int");
 
@@ -163,7 +167,8 @@ namespace ToDoListApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlannerId");
+                    b.HasIndex("PlannerId")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -208,8 +213,8 @@ namespace ToDoListApp.Migrations
             modelBuilder.Entity("ToDoListApp.MVVM.Model.UserModel", b =>
                 {
                     b.HasOne("ToDoListApp.MVVM.Model.Planner", "Planner")
-                        .WithMany()
-                        .HasForeignKey("PlannerId")
+                        .WithOne("User")
+                        .HasForeignKey("ToDoListApp.MVVM.Model.UserModel", "PlannerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -224,6 +229,9 @@ namespace ToDoListApp.Migrations
             modelBuilder.Entity("ToDoListApp.MVVM.Model.Planner", b =>
                 {
                     b.Navigation("MainTasks");
+
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

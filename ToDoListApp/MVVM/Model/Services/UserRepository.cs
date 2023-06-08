@@ -27,20 +27,15 @@ namespace ToDoListApp.MVVM.Model.Services
         }
         public void Add(UserModel userModel)
         {
-            //tutaj będzie rejetracja, mniej więcej w taki sposób.
-            /*var user = new User
-            {
-                Username = Username,
-                // inne pola użytkownika
-            };
+            //pakiet kategorii
+            new Category{ Name="School", IsCustom=false,Owner= userModel.Id};
+            new Category { Name = "Home", IsCustom = false, Owner = userModel.Id };
+            new Category { Name = "Work", IsCustom = false, Owner = userModel.Id };
+            
+            _context.Users.Add(userModel); 
+            _context.Planners.Add(userModel.Planner);
+            _context.SaveChanges();
 
-            var planner = new Planner();
-            user.Planner = planner;
-
-            _context.Users.Add(user);
-            _context.Planners.Add(planner);
-            _context.SaveChanges();*/
-            throw new NotImplementedException();
         }
 
         public bool AuthenticateUser(NetworkCredential credential)

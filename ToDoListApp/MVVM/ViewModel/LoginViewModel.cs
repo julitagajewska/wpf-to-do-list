@@ -129,7 +129,8 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 Thread.CurrentPrincipal = new GenericPrincipal(
                     new GenericIdentity(Username), null);
-
+                var planner = _userRepository.GetPlannerByUsername(Username); // Przykładowa metoda w UserRepository
+                planner.CurrentDate = DateTime.Now; //Ustaw datę systemową
                 //_parent.IsViewVisible = false;
                 _visibilityStore.ChangeVisibilty(false);
             }

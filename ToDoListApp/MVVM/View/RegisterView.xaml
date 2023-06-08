@@ -138,7 +138,7 @@
                         Margin="0,20,0,0"/>
 
             <!-- ??? -->
-            <customcontrols:BindablePasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            <customcontrols:BindablePasswordBox Password="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Height="28"
                         Padding="0, 0, 0, 0">
             </customcontrols:BindablePasswordBox>

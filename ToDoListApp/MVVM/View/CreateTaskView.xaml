@@ -28,6 +28,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"/>
@@ -46,6 +48,10 @@
         <DatePicker Grid.Row="3" Grid.Column="2" SelectedDate="{Binding TaskStartDate, Mode=TwoWay, StringFormat='{}{0:yyyy-MM-dd}'}" Margin="5" />
         <TextBlock Grid.Row="4" Grid.Column="1" Text="EndDate:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
         <DatePicker Grid.Row="4" Grid.Column="2" SelectedDate="{Binding TaskEndDate, Mode=TwoWay,StringFormat='{}{0:yyyy-MM-dd}'}" Margin="5" />
+
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="PlannerDate:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
+        <DatePicker Grid.Row="5" Grid.Column="2" SelectedDate="{Binding TaskPlannerDate, Mode=TwoWay,StringFormat='{}{0:yyyy-MM-dd}'}" Margin="5" />
+        
         <TextBlock Grid.Row="6" Grid.Column="1" Text="Priority:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
         <ComboBox Grid.Row="6" Grid.Column="2" SelectedItem="{Binding SelectedTaskPriorityItem, Mode=TwoWay}" Margin="5"  >
             <ComboBoxItem Content="Low"/>
@@ -60,34 +66,27 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
-        <CheckBox Grid.Row="8" Grid.Column="1" Content="Add New Category" IsChecked="{Binding IsAddCategoryChecked}" Margin="5"  Foreground="#80FFFFFF" />
-        <TextBox Grid.Row="8" Grid.Column="2" Text="{Binding NewCategoryName}" Margin="5" IsEnabled="{Binding IsAddCategoryChecked}"/>
-
-        <ItemsControl ItemsSource="{Binding Subtasks}" Margin="5">
-            <ItemsControl.ItemTemplate>
+        <TextBlock Grid.Row="8" Grid.Column="1" Text="SubTasks:" Margin="5" Foreground="#80FFFFFF" />
+        <ListBox x:Name="subtasksListBox" Grid.Row="8" Grid.Column="2" ItemsSource="{Binding Subtasks}" SelectedItem="{Binding SelectedSubtask}" Margin="5">
+            <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="SubTask Name:" VerticalAlignment="Center" Margin="5" />
-                        <TextBox Text="{Binding SubtaskName}" Margin="5" />
-                        <TextBlock Text="SubTask Description:" VerticalAlignment="Center" Margin="5" />
-                        <TextBox Text="{Binding SubtaskDescription}" Margin="5" />
-                        <TextBlock Text="SubTask Status:" VerticalAlignment="Center" Margin="5" />
-                        <ComboBox SelectedItem="{Binding SubtaskStatus}" Margin="5">
-                            <ComboBoxItem Content="To Do"/>
-                            <ComboBoxItem Content="In Progress" />
-                            <ComboBoxItem Content="Done" />
-                        </ComboBox>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" Width="200" />
+                        <Button Content="Edit" Command="{Binding DataContext.EditSubtaskCommand, RelativeSource={RelativeSource AncestorType={x:Type local:CreateTaskView}}}" CommandParameter="{Binding}"  Click="RefreshButton_Click"/>
+
+                        <Button Content="Delete" Command="{Binding DataContext.DeleteSubtaskCommand, RelativeSource={RelativeSource AncestorType={x:Type local:CreateTaskView}}}" CommandParameter="{Binding}" Click="RefreshButton_Click"/>
                     </StackPanel>
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-        <TextBox Grid.Row="8" Grid.Column="2" Text="{Binding NewCategoryName}" Visibility="{Binding IsAddCategoryChecked, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="5" />
-        <Button Grid.Row="9" Grid.Column="2" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
-        <Button Grid.Row="10" Grid.Column="1" Content="Add Task" Command="{Binding AddTaskCommand}" Margin="5"/>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
-        <Button Grid.Row="10" Grid.Column="2" Content="Add SubTask" Command="{Binding AddSubtaskCommand}" Margin="5" />
-        <TextBlock Grid.Row="11" Text="{Binding ValidationString}" Foreground="Red" Margin="5" />
+        <TextBox Grid.Row="9" Grid.Column="2" Text="{Binding NewName}" Margin="5"/>
+        <TextBox Grid.Row="9" Grid.Column="2" Text="{Binding NewName}" Margin="5" />
+        <Button Grid.Row="10" Grid.Column="2" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
+        <Button Grid.Row="11" Grid.Column="1" Content="Add Task" Command="{Binding AddTaskCommand}" Margin="5"/>
+
+        <Button Grid.Row="11" Grid.Column="2" Content="Add SubTask" Command="{Binding AddSubtaskCommand}" Margin="5" />
+        <TextBlock Grid.Row="12" Text="{Binding ValidationString}" Foreground="Red" Margin="5" />
 
     </Grid>
 </UserControl>

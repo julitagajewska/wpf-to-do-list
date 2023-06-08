@@ -28,8 +28,6 @@ namespace ToDoListApp.MVVM.View
         public MainView()
         {
             InitializeComponent();
-            //dodaj, żeby po naciśnięciu X apka się po prostu wyłączała, a nie crashowała.
-
         }
 
         [DllImport("user32.dll")]

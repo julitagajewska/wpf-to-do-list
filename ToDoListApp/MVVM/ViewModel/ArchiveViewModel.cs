@@ -98,9 +98,10 @@ namespace ToDoListApp.MVVM.ViewModel
         {
             if (_loggedInUser != null && _loggedInUser.Planner != null)
             {
+                _loggedInUser.Planner.CurrentDate = DateTime.Now.Date;
                 Tasks = new ObservableCollection<MainTask>(_context.MainTasks
                     .Include(t => t.Categories)
-                    .Where(t => t.PlannerId == _loggedInUser.PlannerId && t.Status == "Done")
+                    .Where(t => t.PlannerId == _loggedInUser.PlannerId && t.Status == "Done" && t.PlannerDate != _loggedInUser.Planner.CurrentDate)
                     .ToList());
             }
             // Retrieve all tasks from the database
