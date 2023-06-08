@@ -152,7 +152,8 @@ namespace ToDoListApp.MVVM.ViewModel
 
         private void ExecuteShowOverviewViewCommand(object obj)
         {
-            CurrentChildView = new OverviewViewModel();
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            CurrentChildView = new OverviewViewModel(user);
             Caption = "Overview";
             addTaskVisibility = "Visible";
             username = CurrentUserAccount.Username;

@@ -41,12 +41,16 @@
         <DatePicker Grid.Row="3" Grid.Column="2" SelectedDate="{Binding SelectedTask.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBlock Grid.Row="4" Grid.Column="1" Text="EndDate:" Foreground="#80FFFFFF" />
         <DatePicker Grid.Row="4" Grid.Column="2" SelectedDate="{Binding SelectedTask.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Row="5" Grid.Column="1" Text="Status:" Foreground="#80FFFFFF" />
-        <ComboBox Grid.Row="5" Grid.Column="2" ItemsSource="{Binding statuses}" SelectedItem="{Binding SelectedTask.Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
-        <TextBlock Grid.Row="6" Grid.Column="1" Text="Priority:" Foreground="#80FFFFFF" />
-        <ComboBox Grid.Row="6" Grid.Column="2" ItemsSource="{Binding priorities}" SelectedItem="{Binding SelectedTask.Priority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
-        <TextBlock Grid.Row="7" Grid.Column="1" Text="Categories:" Foreground="#80FFFFFF" />
-        <ListBox x:Name="ListBoxCategories" Grid.Row="7" Grid.Column="2" SelectionMode="Extended"
+
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="PlannerDate:" Foreground="#80FFFFFF" />
+        <DatePicker Grid.Row="5" Grid.Column="2" SelectedDate="{Binding SelectedTask.PlannerDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+        <TextBlock Grid.Row="6" Grid.Column="1" Text="Status:" Foreground="#80FFFFFF" />
+        <ComboBox Grid.Row="6" Grid.Column="2" ItemsSource="{Binding statuses}" SelectedItem="{Binding SelectedTask.Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+        <TextBlock Grid.Row="7" Grid.Column="1" Text="Priority:" Foreground="#80FFFFFF" />
+        <ComboBox Grid.Row="7" Grid.Column="2" ItemsSource="{Binding priorities}" SelectedItem="{Binding SelectedTask.Priority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+        <TextBlock Grid.Row="8" Grid.Column="1" Text="Categories:" Foreground="#80FFFFFF" />
+        <ListBox x:Name="ListBoxCategories" Grid.Row="8" Grid.Column="2" SelectionMode="Extended"
          ItemsSource="{Binding TaskCategories}" SelectedItem="{Binding ListBoxSelectedItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
          IsEnabled="{Binding IsListBoxEnabled}" Loaded="ListBoxCategories_Loaded" >
             <ListBox.ItemTemplate>
@@ -55,8 +59,8 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBlock Grid.Row="8" Grid.Column="1" Text="SubTasks:" Foreground="#80FFFFFF" />
-        <ListBox x:Name="subtasksListBox" Grid.Row="8" Grid.Column="2" ItemsSource="{Binding TaskSubTasks}" SelectedItem="{Binding SelectedSubtask}" Margin="5">
+        <TextBlock Grid.Row="9" Grid.Column="1" Text="SubTasks:" Foreground="#80FFFFFF" />
+        <ListBox x:Name="subtasksListBox" Grid.Row="9" Grid.Column="2" ItemsSource="{Binding TaskSubTasks}" SelectedItem="{Binding SelectedSubtask}" Margin="5">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -69,10 +73,10 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <TextBox Grid.Row="9" Grid.Column="2" Text="{Binding NewName}" Margin="5"/>
-        <Button Grid.Row="10" Grid.Column="1" Content="Add SubTask" Command="{Binding AddSubtaskCommand}" Margin="5" />
-        <Button Grid.Row="10" Grid.Column="2" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
-        <Button Grid.Row="11" Grid.Column="2"  Content="Save" Command="{Binding EditTaskCommand}"/>
-        <TextBlock Grid.Row="12" Text="{Binding ValidationString}" Foreground="Red" Margin="5" />
+        <TextBox Grid.Row="10" Grid.Column="2" Text="{Binding NewName}" Margin="5"/>
+        <Button Grid.Row="11" Grid.Column="1" Content="Add SubTask" Command="{Binding AddSubtaskCommand}" Margin="5" />
+        <Button Grid.Row="11" Grid.Column="2" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
+        <Button Grid.Row="12" Grid.Column="2"  Content="Save" Command="{Binding EditTaskCommand}"/>
+        <TextBlock Grid.Row="13" Text="{Binding ValidationString}" Foreground="Red" Margin="5" />
     </Grid>
 </UserControl>

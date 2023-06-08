@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <converters:CategoriesToStringConverter x:Key="CategoriesToStringConverter" />
         <converters:SubTasksToStringConverter x:Key="SubTasksToStringConverter" />
+        <converters:DateToColorConverter x:Key="DateToColorConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -21,6 +22,8 @@
         </Grid.ColumnDefinitions>
         
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -47,23 +50,32 @@
 
         <TextBlock Grid.Row="4" Grid.Column="1" Text="EndDate:" Foreground="#80FFFFFF" FontWeight="Bold" Width="100"/>
         <TextBlock Grid.Row="4" Grid.Column="2"  Text="{Binding SelectedTask.EndDate, StringFormat=\{0:dd-MM-yyyy\}}" Foreground="#80FFFFFF" />
-        
-        <TextBlock Grid.Row="5" Grid.Column="1" Text="Status:" Foreground="#80FFFFFF" FontWeight="Bold" Width="100"/>
-        <TextBlock Grid.Row="5" Grid.Column="2"  Text="{Binding SelectedTask.Status}" Foreground="#80FFFFFF" />
 
-        <TextBlock Grid.Row="6" Grid.Column="1" Text="Priority:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
-        <TextBlock Grid.Row="6" Grid.Column="2"  Text="{Binding SelectedTask.Priority}" Foreground="#80FFFFFF" />
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="PlannerDate:" Foreground="#80FFFFFF" FontWeight="Bold" Width="100"/>
+        <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding SelectedTask.PlannerDate, StringFormat=\{0:dd-MM-yyyy\}}" Foreground="#80FFFFFF">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Background" Value="{Binding SelectedTask.PlannerDate, Converter={StaticResource DateToColorConverter}}" />
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
+        <TextBlock Grid.Row="6" Grid.Column="1" Text="Status:" Foreground="#80FFFFFF" FontWeight="Bold" Width="100"/>
+        <TextBlock Grid.Row="6" Grid.Column="2"  Text="{Binding SelectedTask.Status}" Foreground="#80FFFFFF" />
+
+        <TextBlock Grid.Row="7" Grid.Column="1" Text="Priority:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
+        <TextBlock Grid.Row="7" Grid.Column="2"  Text="{Binding SelectedTask.Priority}" Foreground="#80FFFFFF" />
         
-        <TextBlock Grid.Row="7" Grid.Column="1" Text="Categories:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
-        <TextBlock Grid.Row="7" Grid.Column="2"  Foreground="#80FFFFFF" >
+        <TextBlock Grid.Row="8" Grid.Column="1" Text="Categories:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
+        <TextBlock Grid.Row="8" Grid.Column="2"  Foreground="#80FFFFFF" >
             <TextBlock.Text>
                 <MultiBinding Converter="{StaticResource CategoriesToStringConverter}">
                     <Binding Path="SelectedTask.Categories" />
                 </MultiBinding>
             </TextBlock.Text>
         </TextBlock>
-        <TextBlock Grid.Row="8" Grid.Column="1" Text="SubTasks:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
-        <TextBlock Grid.Row="8" Grid.Column="2"  Foreground="#80FFFFFF" >
+        <TextBlock Grid.Row="9" Grid.Column="1" Text="SubTasks:" Foreground="#80FFFFFF" FontWeight="Bold"  Width="100"/>
+        <TextBlock Grid.Row="9" Grid.Column="2"  Foreground="#80FFFFFF" >
             <TextBlock.Text>
                 <MultiBinding Converter="{StaticResource SubTasksToStringConverter}">
                     <Binding Path="SelectedTask.Subtasks" />
@@ -72,7 +84,7 @@
         </TextBlock>
 
         
-        <StackPanel Grid.Row="9" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="10" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Button Content="Edit Task" Margin="0,0,10,0" Width="160" Command="{Binding DataContext.EditTasksViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
             <Button Content="Delete Task" Margin="10,0,0,0" Width="160" Command="{Binding DataContext.DeleteTasksViewCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding SelectedTask}" />
         </StackPanel>

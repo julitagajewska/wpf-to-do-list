@@ -48,6 +48,10 @@
         <DatePicker Grid.Row="3" Grid.Column="2" SelectedDate="{Binding TaskStartDate, Mode=TwoWay, StringFormat='{}{0:yyyy-MM-dd}'}" Margin="5" />
         <TextBlock Grid.Row="4" Grid.Column="1" Text="EndDate:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
         <DatePicker Grid.Row="4" Grid.Column="2" SelectedDate="{Binding TaskEndDate, Mode=TwoWay,StringFormat='{}{0:yyyy-MM-dd}'}" Margin="5" />
+
+        <TextBlock Grid.Row="5" Grid.Column="1" Text="PlannerDate:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
+        <DatePicker Grid.Row="5" Grid.Column="2" SelectedDate="{Binding TaskPlannerDate, Mode=TwoWay,StringFormat='{}{0:yyyy-MM-dd}'}" Margin="5" />
+        
         <TextBlock Grid.Row="6" Grid.Column="1" Text="Priority:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
         <ComboBox Grid.Row="6" Grid.Column="2" SelectedItem="{Binding SelectedTaskPriorityItem, Mode=TwoWay}" Margin="5"  >
             <ComboBoxItem Content="Low"/>

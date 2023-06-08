@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToDoListApp.MVVM.Model;
+using ToDoListApp.MVVM.ViewModel;
 
 namespace ToDoListApp.MVVM.View
 {
@@ -23,6 +25,14 @@ namespace ToDoListApp.MVVM.View
         public OverviewView()
         {
             InitializeComponent();
+        }
+        private void DataGridRow_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var row = sender as DataGridRow;
+            var viewModel = DataContext as OverviewViewModel;
+            var selectedTask = row.DataContext as MainTask;
+
+            viewModel.ShowDetailsTaskViewCommand.Execute(selectedTask);
         }
     }
 }

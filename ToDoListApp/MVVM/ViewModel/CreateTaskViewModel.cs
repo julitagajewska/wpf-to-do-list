@@ -27,6 +27,7 @@ namespace ToDoListApp.MVVM.ViewModel
         private DateTime? _taskDeadline;
         private DateTime? _taskStartDate;
         private DateTime? _taskEndDate;
+        private DateTime? _taskplannerDate;
         private string _taskPriority;
         public string TaskName
         {
@@ -81,7 +82,16 @@ namespace ToDoListApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(ValidationString));
             }
         }
-
+        public DateTime? TaskPlannerDate
+        {
+            get { return _taskplannerDate; }
+            set
+            {
+                _taskplannerDate = value;
+                OnPropertyChanged(nameof(TaskPlannerDate));
+                OnPropertyChanged(nameof(ValidationString));
+            }
+        }
         public string TaskPriority
         {
             get { return _taskPriority; }
@@ -381,6 +391,7 @@ namespace ToDoListApp.MVVM.ViewModel
                 Deadline = TaskDeadline,
                 StartDate = TaskStartDate,
                 EndDate = TaskEndDate,
+                PlannerDate = TaskPlannerDate,
                 Status = "To Do",
                 Priority = TaskPriority,
                 Categories = SelectedCategories.ToList(),
