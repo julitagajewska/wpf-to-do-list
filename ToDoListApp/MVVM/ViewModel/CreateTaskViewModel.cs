@@ -219,6 +219,12 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 errors.Add("End date cannot be earlier than start date.");
             }
+            //Deadline && PlannerDate
+            if((TaskDeadline.HasValue && TaskDeadline < _loggedInUser.Planner.CurrentDate)|| TaskPlannerDate.HasValue && TaskPlannerDate < _loggedInUser.Planner.CurrentDate)
+            {
+                errors.Add("You cannot add date before today.");
+            }
+
             if (SelectedCategories.Count == 0)
             {
                 errors.Add("At least one category is required.");
@@ -232,6 +238,7 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 errors.Add("Category with the same name already exists.");
             }
+
             bool subTaskExist = Subtasks.Any(subTask => subTask.Name.Equals(NewName) && subTask!=SelectedSubtask);
             if (subTaskExist)
             {
@@ -248,6 +255,7 @@ namespace ToDoListApp.MVVM.ViewModel
             // Pobierz bieżące nazwisko użytkownika
             CurrentUsername = _userRepository.GetCurrentUsername();
             _loggedInUser = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            _loggedInUser.Planner.CurrentDate = DateTime.Now.Date;
             SelectionChangedCommand = new ViewModelCommand(ListBoxSelectionChanged);
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             TaskCategories = new ObservableCollection<Category>(_userRepository.GetUserCategories(user)

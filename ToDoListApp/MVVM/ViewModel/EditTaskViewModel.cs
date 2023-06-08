@@ -196,6 +196,10 @@ namespace ToDoListApp.MVVM.ViewModel
                 {
                     errors.Add("End date cannot be earlier than start date.");
                 }
+                if ((SelectedTask.Deadline.HasValue && SelectedTask.Deadline < _loggedInUser.Planner.CurrentDate) || SelectedTask.PlannerDate.HasValue && SelectedTask.PlannerDate < _loggedInUser.Planner.CurrentDate)
+                {
+                    errors.Add("You cannot add date before today.");
+                }
                 if (ListBoxSelectedItems != null && ListBoxSelectedItems.Count == 0)
                 {
                     errors.Add("At least one category is required.");
@@ -233,8 +237,8 @@ namespace ToDoListApp.MVVM.ViewModel
             _userRepository = new UserRepository(_context);
             CurrentUsername = _userRepository.GetCurrentUsername();
             _loggedInUser = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+            _loggedInUser.Planner.CurrentDate = DateTime.Now.Date;
             SelectedTask = _context.MainTasks.Include(t => t.Categories).Include(t => t.Subtasks).FirstOrDefault(t => t.Id == selectedTask.Id);
-            
             EditTaskCommand = new ViewModelCommand(EditTask);
             status = selectedTask.Status;
             priority = selectedTask.Priority;
