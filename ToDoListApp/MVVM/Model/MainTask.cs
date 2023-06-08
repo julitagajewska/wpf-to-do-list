@@ -18,6 +18,7 @@ namespace ToDoListApp.MVVM.Model
         public DateTime? Deadline { get; set; }
         public DateTime? StartDate { get; set;  }
         public DateTime? EndDate { get; set; }
+        public DateTime? PlannerDate { get; set; } //Planowana data wykonania( w Plannerze)
         [Required]
         public string Status { get; set; }
         [Required]

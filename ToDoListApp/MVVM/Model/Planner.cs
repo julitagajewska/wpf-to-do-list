@@ -14,6 +14,8 @@ namespace ToDoListApp.MVVM.Model
         public int Id { get; set; }
         public UserModel User { get; set; }
 
+        public DateTime CurrentDate { get; set; }
+
         public ICollection<MainTask>? MainTasks { get; set; }
         public Planner()
         {
