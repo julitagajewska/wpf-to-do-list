@@ -36,21 +36,31 @@
             GridLinesVisibility="None"
             ItemsSource="{Binding Tasks}"
             AutoGenerateColumns="False" 
-            HorizontalAlignment="Stretch"
+            HorizontalAlignment="Left"
             VerticalAlignment="Stretch"
-            HeadersVisibility="Column">
+            HeadersVisibility="Column"
+            CanUserAddRows="false">
             
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Status" Width="60" Binding="{Binding Status}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True"/>
-                <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
+                
+                <!--<DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Content="{Binding Name}" Command="{Binding DataContext.ShowDetailsTaskViewCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                     CommandParameter="{Binding}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
+
+                <DataGridTextColumn Header="Name" Width="120" Binding="{Binding Name}" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
 
                 <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
@@ -59,9 +69,11 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Deadline" Width="70" Binding="{Binding Deadline, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="StartDate" Width="70" Binding="{Binding StartDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="EndDate" Width="70" Binding="{Binding EndDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                
+                <DataGridTextColumn Header="Deadline" Width="90" Binding="{Binding Deadline, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="StartDate" Width="90" Binding="{Binding StartDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="EndDate" Width="90" Binding="{Binding EndDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                
                 <DataGridTextColumn Header="Categories" Width="*" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource CategoriesToStringConverter}">

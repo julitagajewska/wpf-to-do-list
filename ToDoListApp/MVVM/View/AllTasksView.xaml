@@ -11,14 +11,15 @@
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model.Converters" xmlns:ei1="http://schemas.microsoft.com/xaml/behaviors">
+             xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model.Converters"
+             xmlns:ei1="http://schemas.microsoft.com/xaml/behaviors">
 
     <UserControl.Resources>
         <converters:CategoriesToStringConverter x:Key="CategoriesToStringConverter" />
         <DataTemplate DataType="{x:Type mvvm:CreateTaskViewModel}">
             <local:CreateTaskView />
         </DataTemplate>
-    </UserControl.Resources> 
+    </UserControl.Resources>
 
     <Grid Margin="-10,0,10,0">
         <Grid.ColumnDefinitions>
@@ -122,9 +123,9 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Status" Width="60" Binding="{Binding Status}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Priority" x:Name="PriorityColumn" Width="60" Binding="{Binding Priority}" IsReadOnly="True" CellStyle="{StaticResource priorityTaleCell}"/>
 
-                <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
+                <!--<DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button
@@ -134,7 +135,15 @@
                                 Style="{StaticResource cellButton}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
+
+                <DataGridTextColumn Header="Name" Width="120" Binding="{Binding Name}" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
 
                 <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
@@ -144,9 +153,9 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Header="Deadline" Width="70" Binding="{Binding Deadline, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="StartDate" Width="70" Binding="{Binding StartDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="EndDate" Width="70" Binding="{Binding EndDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Deadline" Width="90" Binding="{Binding Deadline, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="StartDate" Width="90" Binding="{Binding StartDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="EndDate" Width="90" Binding="{Binding EndDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
 
                 <DataGridTextColumn Header="Categories" Width="*" IsReadOnly="True">
                     <DataGridTextColumn.Binding>

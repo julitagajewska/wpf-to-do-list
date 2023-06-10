@@ -12,10 +12,12 @@ namespace ToDoListApp.MVVM.Model.Services
     public class CategoryRepository : ICategoryRepository
     {
         private readonly ToDoDbContext _context;
+
         public CategoryRepository(ToDoDbContext context)
         {
             _context = context;
         }
+
         public void UpdateCategory(Category category)
         {
             // Sprawdź, czy kategoria jest już dołączona do kontekstu

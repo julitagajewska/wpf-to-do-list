@@ -250,7 +250,7 @@
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="100" />
                             <ColumnDefinition Width="80" />
@@ -259,7 +259,7 @@
                         <Grid
                             Grid.Column="1" Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="120" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="100" />

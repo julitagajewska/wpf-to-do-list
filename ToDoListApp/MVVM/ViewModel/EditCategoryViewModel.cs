@@ -21,7 +21,9 @@ namespace ToDoListApp.MVVM.ViewModel
         private readonly ToDoDbContext _context;
         private readonly IUserRepository _userRepository;
         private readonly CategoryRepository _categoryRepository;
+
         private Category _selectedCategory;
+
         public Category SelectedCategory
         {
             get { return _selectedCategory; }
@@ -32,7 +34,7 @@ namespace ToDoListApp.MVVM.ViewModel
                 OnPropertyChanged(nameof(ValidationString));
             }
         }
-        //Walidacja
+
         //Walidacja
         public string this[string columnName]
         {
@@ -40,10 +42,9 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 if (SelectedCategory != null)
                 {
-
                     if (string.IsNullOrEmpty(SelectedCategory.Name))
                     {
-                        return "Category Name is required.";
+                        return "Category Name is required";
                     }
 
                 }
@@ -76,8 +77,8 @@ namespace ToDoListApp.MVVM.ViewModel
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             ObservableCollection<Category> userCategories = _userRepository.GetUserCategories(user);
             bool categoryExists = userCategories.Any(category =>
-            category.Name.Equals(SelectedCategory.Name, StringComparison.OrdinalIgnoreCase) &&
-            category.IsCustom && category!=SelectedCategory);
+            category.Name.Equals(SelectedCategory.Name, StringComparison.OrdinalIgnoreCase)
+            && category!=SelectedCategory);
 
             if (categoryExists)
             {

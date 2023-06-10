@@ -212,9 +212,10 @@ namespace ToDoListApp.MVVM.ViewModel
         }
         private void ExecuteShowEditCategoryView(object payload)
         {
+            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             if (payload is Category selectedCategory)
             {
-                Caption = selectedCategory.Name;
+                Caption = $"Edit category: {selectedCategory.Name}";
                 CurrentChildView = new EditCategoryViewModel(selectedCategory);
             }
 

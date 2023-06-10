@@ -27,6 +27,7 @@
   <ItemGroup>
     <None Remove="Images\key-icon.png" />
     <None Remove="Images\login-background.jpg" />
+    <None Remove="Images\pen.png" />
     <None Remove="Images\profile-picture.jpg" />
     <None Remove="Images\user-icon.png" />
   </ItemGroup>
@@ -63,6 +64,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Images\pen.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Images\profile-picture.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
