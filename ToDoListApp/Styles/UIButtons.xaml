@@ -12,7 +12,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" Width="30" Height="30" CornerRadius="4">
+                    <Border Background="{TemplateBinding Background}" Width="20" Height="20" CornerRadius="4">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </ControlTemplate>
@@ -43,5 +43,113 @@
         <Setter Property="Width" Value="18" />
         <Setter Property="Height" Value="18" />
     </Style>
+    
+    <!-- Task checkbox -->
+    <Style x:Key="TaskCheckbox" TargetType="{x:Type CheckBox}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Foreground" Value="#80FFFFFF" />
+        <Setter Property="Opacity" Value="1" />
+        <Setter Property="Margin" Value="0, 0, 0, 10" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    
+                    <!-- Bullet -->
+                    <BulletDecorator Background="Transparent">
+                        <BulletDecorator.Bullet>
+                            <Border x:Name="Border"
+                                    Width="15"
+                                    Height="15"
+                                    CornerRadius="10"
+                                    BorderThickness="2">
 
+                                <!-- Bullet border -->
+                                <Border.BorderBrush>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStopCollection>
+                                                <GradientStop Color="#00cdcf" Offset="0.0" />
+                                                <GradientStop Color="#158093" Offset="1.0" />
+                                            </GradientStopCollection>
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </Border.BorderBrush>
+
+                                <!-- Bullet fill -->
+                                <!--<Border.Background>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStopCollection>
+                                                <GradientStop Color="#00cdcf" Offset="0.0" />
+                                                <GradientStop Color="#158093" Offset="1.0" />
+                                            </GradientStopCollection>
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </Border.Background>-->
+
+                                <Grid>
+                                    <Border x:Name="InnerCircle"
+                                            Visibility="Hidden"
+                                            Width="6"
+                                            Height="6"
+                                            CornerRadius="6" >
+
+                                        <Border.BorderBrush>
+                                            <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                                <LinearGradientBrush.GradientStops>
+                                                    <GradientStopCollection>
+                                                        <GradientStop Color="#00cdcf" Offset="0.0" />
+                                                        <GradientStop Color="#158093" Offset="1.0" />
+                                                    </GradientStopCollection>
+                                                </LinearGradientBrush.GradientStops>
+                                            </LinearGradientBrush>
+                                        </Border.BorderBrush>
+
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                                <LinearGradientBrush.GradientStops>
+                                                    <GradientStopCollection>
+                                                        <GradientStop Color="#00cdcf" Offset="0.0" />
+                                                        <GradientStop Color="#158093" Offset="1.0" />
+                                                    </GradientStopCollection>
+                                                </LinearGradientBrush.GradientStops>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </BulletDecorator.Bullet>
+
+                        <ContentPresenter
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            RecognizesAccessKey="True" />
+
+                    </BulletDecorator>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="InnerCircle" Property="Visibility" Value="Visible" />
+                            <Setter Property="Opacity" Value="0.75" />
+                            <Setter TargetName="Border" Property="Opacity" Value="0.5" />
+                        </Trigger>
+                        
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="#BFFFFFFF" />
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.9" />
+                            <Setter TargetName="Border" Property="Opacity" Value="0.7" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

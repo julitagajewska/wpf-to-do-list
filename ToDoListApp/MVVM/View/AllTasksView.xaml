@@ -21,7 +21,7 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Grid Margin="-10,0,10,0">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80" />
             <ColumnDefinition Width="463*" />
@@ -98,7 +98,36 @@
 
 
             <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-                <customcontrols:FilteringTextBox PlaceholderText="Filter tasks ..."/>
+                <Grid>
+                    <Border x:Name="inputBackground" BorderBrush="#343c72" BorderThickness="16" CornerRadius="2" Panel.ZIndex="1"/>
+
+                    <TextBox
+                        x:Name="filteringInput"
+                        Style="{StaticResource serchTextBox}"
+                        Panel.ZIndex="2"
+                        TextChanged="filteringInput_TextChanged"
+                        GotFocus="filteringInput_GotFocus"
+                        LostFocus="filteringInput_LostFocus"/>
+
+                    <fa:IconImage
+                        Icon="MagnifyingGlass"
+                        Width="10"
+                        Height="10"
+                        Foreground="#80FFFFFF"
+                        HorizontalAlignment="Left"
+                        Margin="15 0 0 0"
+                        Panel.ZIndex="1"/>
+
+                    <TextBlock 
+                        x:Name="placeholder"
+                        Text="Filter tasks ..."
+                        Foreground="#80FFFFFF"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Margin="35 0 0 0"
+                        Panel.ZIndex="1"/>
+
+                </Grid>
             </StackPanel>
 
         </Grid>

@@ -31,9 +31,11 @@
         <DataTemplate DataType="{x:Type viewModel:DetailsTaskViewModel}">
             <local:DetailsTaskView />
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewModel:EditTaskViewModel}">
             <local:EditTaskView />
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewModel:ArchiveViewModel}">
             <local:ArchiveView />
         </DataTemplate>
@@ -52,6 +54,10 @@
 
         <DataTemplate DataType="{x:Type viewModel:EditCategoryViewModel}">
             <local:EditCategoryView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:ArchivedTaskDetailsViewModel}">
+            <local:ArchivedTaskDetailsView />
         </DataTemplate>
     </Window.Resources>
     
@@ -124,6 +130,7 @@
                                 <TextBlock Text="All tasks" Style="{StaticResource sidebarButtonText}" />
                             </StackPanel>
                         </RadioButton>
+                        
                         <!-- Categories -->
                         <RadioButton
                             Style="{StaticResource sidebarButton}"
@@ -135,6 +142,7 @@
                                 <TextBlock Text="Categories" Style="{StaticResource sidebarButtonText}" />
                             </StackPanel>
                         </RadioButton>
+                        
                         <!-- Archive -->
                         <RadioButton
                             Style="{StaticResource sidebarButton}"
@@ -266,7 +274,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Caption}" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <TextBlock Text="{Binding Caption}" Style="{StaticResource headerLarge}" />
                             </StackPanel>
 
                             <!--<Button Grid.Column="1" Style="{StaticResource buttonWithIcon}" Visibility="{Binding addTaskVisibility}">

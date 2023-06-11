@@ -6,8 +6,12 @@
              xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
              xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model.Converters"
              xmlns:mvvm="clr-namespace:ToDoListApp.MVVM.ViewModel"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:customcontrols="clr-namespace:ToDoListApp.CustomControls"
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    
     <UserControl.Resources>
         <converters:CategoriesToStringConverter x:Key="CategoriesToStringConverter" />
         <DataTemplate DataType="{x:Type mvvm:ArchiveViewModel}">
@@ -23,15 +27,90 @@
         </Grid.ColumnDefinitions>
         
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
+        
+        <!-- Filtering / searching -->
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{Binding TaskCount, StringFormat='{}{0} Finished Tasks'}" Style="{StaticResource headerMedium}" VerticalAlignment="Center"/>
+
+            <Button Grid.Column="2" Style="{StaticResource buttonWithIcon}" Visibility="{Binding addTaskVisibility}" Click="Button_Click">
+                <StackPanel  Orientation="Horizontal" VerticalAlignment="Center">
+                    <fa:IconImage Icon="CheckDouble" Width="10" Height="10" Foreground="White" Margin="0 0 10 0" />
+                    <TextBlock Text="All tasks" />
+                </StackPanel>
+            </Button>
+
+            <Grid Grid.Column="4" VerticalAlignment="Center">
+                <ComboBox x:Name="categoryComboBox" ItemsSource="{Binding UserCategories}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory}" Style="{StaticResource msComboBox}" SelectionChanged="categoryComboBox_Selected"/>
+                <TextBlock x:Name="categoryComboBoxPlaceholder" Text="Select category ..." VerticalAlignment="Center" Margin="10 0 0 0" Foreground="#80FFFFFF"  IsHitTestVisible="False" Opacity="0.5" >
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=categoryComboBox,Path=SelectedItem}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+
+            <StackPanel Grid.Column="6" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <Grid>
+                    <Border x:Name="inputBackground" BorderBrush="#343c72" BorderThickness="16" CornerRadius="2" Panel.ZIndex="1"/>
+
+                    <TextBox
+                        x:Name="filteringInput"
+                        Style="{StaticResource serchTextBox}"
+                        Panel.ZIndex="2"
+                        TextChanged="filteringInput_TextChanged"
+                        GotFocus="filteringInput_GotFocus"
+                        LostFocus="filteringInput_LostFocus"/>
+
+                    <fa:IconImage
+                        Icon="MagnifyingGlass"
+                        Width="10"
+                        Height="10"
+                        Foreground="#80FFFFFF"
+                        HorizontalAlignment="Left"
+                        Margin="15 0 0 0"
+                        Panel.ZIndex="1"/>
+
+                    <TextBlock 
+                        x:Name="placeholder"
+                        Text="Filter tasks ..."
+                        Foreground="#80FFFFFF"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Margin="35 0 0 0"
+                        Panel.ZIndex="1"/>
+
+                </Grid>
+            </StackPanel>
+        </Grid>
+        
+        <!-- Table -->
         <DataGrid
-            Grid.Row="1"
+            Grid.Row="3"
             Grid.Column="1"
             Style="{StaticResource allTasksGrid}"
             ColumnHeaderStyle="{DynamicResource AllTasksDataGridHeader}"
-            RowStyle="{StaticResource DataGridRow}"
             CellStyle="{DynamicResource DataGridCell}"
             GridLinesVisibility="None"
             ItemsSource="{Binding Tasks}"
@@ -40,10 +119,17 @@
             VerticalAlignment="Stretch"
             HeadersVisibility="Column"
             CanUserAddRows="false">
-            
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource DataGridRow}">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridRow_PreviewMouseLeftButtonDown"/>
+                </Style>
+            </DataGrid.RowStyle>
+
             <DataGrid.Columns>
+                
                 <DataGridTextColumn Header="Status" Width="60" Binding="{Binding Status}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True" CellStyle="{StaticResource priorityTaleCell}" />
                 
                 <!--<DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
@@ -82,7 +168,16 @@
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
 
+
             </DataGrid.Columns>
+            
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction
+                    Command="{Binding DataContext.ShowDetailsTaskViewCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            
         </DataGrid>
         <!--<Button Grid.Row="0" Grid.Column="1" Content="All Categories" Command="{Binding AllCategoriesButtonCommand}" />
         <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding UserCategories}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory}" />-->

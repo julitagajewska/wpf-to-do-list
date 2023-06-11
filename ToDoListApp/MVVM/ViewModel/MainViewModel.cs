@@ -93,6 +93,7 @@ namespace ToDoListApp.MVVM.ViewModel
             }
         }
 
+
         // Commands
         public ICommand ShowOverviewViewCommand { get; set; }
         public ICommand ShowAllTasksViewCommand { get; set; }
@@ -100,6 +101,7 @@ namespace ToDoListApp.MVVM.ViewModel
         public ICommand ShowProfileViewCommand { get; set; }
         public ICommand ShowCategoryPanelViewCommand { get; set; }
         public ICommand LogOutCommand { get; set; }
+        public ICommand ShowArchivedTaskDetailsViewCommand { get; set; }
 
         public MainViewModel()
         {
@@ -113,6 +115,7 @@ namespace ToDoListApp.MVVM.ViewModel
             Messenger.Subscribe("ShowCategoryPanelView", ExecuteShowCategoryPanelView);
             Messenger.Subscribe("ShowEditTasksView", ExecuteShowEditTasksView);
             Messenger.Subscribe("ShowEditCategoryView", ExecuteShowEditCategoryView);
+            Messenger.Subscribe("ShowArchivedTaskDetailsView", ExecuteShowArchivedTaskDetailsView);
 
             // Initialize commands
             ShowOverviewViewCommand = new ViewModelCommand(ExecuteShowOverviewViewCommand);
@@ -120,6 +123,7 @@ namespace ToDoListApp.MVVM.ViewModel
             ShowArchiveViewCommand = new ViewModelCommand(ExecuteShowArchiveViewCommand);
             ShowProfileViewCommand = new ViewModelCommand(ExecuteShowProfileViewCommand);
             ShowCategoryPanelViewCommand = new ViewModelCommand(ExecuteShowCategoryPanelView);
+            ShowArchivedTaskDetailsViewCommand = new ViewModelCommand(ExecuteShowArchivedTaskDetailsView);
 
             LogOutCommand = new ViewModelCommand(ExecuteLogOutcommand);
 
@@ -131,6 +135,15 @@ namespace ToDoListApp.MVVM.ViewModel
             ExecuteShowOverviewViewCommand(null);
 
             LoadCurrentUserData();
+        }
+
+        private void ExecuteShowArchivedTaskDetailsView(object payload)
+        {
+            if (payload is MainTask selectedTask)
+            {
+                Caption = "Archived task details";
+                CurrentChildView = new ArchivedTaskDetailsViewModel(selectedTask);
+            }
         }
 
         private void OnAddTaskVisibilityChanged(string value)
@@ -154,6 +167,7 @@ namespace ToDoListApp.MVVM.ViewModel
         {
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             CurrentChildView = new OverviewViewModel(user);
+
             Caption = "Overview";
             addTaskVisibility = "Visible";
             username = CurrentUserAccount.Username;
@@ -196,10 +210,10 @@ namespace ToDoListApp.MVVM.ViewModel
             if (payload is MainTask selectedTask)
             {
                 addTaskVisibility = "Hidden";
-                Caption = selectedTask.Name;
+                // Caption = selectedTask.Name;
+                Caption = "Task details";
                 CurrentChildView = new DetailsTaskViewModel(selectedTask);
             }
-            
         }
         private void ExecuteShowEditTasksView(object payload)
         {

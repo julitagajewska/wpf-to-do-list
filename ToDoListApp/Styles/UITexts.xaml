@@ -7,10 +7,57 @@
 
     <!-- Logo -->
     <Style x:Key="logoText" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    
+    <!-- Header - Large -->
+    <Style x:Key="headerLarge" TargetType="TextBlock">
         <Setter Property="FontSize" Value="20" />
         <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="Foreground" Value="White"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Header - Medium -->
+    <Style x:Key="headerMedium" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Header - Small -->
+    <Style x:Key="headerSmall" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+    
+    <!-- Details - Label -->
+    <Style x:Key="detailsLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="#BFFFFFFF"/>
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Details - Content -->
+    <Style x:Key="detailsContent" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Regular" />
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="#80ffffff"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
 

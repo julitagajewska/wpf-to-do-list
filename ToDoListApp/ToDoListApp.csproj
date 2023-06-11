@@ -64,9 +64,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Images\pen.png">
+    <Resource Include="Images\pen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Resource>
     <Resource Include="Images\profile-picture.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -90,6 +90,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Styles\UITexts.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="MVVM\View\ArchivedTaskDetailsView.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Page>
   </ItemGroup>
 	
 </Project>

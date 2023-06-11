@@ -86,6 +86,8 @@ namespace ToDoListApp.MVVM.ViewModel
         public ICommand ShowCreateTasksViewCommand { get; set; }
         public ICommand ShowDetailsTaskViewCommand { get; set; }
         public ICommand AllCategoriesButtonCommand { get; set; }
+        public ICommand FilterTasksCommand { get; set; }
+        public ICommand LoadTasksCommand { get; set; }
         public AllTasksViewModel(UserModel loggedInUser)
         {
             _context = new ToDoDbContext(); // Create an instance of ToDoDbContext
@@ -95,10 +97,34 @@ namespace ToDoListApp.MVVM.ViewModel
             ShowCreateTasksViewCommand = new ViewModelCommand(ExecuteShowCreateTasksViewCommand);
             ShowDetailsTaskViewCommand = new ViewModelCommand(ExecuteShowDetailsTaskViewCommand);
             AllCategoriesButtonCommand = new ViewModelCommand(ExecuteAllCategoriesButtonCommand);
+            FilterTasksCommand = new ViewModelCommand(ExecuteFilterTasksCommand);
+            LoadTasksCommand = new ViewModelCommand(ExecuteLoadTasksCommand);
+
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             // Load tasks from the database
             LoadTasks();
             LoadUserCategories(user);
+        }
+
+        private void ExecuteLoadTasksCommand(object obj)
+        {
+            LoadTasks();
+        }
+
+        private void ExecuteFilterTasksCommand(object obj)
+        {
+            String searchInput = (String)obj;
+
+            if(searchInput != "")
+            {
+                Tasks = new ObservableCollection<MainTask>(_context.MainTasks
+                    .Where(x => x.Name.ToLower().Contains(searchInput.ToLower()) && x.Status != "Done")
+                    .ToList());
+            } else
+            {
+                LoadTasks();
+            }
+
         }
 
         private void ExecuteShowCreateTasksViewCommand(object obj)
