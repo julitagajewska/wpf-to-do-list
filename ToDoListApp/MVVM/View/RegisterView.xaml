@@ -152,10 +152,10 @@
                         Margin="0,20,0,0"
                         TextWrapping="Wrap"/>
 
-            <!-- Log in button -->
+            <!-- REgister button -->
             <Button
                         x:Name="btnLogin"
-                        Command="{Binding LoginCommand}"
+                        Command="{Binding RegisterCommand}"
                         BorderThickness="0"
                         Content="Register"
                         Margin="0,10,0,0"

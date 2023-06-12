@@ -12,54 +12,91 @@
     <UserControl.Resources>
         <converters:CategoriesToStringConverter x:Key="CategoriesToStringConverter" />
         <converters:DateToColorConverter x:Key="DateToColorConverter" />
+        <converters:EmptyToDashConverter x:Key="EmptyToDashConverter" />
         <DataTemplate DataType="{x:Type mvvm:OverviewViewModel}">
             <local:OverviewView />
         </DataTemplate>
     </UserControl.Resources>
+
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="80" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20" />
+            <!-- Today tasks header -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <!-- Today tasks table -->
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+            <!-- Upcoming tasks header -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <!-- Upcoming tasks table -->
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="2" Text="{Binding TodayTaskCount, StringFormat='{}{0} Today Tasks'}" Foreground="White"/>
-        <DataGrid Grid.Row="3" ItemsSource="{Binding TodayTasks}" AutoGenerateColumns="False" >
+
+        <!-- Today tasks header -->
+        <Grid Grid.Row="1" Grid.Column="1">
+            <TextBlock Text="{Binding TodayTaskCount, StringFormat='{}{0} Tasks for today'}" Style="{StaticResource headerMedium}"/>
+        </Grid>
+
+        <!-- Today tasks table -->
+        <DataGrid
+            Grid.Row="3"
+            Grid.Column="1"
+            CellStyle="{DynamicResource DataGridCell}"
+            CanUserAddRows="false" RowHeaderWidth="0"
+            GridLinesVisibility="None"
+            ColumnHeaderStyle="{DynamicResource AllTasksDataGridHeader}"
+            ItemsSource="{Binding TodayTasks}"
+            AutoGenerateColumns="False"
+            Style="{StaticResource allTasksGrid}">
+
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource DataGridRow}">
                     <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridRow_PreviewMouseLeftButtonDown"/>
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns >
+                <!-- Status -->
                 <DataGridTextColumn Header="Status" Width="60" Binding="{Binding Status}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True"/>
+
+                <!-- Priority -->
+                <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True" CellStyle="{StaticResource priorityTaleCell}"/>
+
+                <!-- Name -->
                 <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button
-                                Content="{Binding Name}"
-                                Command="{Binding DataContext.ShowDetailsTaskViewCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                CommandParameter="{Binding}"
-                                Style="{StaticResource cellButton}"/>
+                            <TextBlock Text="{Binding Name}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}" IsReadOnly="True">
+
+                <!-- Description -->
+                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description, Converter={StaticResource EmptyToDashConverter} }" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="PlannerDate" Width="100" Binding="{Binding PlannerDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True">
+
+                <!-- Assigned date -->
+                <DataGridTextColumn Header="PlannerDate" Width="100" Binding="{Binding PlannerDate, StringFormat=\{0:dd-MM-yyyy\}, Converter={StaticResource EmptyToDashConverter} }" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="Background" Value="{Binding PlannerDate, Converter={StaticResource DateToColorConverter}}" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+
+                <!-- Categories -->
                 <DataGridTextColumn Header="Categories" Width="*" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource CategoriesToStringConverter}">
@@ -67,6 +104,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
+                
             </DataGrid.Columns>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
@@ -76,41 +114,63 @@
             </i:Interaction.Triggers>
         </DataGrid>
 
-        <TextBlock Grid.Row="4" Text="{Binding UpcomingTaskCount, StringFormat='{}{0} Upcoming Tasks'}" Foreground="White"/>
-        <DataGrid Grid.Row="5" ItemsSource="{Binding UpComingTasks}" AutoGenerateColumns="False">
+        <!-- Upcoming tasks header -->
+        <Grid Grid.Row="5" Grid.Column="1">
+            <TextBlock Text="{Binding UpcomingTaskCount, StringFormat='{}{0} Upcoming Tasks'}" Style="{StaticResource headerMedium}"/>
+        </Grid>
+
+        <!-- Upcoming tasks table -->
+        <DataGrid
+            Grid.Row="7"
+            Grid.Column="1"
+            CellStyle="{DynamicResource DataGridCell}"
+            CanUserAddRows="false" RowHeaderWidth="0"
+            GridLinesVisibility="None"
+            ColumnHeaderStyle="{DynamicResource AllTasksDataGridHeader}"
+            Style="{StaticResource allTasksGrid}"
+            ItemsSource="{Binding UpComingTasks}"
+            AutoGenerateColumns="False">
+            
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource DataGridRow}">
                     <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridRow_PreviewMouseLeftButtonDown"/>
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns >
+                <!-- Status -->
                 <DataGridTextColumn Header="Status" Width="60" Binding="{Binding Status}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True"/>
+                
+                <!-- Priority -->
+                <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True" CellStyle="{StaticResource priorityTaleCell}"/>
+                
+                <!-- Name -->
                 <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button
-                                Content="{Binding Name}"
-                                Command="{Binding DataContext.ShowDetailsTaskViewCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                CommandParameter="{Binding}"
-                                Style="{StaticResource cellButton}"/>
+                            <TextBlock Text="{Binding Name}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}" IsReadOnly="True">
+
+                <!-- Description -->
+                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description, Converter={StaticResource EmptyToDashConverter} }" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="PlannerDate" Width="100" Binding="{Binding PlannerDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True">
+
+                <!-- Assigned date -->
+                <DataGridTextColumn Header="Assigned date" Width="100" Binding="{Binding PlannerDate, StringFormat=\{0:dd-MM-yyyy\}, Converter={StaticResource EmptyToDashConverter} }" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="Background" Value="{Binding PlannerDate, Converter={StaticResource DateToColorConverter}}" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+
+                <!-- Categories -->
                 <DataGridTextColumn Header="Categories" Width="*" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
                         <MultiBinding Converter="{StaticResource CategoriesToStringConverter}">
@@ -118,6 +178,7 @@
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>
+                
             </DataGrid.Columns>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
@@ -126,5 +187,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </DataGrid>
+
     </Grid>
+    
 </UserControl>
