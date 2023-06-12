@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Cryptography;
 using System.Security.Principal;
@@ -150,11 +151,27 @@ namespace ToDoListApp.MVVM.ViewModel
 
         private string HashPassword()
         {
-            SHA256 hash = SHA256.Create();
-            var passwordBytes = Encoding.Default.GetBytes(Password.ToString());
-            var hashedPassword = hash.ComputeHash(passwordBytes);
-            return Convert.ToHexString(hashedPassword);
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                string password = ConvertSecureStringToString(Password);
+                byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+                byte[] hashedPasswordBytes = sha256.ComputeHash(passwordBytes);
+                string hashedPassword = BitConverter.ToString(hashedPasswordBytes).Replace("-", string.Empty);
+                return hashedPassword;
+            }
+        }
 
+        private string ConvertSecureStringToString(SecureString secureString)
+        {
+            IntPtr bstr = Marshal.SecureStringToBSTR(secureString);
+            try
+            {
+                return Marshal.PtrToStringBSTR(bstr);
+            }
+            finally
+            {
+                Marshal.ZeroFreeBSTR(bstr);
+            }
         }
     }
 }
