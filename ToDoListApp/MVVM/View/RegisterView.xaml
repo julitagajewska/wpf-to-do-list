@@ -6,86 +6,84 @@
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
              xmlns:customcontrols="clr-namespace:ToDoListApp.CustomControls"
-             
+             xmlns:viewmodel="clr-namespace:ToDoListApp.MVVM.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:RegisterViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800"
              Background="Transparent">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <!-- Username -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="10" />
+
+            <!-- E-mail -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="10" />
+
+            <!-- Password -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="10" />
+
+            <!-- Confirm password  -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="10" />
+
+            <!-- Register button  -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+
         <StackPanel
-                        VerticalAlignment="Center"
-                        Width="250"
-                        Grid.Row="1"
-                        Orientation="Vertical"
-                        Margin="0,0,0,0">
+            VerticalAlignment="Center"
+            Width="250"
+            Grid.Row="1"
+            Orientation="Vertical"
+            Margin="0,0,0,0">
+
+        <TextBlock
+            Text="REGISTER"
+            Style="{StaticResource headerLargePrimary}"/>
+
+        <TextBlock
+            Text="And let's track some tasks"
+            Opacity="0.5"
+            Margin="0 5 0 0"
+            Style="{StaticResource headerSmallSecondary}"/>
+        </StackPanel>
+
+        <!-- Username -->
+        <Grid Grid.Row="3" HorizontalAlignment="Center">
 
             <TextBlock
-                        Text="REGISTER"
-                        Style="{StaticResource headerLargePrimary}"/>
-
-            <TextBlock
-                        Text="And let's track some tasks"
-                        Opacity="0.5"
-                        Margin="0 5 0 0"
-                        Style="{StaticResource headerSmallSecondary}"/>
-
-            <!-- Username -->
-            <TextBlock
-                        Text="Username"
-                        Foreground="DarkGray"
-                        FontSize="12"
-                        FontWeight="Regular"
-                        FontFamily="Montserrat"                             
-                        Margin="0, 20,0,0"/>
-
-
-            <TextBox
-                        x:Name="txtUser"
-                        Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                        FontSize="14"
-                        FontWeight="Light"
-                        Foreground="White"
-                        CaretBrush="LightGray"
-                        BorderBrush="DarkGray"
-                        BorderThickness="0, 0, 0, 2"
-                        Height="28"
-                        VerticalContentAlignment="Center"
-                        Margin="0, 5, 0, 0"
-                        Padding="20, 0, 0, 0">
-
-
-
-                <TextBox.Background>
-                    <ImageBrush
-                                ImageSource="../../Images/user-icon.png"
-                                Stretch="None"
-                                AlignmentX="Left" />
-                </TextBox.Background>
-
-            </TextBox>
-
-            <!-- Username -->
-            <TextBlock
-                        Text="E-mail"
-                        Foreground="DarkGray"
-                        FontSize="12"
-                        FontWeight="Regular"
-                        FontFamily="Montserrat"                             
-                        Margin="0, 40,0,0"/>
-
-
+                x:Name="usernamePlaceholder"
+                Text="Username"
+                Style="{StaticResource inputPlaceholder}"
+                Panel.ZIndex="1"
+                Margin="25, 6, 0, 0"/>
 
             <Border
                 BorderBrush="Transparent"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
                 Height="40"
-                Width="250">
+                Width="250"
+                Panel.ZIndex="2">
 
                 <StackPanel
                     Orientation="Horizontal">
-                    <fa:IconImage Icon="Envelope" Style="{StaticResource inputFieldIcon}" />
+                    <fa:IconImage Icon="User" Style="{StaticResource inputFieldIcon}" />
                     <TextBox
-                        x:Name="txtEmail"
+                        x:Name="txtUsername"
+                        GotFocus="txtUsername_GotFocus"
+                        LostFocus="txtUsername_LostFocus"
                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
                         FontSize="14"
                         FontWeight="Light"
@@ -97,109 +95,116 @@
                         Height="28"
                         Width="260"
                         VerticalContentAlignment="Center"
-                        Margin="-20, 5, 0, 0"
-                        Padding="25, 0, 0, 0" TextChanged="txtEmail_TextChanged">
+                        Margin="-20, 0, 0, 0"
+                        Padding="25, 0, 0, 0" TextChanged="txtUsername_TextChanged"
+                        Panel.ZIndex="2">
                     </TextBox>
                 </StackPanel>
             </Border>
+        </Grid>
+        <StackPanel
+            VerticalAlignment="Center"
+            Width="250"
+            Grid.Row="4"
+            Orientation="Vertical"
+            Margin="0,0,0,0">
 
+            <TextBlock Text="{Binding UsernameError}" Style="{StaticResource inputFieldValidationError}" Margin="0"/>
+        </StackPanel>
 
-            <!-- Password -->
+        <!-- E-mail -->
+        <Grid Grid.Row="6" HorizontalAlignment="Center">
+
             <TextBlock
-                        Text="Password"
-                        Foreground="DarkGray"
-                        FontSize="12"
-                        FontWeight="Regular"
-                        FontFamily="Montserrat"                             
-                        Margin="0,40,0,0"/>
+                x:Name="emailPlaceholder"
+                Text="E-Mail"
+                Style="{StaticResource inputPlaceholder}"
+                Panel.ZIndex="1"
+                Margin="25, 6, 0, 0"/>
 
-            <!-- ??? -->
+            <Border
+                BorderBrush="Transparent"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                Height="40"
+                Width="250"
+                Panel.ZIndex="2">
+
+                <StackPanel
+                    Orientation="Horizontal">
+                    <fa:IconImage Icon="Envelope" Style="{StaticResource inputFieldIcon}" />
+                    <TextBox
+                        x:Name="txtEmail"
+                        GotFocus="txtEmail_GotFocus"
+                        LostFocus="txtEmail_LostFocus"
+                        Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
+                        FontSize="14"
+                        FontWeight="Light"
+                        Foreground="White"
+                        CaretBrush="LightGray"
+                        BorderBrush="DarkGray"
+                        Background="Transparent"
+                        BorderThickness="0, 0, 0, 2"
+                        Height="28"
+                        Width="260"
+                        VerticalContentAlignment="Center"
+                        Margin="-20, 0, 0, 0"
+                        Padding="25, 0, 0, 0" TextChanged="txtEmail_TextChanged"
+                        Panel.ZIndex="2">
+                    </TextBox>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <StackPanel
+            VerticalAlignment="Center"
+            Width="250"
+            Grid.Row="7"
+            Orientation="Vertical"
+            Margin="0,0,0,0">
+
+            <TextBlock Text="{Binding EmailError}" Style="{StaticResource inputFieldValidationError}" Margin="0"/>
+        </StackPanel>
+
+        <!-- Password -->
+        <Grid Grid.Row="9" HorizontalAlignment="Center">
             <customcontrols:BindablePasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Height="28"
-                        Padding="0, 0, 0, 0">
+                        Width="250"
+                        Padding="0, 0, 0, 0"
+                        PlaceholderText="Password">
             </customcontrols:BindablePasswordBox>
+        </Grid>
+        <StackPanel
+            VerticalAlignment="Center"
+            Width="250"
+            Grid.Row="10"
+            Orientation="Vertical"
+            Margin="0,0,0,0">
 
-            <TextBlock
-                        Text="{Binding ErrorMessage}"
-                        Foreground="#D75960"
-                        FontSize="12"
-                        FontWeight="Regular"
-                        FontFamily="Montserrat"                             
-                        Margin="0,20,0,0"
-                        TextWrapping="Wrap"/>
+            <TextBlock Text="{Binding PasswordError}" Style="{StaticResource inputFieldValidationError}" Margin="0"/>
+        </StackPanel>
 
-            <!-- Confirm Password -->
-            <TextBlock
-                        Text="Confirm password"
-                        Foreground="DarkGray"
-                        FontSize="12"
-                        FontWeight="Regular"
-                        FontFamily="Montserrat"                             
-                        Margin="0,20,0,0"/>
-
-            <!-- ??? -->
+        <!-- Confirm password -->
+        <Grid Grid.Row="12" HorizontalAlignment="Center">
             <customcontrols:BindablePasswordBox Password="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Height="28"
-                        Padding="0, 0, 0, 0">
+                        Width="250"
+                        Padding="0, 0, 0, 0"
+                        PlaceholderText="Confirm password">
             </customcontrols:BindablePasswordBox>
+        </Grid>
+        <StackPanel
+            VerticalAlignment="Center"
+            Width="250"
+            Grid.Row="13"
+            Orientation="Vertical"
+            Margin="0,0,0,0">
 
-            <TextBlock
-                        Text="{Binding ErrorMessage}"
-                        Foreground="#D75960"
-                        FontSize="12"
-                        FontWeight="Regular"
-                        FontFamily="Montserrat"                             
-                        Margin="0,20,0,0"
-                        TextWrapping="Wrap"/>
-
-            <!-- REgister button -->
-            <Button
-                        x:Name="btnLogin"
-                        Command="{Binding RegisterCommand}"
-                        BorderThickness="0"
-                        Content="Register"
-                        Margin="0,10,0,0"
-                        Style="{StaticResource btnPrimary}">
-
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Width="150" Height="40"
-                                CornerRadius="20"
-                                Background="{TemplateBinding Background}">
-
-                            <ContentPresenter
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-
-            </Button>
-
-            <StackPanel
-                Orientation="Horizontal"
-                HorizontalAlignment="Center"
-                Margin="0 20 0 0">
-                
-                <TextBlock
-                    Text="Already have an account?"
-                    Foreground="White"
-                    Opacity="0.7"
-                    FontSize="12"
-                    FontWeight="Light"/>
-
-                <Button
-                    BorderBrush="Transparent"
-                    Content="Log in"
-                    Foreground="White"
-                    Opacity="0.9"
-                    FontSize="12"
-                    FontWeight="Light"
-                    Margin="20 0 0 0"
-                    Background="Transparent" />
-
-            </StackPanel>
-
+            <TextBlock Text="{Binding ConfirmPasswordError}" Style="{StaticResource inputFieldValidationError}" Margin="0"/>
         </StackPanel>
+
+        <!-- Register button -->
+
+
     </Grid>
 </UserControl>

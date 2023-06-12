@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToDoListApp.MVVM.ViewModel;
 
 namespace ToDoListApp.CustomControls
 {
@@ -21,7 +22,17 @@ namespace ToDoListApp.CustomControls
     /// </summary>
     public partial class BindablePasswordBox : UserControl
     {
-
+        private string placeholderText;
+        public string PlaceholderText
+        {
+            get { return placeholderText; }
+            set
+            {
+                placeholderText = value;
+                // OnPropertyChanged(nameof(PlaceholderText));
+                placeholder.Text = placeholderText; // Zamienić na OnPropertyChanged()
+            }
+        }
         public static readonly DependencyProperty PasswordProperty = 
             DependencyProperty.Register("Password", typeof(SecureString), typeof(BindablePasswordBox));
 
@@ -46,6 +57,28 @@ namespace ToDoListApp.CustomControls
         private void OnPasswordChanged(object sender, RoutedEventArgs e)
         {
             Password = txtPassword.SecurePassword;
+            var viewModel = (RegisterViewModel)DataContext;
+            // viewModel.ValidatePasswordCommand.Execute(txtPassword.Password);
+            if (Password.Length == 0)
+            {
+                placeholder.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                placeholder.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void txtPassword_GotFocus(object sender, RoutedEventArgs e)
+        {
+            placeholder.Visibility = Visibility.Hidden;
+        }
+
+        private void txtPassword_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Password = txtPassword.SecurePassword;
+            if (Password.Length == 0)
+                placeholder.Visibility = Visibility.Visible;
         }
     }
 }
