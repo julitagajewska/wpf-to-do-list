@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
         xmlns:local="clr-namespace:ToDoListApp.MVVM.View"
         xmlns:mvvm="clr-namespace:ToDoListApp.MVVM.ViewModel"
         mc:Ignorable="d" 
@@ -14,79 +15,275 @@
     <UserControl.DataContext>
         <mvvm:CreateTaskViewModel />
     </UserControl.DataContext>
+
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="80" />
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="Task Name:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding TaskName}" Margin="5" />
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="Task Description:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
-        <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding TaskDescription}" Margin="5" />
-        <TextBlock Grid.Row="2" Grid.Column="1" Text="Deadline:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
-        <DatePicker Grid.Row="2" Grid.Column="2" SelectedDate="{Binding TaskDeadline, Mode=TwoWay,StringFormat='{}{0:yyyy-MM-dd}'}" Margin="5" />
-        <TextBlock Grid.Row="3" Grid.Column="1" Text="StartDate:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
-        <DatePicker Grid.Row="3" Grid.Column="2" SelectedDate="{Binding TaskStartDate, Mode=TwoWay, StringFormat='{}{0:yyyy-MM-dd}'}" Margin="5" />
-        <TextBlock Grid.Row="4" Grid.Column="1" Text="EndDate:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
-        <DatePicker Grid.Row="4" Grid.Column="2" SelectedDate="{Binding TaskEndDate, Mode=TwoWay,StringFormat='{}{0:yyyy-MM-dd}'}" Margin="5" />
-
-        <TextBlock Grid.Row="5" Grid.Column="1" Text="PlannerDate:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
-        <DatePicker Grid.Row="5" Grid.Column="2" SelectedDate="{Binding TaskPlannerDate, Mode=TwoWay,StringFormat='{}{0:yyyy-MM-dd}'}" Margin="5" />
         
-        <TextBlock Grid.Row="6" Grid.Column="1" Text="Priority:" VerticalAlignment="Center" Margin="5" Foreground="#80FFFFFF"  />
-        <ComboBox Grid.Row="6" Grid.Column="2" SelectedItem="{Binding SelectedTaskPriorityItem, Mode=TwoWay}" Margin="5"  >
-            <ComboBoxItem Content="Low"/>
-            <ComboBoxItem Content="Medium" />
-            <ComboBoxItem Content="High" />
-        </ComboBox>
-        <TextBlock Grid.Row="7" Grid.Column="1" Text="Categories:" Margin="5" Foreground="#80FFFFFF" />
-        <ListBox Grid.Row="7" Grid.Column="2"  SelectionMode="Extended" ItemsSource="{Binding TaskCategories}" SelectionChanged="ListBox_SelectionChanged" Margin="5">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Name}" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <TextBlock Grid.Row="8" Grid.Column="1" Text="SubTasks:" Margin="5" Foreground="#80FFFFFF" />
-        <ListBox x:Name="subtasksListBox" Grid.Row="8" Grid.Column="2" ItemsSource="{Binding Subtasks}" SelectedItem="{Binding SelectedSubtask}" Margin="5">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" Width="200" />
-                        <Button Content="Edit" Command="{Binding DataContext.EditSubtaskCommand, RelativeSource={RelativeSource AncestorType={x:Type local:CreateTaskView}}}" CommandParameter="{Binding}"  Click="RefreshButton_Click"/>
+        <!-- Name, details, dates -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
 
-                        <Button Content="Delete" Command="{Binding DataContext.DeleteSubtaskCommand, RelativeSource={RelativeSource AncestorType={x:Type local:CreateTaskView}}}" CommandParameter="{Binding}" Click="RefreshButton_Click"/>
+            <!-- Task Info Header -->
+            <TextBlock Text="Task details" Style="{StaticResource headerMedium}" Grid.Row="1" />
+
+            <Grid Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <!-- Name -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <!-- Description -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <!-- Priority -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <!-- Assign date -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <!-- Deadline -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <!-- Start date -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <!-- End date -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <!-- Error messages -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                
+                <!-- Name -->
+                <Grid Grid.Row="0">
+                    <Grid>
+                        <Border x:Name="nameInputBackground" BorderBrush="#343c72" BorderThickness="16" CornerRadius="2" Panel.ZIndex="1"/>
+
+                        <TextBox
+                            x:Name="nameInput"
+                            Text="{Binding TaskName}"
+                            Style="{StaticResource filledInputWithoutIcon}"
+                            Panel.ZIndex="2"
+                            TextChanged="NameInputChanged"
+                            GotFocus="NameInputGotFocus"
+                            LostFocus="NameInputLostFocus"/>
+
+                        <TextBlock 
+                            x:Name="namePlaceholder"
+                            Text="Name ..."
+                            Style="{StaticResource filledInputPlaceholder}"/>
+                    </Grid>
+                </Grid>
+
+                <!-- Description -->
+                <Grid Grid.Row="2">
+                    <Grid>
+                        <Border x:Name="descriptionInputBackground" BorderBrush="#343c72" BorderThickness="16" CornerRadius="2" Panel.ZIndex="1"/>
+
+                        <TextBox
+                            x:Name="descriptionInput"
+                            Text="{Binding TaskDescription}"
+                            Style="{StaticResource filledInputWithoutIcon}"
+                            Panel.ZIndex="2"
+                            TextChanged="DescriptionInputChanged"
+                            GotFocus="DescriptionInputGotFocus"
+                            LostFocus="DescriptionInputLostFocus"/>
+
+                        <TextBlock 
+                            x:Name="descriptionPlaceholder"
+                            Text="Description ..."
+                            Style="{StaticResource filledInputPlaceholder}"/>
+                    </Grid>
+                </Grid>
+
+
+                <!-- Priority -->
+                <Grid Grid.Row="4">
+                    <ComboBox x:Name="categoryComboBox" SelectedItem="{Binding SelectedTaskPriorityItem, Mode=TwoWay}" Style="{StaticResource msComboBox}">
+                        <ComboBoxItem Content="Low"/>
+                        <ComboBoxItem Content="Medium" />
+                        <ComboBoxItem Content="High" />
+                    </ComboBox>
+                    
+                    <TextBlock x:Name="categoryComboBoxPlaceholder" Text="Priority ..." VerticalAlignment="Center" Margin="10 0 0 0" Foreground="#80FFFFFF"  IsHitTestVisible="False" Opacity="0.5" >
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Hidden" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=categoryComboBox,Path=SelectedItem}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+                
+                <!-- Assign day -->
+                <Grid Grid.Row="6">
+                    <DatePicker x:Name="assignDayDatePicker" Tag="Assign day ..." Style="{StaticResource inputDatePicker}" SelectedDate="{Binding TaskPlannerDate, Mode=TwoWay,StringFormat='{}{0:yyyy-MM-dd}'}" GotKeyboardFocus="AssignDayDatePickerGotFocus" LostKeyboardFocus="AssignDayDatePickerLostFocus"/>
+                </Grid>
+
+                <!-- Deadline -->
+                <Grid Grid.Row="8">
+                    <DatePicker x:Name="deadlineDatePicker" Tag="Deadline ..." Style="{StaticResource inputDatePicker}" SelectedDate="{Binding TaskDeadline, Mode=TwoWay,StringFormat='{}{0:yyyy-MM-dd}'}" GotKeyboardFocus="DeadlinePickerGotFocus" LostKeyboardFocus="DeadlinePickerLostFocus" />
+                </Grid>
+                
+                <!-- Start date -->
+                <Grid Grid.Row="10">
+                    <DatePicker x:Name="startDatePicker" Tag="Start date ..." Style="{StaticResource inputDatePicker}" SelectedDate="{Binding TaskStartDate, Mode=TwoWay, StringFormat='{}{0:yyyy-MM-dd}'}" GotKeyboardFocus="StartDatePickerGotFocus" LostKeyboardFocus="StartDatePickerLostFocus" />
+                </Grid>
+
+                <!-- End date -->
+                <Grid Grid.Row="12">
+                    <DatePicker x:Name="endDatePicker" Tag="End date ..." Style="{StaticResource inputDatePicker}" SelectedDate="{Binding TaskEndDate, Mode=TwoWay,StringFormat='{}{0:yyyy-MM-dd}'}" GotKeyboardFocus="EndDatePickerGotFocus" LostKeyboardFocus="EndDatePickerLostFocus" />
+                </Grid>
+
+                <!-- Error messages -->
+                <Grid Grid.Row="14">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Style="{StaticResource inputFieldValidationError}" Text="{Binding ValidationString}" Margin="0" />
+                        
                     </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                </Grid>
+            </Grid>
+        </Grid>
+        
+        <!-- Categories, subtasks-->
+        <Grid Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <!-- Categories Header -->
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <!-- Categories -->
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <!-- Subtasks Header -->
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <!-- Subtasks -->
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <!-- Create task button -->
+                <RowDefinition Height="40" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
 
-        <TextBox Grid.Row="9" Grid.Column="2" Text="{Binding NewName}" Margin="5"/>
-        <TextBox Grid.Row="9" Grid.Column="2" Text="{Binding NewName}" Margin="5" />
-        <Button Grid.Row="10" Grid.Column="2" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
-        <Button Grid.Row="11" Grid.Column="1" Content="Add Task" Command="{Binding AddTaskCommand}" Margin="5"/>
+            <!-- Categories Header -->
+            <TextBlock Text="Categories" Style="{StaticResource headerMedium}" Grid.Row="1" />
+            
+            <!-- Categories -->
+            <Grid Grid.Row="3">
+                <ListBox SelectionMode="Extended" Style="{StaticResource inputListBox}" ItemsSource="{Binding TaskCategories}" SelectionChanged="CategoryListBoxSelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            <Grid Grid.Row="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                
+                <Grid>
+                    <Border x:Name="newCategoryInputBackground" BorderBrush="#343c72" BorderThickness="16" CornerRadius="2" Panel.ZIndex="1"/>
 
-        <Button Grid.Row="11" Grid.Column="2" Content="Add SubTask" Command="{Binding AddSubtaskCommand}" Margin="5" />
-        <TextBlock Grid.Row="12" Text="{Binding ValidationString}" Foreground="Red" Margin="5" />
+                    <TextBox
+                        x:Name="newCategoryInput"
+                        Text="{Binding NewCategoryName}"
+                        Style="{StaticResource filledInputWithoutIcon}"
+                        Panel.ZIndex="2"
+                        TextChanged="NewCategoryInputChanged"
+                        GotFocus="NewCategoryInputGotFocus"
+                        LostFocus="NewCategoryInputLostFocus" />
 
+                    <TextBlock
+                        x:Name="newCategoryPlaceholder"
+                        Text="New category ..."
+                        Style="{StaticResource filledInputPlaceholder}"/>
+                </Grid>
+                <Button Grid.Column="2" Style="{StaticResource iconOnlyButtonLarge}" Command="{Binding AddCategoryCommand}">
+                    <fa:IconImage Icon="Plus" Width="12"  Style="{StaticResource iconOnlyButtonIconLarge}" />
+                </Button>
+            </Grid>
+
+            <!-- Subtasks Header -->
+            <TextBlock Text="Subtasks" Style="{StaticResource headerMedium}" Grid.Row="7" />
+            
+            <!-- Subtasks -->
+            <Grid Grid.Row="9">
+                <ListBox x:Name="subtasksListBox" Style="{StaticResource inputListBox}" ItemsSource="{Binding Subtasks}" SelectedItem="{Binding SelectedSubtask}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Name}" Width="Auto" />
+                                <!--<Button Content="Edit" Command="{Binding DataContext.EditSubtaskCommand, RelativeSource={RelativeSource AncestorType={x:Type local:CreateTaskView}}}" CommandParameter="{Binding}"  Click="RefreshButton_Click"/>-->
+                                <Button HorizontalAlignment="Right" Style="{StaticResource iconOnlyButtonDark}" Margin="10 0 0 0" Command="{Binding DataContext.DeleteSubtaskCommand, RelativeSource={RelativeSource AncestorType={x:Type local:CreateTaskView}}}" CommandParameter="{Binding}" Click="RefreshButton_Click">
+                                    <fa:IconImage Icon="Xmark" Width="10"  Style="{StaticResource iconOnlyButtonIconDark}" />
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            <Grid Grid.Row="11">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <Border x:Name="newSubtaskInputBackground" BorderBrush="#343c72" BorderThickness="16" CornerRadius="2" Panel.ZIndex="1"/>
+
+                    <TextBox
+                        x:Name="newSubtaskInput"
+                        Text="{Binding NewSubtaskName}"
+                        Style="{StaticResource filledInputWithoutIcon}"
+                        Panel.ZIndex="2"
+                        TextChanged="NewSubtaskInputChanged"
+                        GotFocus="NewSubtaskInputGotFocus"
+                        LostFocus="NewSubtaskInputLostFocus" />
+
+                    <TextBlock
+                        x:Name="newSubtaskPlaceholder"
+                        Text="New subtask ..."
+                        Style="{StaticResource filledInputPlaceholder}"/>
+                </Grid>
+                <Button Grid.Column="2" Style="{StaticResource iconOnlyButtonLarge}" Command="{Binding AddSubtaskCommand}">
+                    <fa:IconImage Icon="Plus" Width="12"  Style="{StaticResource iconOnlyButtonIconLarge}" />
+                </Button>
+            </Grid>
+
+            <StackPanel Grid.Row="13" Orientation="Horizontal" FlowDirection="RightToLeft">
+                <Button Style="{StaticResource buttonWithIcon}" Command="{Binding AddTaskCommand}">
+                    <StackPanel  Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Create Task" Margin="0 0 10 0" FontSize="12"/>
+                        <fa:IconImage Icon="Plus" Width="10" Height="10" Foreground="White" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

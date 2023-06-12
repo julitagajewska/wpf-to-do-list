@@ -138,7 +138,7 @@
                             Command="{Binding ShowCategoryPanelViewCommand}">
 
                             <StackPanel Orientation="Horizontal">
-                                <fa:IconImage Icon="ListCheck"  Style="{StaticResource sidebarButtonIcon}" />
+                                <fa:IconImage Icon="Tag"  Style="{StaticResource sidebarButtonIcon}" />
                                 <TextBlock Text="Categories" Style="{StaticResource sidebarButtonText}" />
                             </StackPanel>
                         </RadioButton>
