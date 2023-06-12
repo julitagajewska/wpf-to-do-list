@@ -13,6 +13,7 @@ using ToDoListApp.MVVM.Model.Services;
 using ToDoListApp.Data;
 using Microsoft.VisualBasic.ApplicationServices;
 using ToDoListApp.Store;
+using System.Security.Claims;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -165,12 +166,17 @@ namespace ToDoListApp.MVVM.ViewModel
 
         private void ExecuteShowOverviewViewCommand(object obj)
         {
-            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
-            CurrentChildView = new OverviewViewModel(user);
+            var identity = Thread.CurrentPrincipal?.Identity;
+            if (identity != null)
+            {
+                var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
+                CurrentChildView = new OverviewViewModel(user);
 
-            Caption = "Overview";
-            addTaskVisibility = "Visible";
-            username = CurrentUserAccount.Username;
+                Caption = "Overview";
+                addTaskVisibility = "Visible";
+                username = CurrentUserAccount.Username;
+            }
+            
         }
 
         private void ExecuteShowAllTasksViewCommand(object obj)
