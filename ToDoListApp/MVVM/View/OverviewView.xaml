@@ -88,7 +88,7 @@
                 </DataGridTextColumn>
 
                 <!-- Assigned date -->
-                <DataGridTextColumn Header="PlannerDate" Width="100" Binding="{Binding PlannerDate, StringFormat=\{0:dd-MM-yyyy\}, Converter={StaticResource EmptyToDashConverter} }" IsReadOnly="True">
+                <DataGridTextColumn Header="Assigned date" Width="100" Binding="{Binding PlannerDate, StringFormat=\{0:dd-MM-yyyy\}, Converter={StaticResource EmptyToDashConverter} }" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="Background" Value="{Binding PlannerDate, Converter={StaticResource DateToColorConverter}}" />

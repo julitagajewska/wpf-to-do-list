@@ -118,7 +118,7 @@ namespace ToDoListApp.MVVM.ViewModel
             if(searchInput != "")
             {
                 Tasks = new ObservableCollection<MainTask>(_context.MainTasks
-                    .Where(x => x.Name.ToLower().Contains(searchInput.ToLower()) && x.Status != "Done")
+                    .Where(x => x.Name.ToLower().Contains(searchInput.ToLower()) && x.Status != "Done" && x.PlannerId== _loggedInUser.PlannerId)
                     .ToList());
             } else
             {
