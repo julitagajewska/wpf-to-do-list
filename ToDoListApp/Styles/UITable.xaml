@@ -1,7 +1,28 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+                    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+                    xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model.Converters">
 
+    <converters:PriorityConverter x:Key="PriorityConverter" />
+
+    <!-- Priority -->
+
+    <Style x:Key="priorityTaleCell" TargetType="{x:Type DataGridCell}">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=Priority}" Value="Low">
+                <Setter Property="Foreground" Value="#90be6d"  />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=Priority}" Value="Medium">
+                <Setter Property="Foreground" Value="#f9c74f" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=Priority}" Value="High">
+                <Setter Property="Foreground" Value="#f94144" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    
     <Style x:Key="ColumnHeaderGripperStyle" TargetType="{x:Type Thumb}">
         <Setter Property="Width" Value="8"/>
         <Setter Property="Background" Value="Transparent"/>
@@ -39,6 +60,7 @@
     <Style x:Key="DataGridCell" TargetType="{x:Type DataGridCell}">
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Margin" Value="10 5 0 5" />
         <Setter Property="BorderThickness" Value="0"/>
@@ -118,9 +140,9 @@
             <Trigger Property="IsNewItem" Value="True">
                 <Setter Property="Margin" Value="{Binding NewItemMargin, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
             </Trigger>
-            <!--<Trigger Property="IsMouseOver" Value="True">
+            <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="#363c70" />
-            </Trigger>-->
+            </Trigger>
         </Style.Triggers>
     </Style>
     

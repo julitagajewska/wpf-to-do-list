@@ -93,6 +93,7 @@ namespace ToDoListApp.MVVM.ViewModel
         private void ExecuteShowLoginViewCommand(object obj)
         {
             CurrentChildView = new LoginViewModel(visibilityStore);
+            // CurrentChildView = new ArchivedTaskDetailsViewModel();
         }
 
         private void ExecuteShowRegisterViewCommand(object obj)

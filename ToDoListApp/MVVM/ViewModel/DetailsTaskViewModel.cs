@@ -22,6 +22,16 @@ namespace ToDoListApp.MVVM.ViewModel
         private readonly ToDoDbContext _context;
         private readonly IMainTaskService _mainTaskService;
         private string _caption;
+        private ObservableCollection<CheckBoxModel> _checkboxes;
+        public ObservableCollection<CheckBoxModel> Checkboxes
+        {
+            get { return _checkboxes; }
+            set
+            {
+                _checkboxes = value;
+                OnPropertyChanged(nameof(Checkboxes));
+            }
+        }
         public string Caption
         {
             get
@@ -45,6 +55,7 @@ namespace ToDoListApp.MVVM.ViewModel
         }
         public ICommand EditTasksViewCommand { get; set; }
         public ICommand DeleteTasksViewCommand { get; set; }
+        public ICommand ToggleStatusCommand { get; set; }
 
         public DetailsTaskViewModel(MainTask selectedTask)
         {
@@ -52,8 +63,17 @@ namespace ToDoListApp.MVVM.ViewModel
             _mainTaskService = new MainTaskService(_context);
             SelectedTask = _context.MainTasks.Include(t => t.Categories).Include(t => t.Subtasks).FirstOrDefault(t => t.Id == selectedTask.Id);
 
+            _checkboxes = new ObservableCollection<CheckBoxModel>();
+            foreach (Subtask task in SelectedTask.Subtasks)
+            {
+                bool status = false;
+                if (task.Status == "Done") status = true;
+                _checkboxes.Add(new CheckBoxModel { Subtask = task, ButtonText = task.Name, Checked = status });
+            }
+
             EditTasksViewCommand = new ViewModelCommand(ShowEditTaskViewCommand);
             DeleteTasksViewCommand = new ViewModelCommand(ExecuteDeleteTaskCommand);
+            ToggleStatusCommand = new ViewModelCommand(ExecuteToggleStatusCommand);
         }
         private void ShowEditTaskViewCommand(object obj)
         {
@@ -76,6 +96,35 @@ namespace ToDoListApp.MVVM.ViewModel
                     Messenger.Publish("ShowAllTasksView");
                 }
             }
+        }
+
+        private void ExecuteToggleStatusCommand(object obj)
+        {
+            Subtask subtask = (Subtask)obj;
+            if (subtask.Status == "To Do") {
+                subtask.Status = "Done";
+            }
+            else
+            {
+                subtask.Status = "To Do";
+            }
+            _mainTaskService.UpdateMainTask(SelectedTask);
+            _context.SaveChanges();
+
+            //bool isTaskFinished = true;
+
+            //foreach(Subtask task in SelectedTask.Subtasks)
+            //{
+            //    if(task.Status != "Done") isTaskFinished = false;
+            //}
+
+            //if (isTaskFinished)
+            //{
+            //    SelectedTask.Status = "Done";
+            //}
+
+            //_mainTaskService.UpdateMainTask(SelectedTask);
+            //_context.SaveChanges();
         }
     }
 }

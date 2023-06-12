@@ -26,6 +26,29 @@ namespace ToDoListApp.MVVM.ViewModel
         private readonly MainTaskService _mainTaskService;
         public string CurrentUsername { get; set; }
         private MainTask _selectedTask;
+
+        private string _newSubtaskName;
+        private string _newCategoryName;
+        public string NewCategoryName
+        {
+            get { return _newCategoryName; }
+            set
+            {
+                _newCategoryName = value;
+                OnPropertyChanged(nameof(NewCategoryName));
+                OnPropertyChanged(nameof(ValidationString));
+            }
+        }
+        public string NewSubtaskName
+        {
+            get { return _newSubtaskName; }
+            set
+            {
+                _newSubtaskName = value;
+                OnPropertyChanged(nameof(NewSubtaskName));
+                OnPropertyChanged(nameof(ValidationString));
+            }
+        }
         public MainTask SelectedTask
         {
             get { return _selectedTask; }
@@ -270,14 +293,14 @@ namespace ToDoListApp.MVVM.ViewModel
         private void ExecuteAddCategoryCommand(object obj)
         {
             bool categoryExists = TaskCategories.Any(category =>
-            category.Name.Equals(NewName, StringComparison.OrdinalIgnoreCase) &&
+            category.Name.Equals(NewCategoryName, StringComparison.OrdinalIgnoreCase) &&
             category.IsCustom);
 
-            if (!string.IsNullOrEmpty(NewName) && !categoryExists)
+            if (!string.IsNullOrEmpty(NewCategoryName) && !categoryExists)
             {
                 var category = new Category
                 {
-                    Name = NewName,
+                    Name = NewCategoryName,
                     IsCustom = true,
                     Owner = _loggedInUser.Id // Przypisanie id Usera.
                 };
@@ -289,20 +312,20 @@ namespace ToDoListApp.MVVM.ViewModel
                 TaskCategories.Add(category);
                 _context.Categories.Add(category);
                 _context.SaveChanges();
-                NewName = string.Empty;
+                NewCategoryName = string.Empty;
             }
         }
         private void ExecuteAddSubTaskCommand(object obj)
         {
-            bool subTaskExist = TaskSubTasks.Any(subTask => subTask.Name.Equals(NewName) && subTask != SelectedSubtask);
+            bool subTaskExist = TaskSubTasks.Any(subTask => subTask.Name.Equals(NewSubtaskName) && subTask != SelectedSubtask);
             if (subTaskExist)
             {
                 return;
             }
-            if (!string.IsNullOrEmpty(NewName))
+            if (!string.IsNullOrEmpty(NewSubtaskName))
             {
-                TaskSubTasks.Add(new Subtask { Name = NewName, Status = "To Do" });
-                NewName = string.Empty;
+                TaskSubTasks.Add(new Subtask { Name = NewSubtaskName, Status = "To Do" });
+                NewSubtaskName = string.Empty;
             }
         }
         private void ExecuteEditSubtaskCommand(object obj)

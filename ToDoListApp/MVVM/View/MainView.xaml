@@ -31,9 +31,11 @@
         <DataTemplate DataType="{x:Type viewModel:DetailsTaskViewModel}">
             <local:DetailsTaskView />
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewModel:EditTaskViewModel}">
             <local:EditTaskView />
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewModel:ArchiveViewModel}">
             <local:ArchiveView />
         </DataTemplate>
@@ -52,6 +54,10 @@
 
         <DataTemplate DataType="{x:Type viewModel:EditCategoryViewModel}">
             <local:EditCategoryView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:ArchivedTaskDetailsViewModel}">
+            <local:ArchivedTaskDetailsView />
         </DataTemplate>
     </Window.Resources>
     
@@ -124,6 +130,7 @@
                                 <TextBlock Text="All tasks" Style="{StaticResource sidebarButtonText}" />
                             </StackPanel>
                         </RadioButton>
+                        
                         <!-- Categories -->
                         <RadioButton
                             Style="{StaticResource sidebarButton}"
@@ -131,10 +138,11 @@
                             Command="{Binding ShowCategoryPanelViewCommand}">
 
                             <StackPanel Orientation="Horizontal">
-                                <fa:IconImage Icon="ListCheck"  Style="{StaticResource sidebarButtonIcon}" />
+                                <fa:IconImage Icon="Tag"  Style="{StaticResource sidebarButtonIcon}" />
                                 <TextBlock Text="Categories" Style="{StaticResource sidebarButtonText}" />
                             </StackPanel>
                         </RadioButton>
+                        
                         <!-- Archive -->
                         <RadioButton
                             Style="{StaticResource sidebarButton}"
@@ -167,8 +175,8 @@
                         <!-- Log Out -->
                         <Button
                             Style="{StaticResource logOutButton}"
-                            Tag="{StaticResource Highlight}">
-                            <!--Command="{Binding LogOutCommand}">-->
+                            Tag="{StaticResource Highlight}"
+                            Click="logOutButton_Click">
 
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="RightFromBracket"  Style="{StaticResource logOutButtonIcon}" />
@@ -250,7 +258,7 @@
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="80" />
-                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="100" />
                             <ColumnDefinition Width="80" />
@@ -259,14 +267,14 @@
                         <Grid
                             Grid.Column="1" Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="120" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="100" />
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Caption}" FontSize="16" FontWeight="Medium" Foreground="White"/>
+                                <TextBlock Text="{Binding Caption}" Style="{StaticResource headerLarge}" />
                             </StackPanel>
 
                             <!--<Button Grid.Column="1" Style="{StaticResource buttonWithIcon}" Visibility="{Binding addTaskVisibility}">

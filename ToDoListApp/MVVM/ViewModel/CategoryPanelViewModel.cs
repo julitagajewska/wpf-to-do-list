@@ -126,12 +126,11 @@ namespace ToDoListApp.MVVM.ViewModel
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             ObservableCollection<Category> userCategories = _userRepository.GetUserCategories(user);
             bool categoryExists = UserCategories.Any(category =>
-            category.Name.Equals(NewCategoryName, StringComparison.OrdinalIgnoreCase) &&
-            category.IsCustom);
+            category.Name.Equals(NewCategoryName, StringComparison.OrdinalIgnoreCase));
 
             if (categoryExists)
             {
-              errors.Add("Category with the same name already exists.");
+              errors.Add("Category with the same name already exists");
             }
             return errors;
         }

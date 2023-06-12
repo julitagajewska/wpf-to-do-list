@@ -48,5 +48,36 @@ namespace ToDoListApp.MVVM.View
 
             viewModel.ShowDetailsTaskViewCommand.Execute(selectedTask);
         }
+
+        private void filteringInput_GotFocus(object sender, RoutedEventArgs e)
+        {
+            filteringInput.BorderThickness = new Thickness(0);
+            inputBackground.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3B448B"));
+            placeholder.Visibility = Visibility.Hidden;
+        }
+
+        private void filteringInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            filteringInput.BorderThickness = new Thickness(0);
+            inputBackground.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#343c72"));
+            if (string.IsNullOrEmpty(filteringInput.Text))
+                placeholder.Visibility = Visibility.Visible;
+        }
+
+        private void filteringInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            var viewModel = DataContext as AllTasksViewModel;
+            if (string.IsNullOrEmpty(filteringInput.Text))
+            {
+                placeholder.Visibility = Visibility.Visible;
+                viewModel.LoadTasksCommand.Execute(null);
+            }
+            else
+            {
+                placeholder.Visibility = Visibility.Hidden;
+                viewModel.FilterTasksCommand.Execute(textBox.Text);
+            }
+        }
     }
 }

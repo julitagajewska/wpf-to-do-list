@@ -25,9 +25,48 @@ namespace ToDoListApp.MVVM.View
             InitializeComponent();
         }
 
+        private void txtUsername_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            if (string.IsNullOrEmpty(textBox.Text))
+                usernamePlaceholder.Visibility = Visibility.Visible;
+            else
+                usernamePlaceholder.Visibility = Visibility.Hidden;
+        }
+
+        private void txtUsername_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            usernamePlaceholder.Visibility = Visibility.Hidden;
+        }
+
+        private void txtUsername_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            if (string.IsNullOrEmpty(textBox.Text))
+                usernamePlaceholder.Visibility = Visibility.Visible;
+        }
+
         private void txtEmail_TextChanged(object sender, TextChangedEventArgs e)
         {
+            TextBox textBox = (TextBox)sender;
+            if (string.IsNullOrEmpty(textBox.Text))
+                emailPlaceholder.Visibility = Visibility.Visible;
+            else
+                emailPlaceholder.Visibility = Visibility.Hidden;
+        }
 
+        private void txtEmail_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            emailPlaceholder.Visibility = Visibility.Hidden;
+        }
+
+        private void txtEmail_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            if (string.IsNullOrEmpty(textBox.Text))
+                emailPlaceholder.Visibility = Visibility.Visible;
         }
     }
 }

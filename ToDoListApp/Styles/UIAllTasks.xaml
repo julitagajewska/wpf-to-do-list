@@ -63,7 +63,6 @@
 
         <!-- Active -->
 
-
     </Style>
 
     <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton" >
@@ -116,6 +115,7 @@
     <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
         <Border x:Name="PART_ContentHost" Focusable="False" Background="#3B448B" />
     </ControlTemplate>
+   
 
     <Style x:Key="msComboBox" TargetType="ComboBox">
         <Setter Property="Foreground" Value="#80FFFFFF" />

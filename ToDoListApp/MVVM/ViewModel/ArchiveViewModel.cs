@@ -16,15 +16,15 @@ namespace ToDoListApp.MVVM.ViewModel
 {
     public class ArchiveViewModel : ViewModelBase
     {
-        private readonly ToDoDbContext _context;
+        private readonly ToDoDbContext _context; 
         private readonly IUserRepository _userRepository;
         private readonly MainTaskService _mainTaskService;
         private string _caption;
         private ObservableCollection<MainTask> _tasks;
         private UserModel _loggedInUser;
-
         private ObservableCollection<Category> _userCategories;
         private Category _selectedCategory;
+        private int _taskCount;
         public string Caption
         {
             get
@@ -66,8 +66,20 @@ namespace ToDoListApp.MVVM.ViewModel
                 FilterTasksByCategory();
             }
         }
+        public int TaskCount
+        {
+            get { return _taskCount; }
+            set
+            {
+                _taskCount = value;
+                OnPropertyChanged(nameof(TaskCount));
+            }
+        }
         public ICommand ShowDetailsTaskViewCommand { get; set; }
         public ICommand AllCategoriesButtonCommand { get; set; }
+        public ICommand FilterTasksCommand { get; set; }
+        public ICommand LoadTasksCommand { get; set; }
+
         public ArchiveViewModel(UserModel loggedInUser)
         {
             _context = new ToDoDbContext(); // Create an instance of ToDoDbContext
@@ -76,19 +88,49 @@ namespace ToDoListApp.MVVM.ViewModel
             _loggedInUser = loggedInUser;
             ShowDetailsTaskViewCommand = new ViewModelCommand(ExecuteShowDetailsTaskViewCommand);
             AllCategoriesButtonCommand = new ViewModelCommand(ExecuteAllCategoriesButtonCommand);
+            FilterTasksCommand = new ViewModelCommand(ExecuteFilterTasksCommand);
+            LoadTasksCommand = new ViewModelCommand(ExecuteLoadTasksCommand);
+
             // Load tasks from the database
             LoadTasks();
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
             LoadUserCategories(user);
         }
+
+        private void ExecuteLoadTasksCommand(object obj)
+        {
+            LoadTasks();
+        }
+
+        private void ExecuteFilterTasksCommand(object obj)
+        {
+            String searchInput = (String)obj;
+
+            if (searchInput != "")
+            {
+                Tasks = new ObservableCollection<MainTask>(_context.MainTasks
+                    .Where(x => x.Name.ToLower().Contains(searchInput.ToLower()) && x.Status == "Done")
+                    .ToList());
+            }
+            else
+            {
+                LoadTasks();
+            }
+
+        }
+
+        private void UpdateTaskCount()
+        {
+            TaskCount = Tasks.Count;
+        }
         private void ExecuteShowDetailsTaskViewCommand(object obj)
         {
             if (obj is MainTask selectedTask)
             {
-                Messenger.Publish("ShowDetailsTaskView", selectedTask);
-                Caption = "Task Details";
+                Messenger.Publish("ShowArchivedTaskDetailsView", selectedTask);
             }
         }
+
         private void ExecuteAllCategoriesButtonCommand(object obj)
         {
             SelectedCategory = null;
@@ -101,7 +143,8 @@ namespace ToDoListApp.MVVM.ViewModel
                 _loggedInUser.Planner.CurrentDate = DateTime.Now.Date;
                 Tasks = new ObservableCollection<MainTask>(_context.MainTasks
                     .Include(t => t.Categories)
-                    .Where(t => t.PlannerId == _loggedInUser.PlannerId && t.Status == "Done" && t.PlannerDate != _loggedInUser.Planner.CurrentDate)
+                    //.Where(t => t.PlannerId == _loggedInUser.PlannerId && t.Status == "Done" && t.PlannerDate != _loggedInUser.Planner.CurrentDate)
+                    .Where(t => t.PlannerId == _loggedInUser.PlannerId && t.Status == "Done")
                     .ToList());
             }
             // Retrieve all tasks from the database
@@ -110,6 +153,7 @@ namespace ToDoListApp.MVVM.ViewModel
                 Tasks = new ObservableCollection<MainTask>();
             }
 
+            UpdateTaskCount();
             //Tasks = new ObservableCollection<MainTask>(_context.MainTasks.Include(t => t.Categories).ToList());
         }
         private void LoadUserCategories(UserModel user)

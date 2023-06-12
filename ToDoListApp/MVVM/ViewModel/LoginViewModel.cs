@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security;
+using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
@@ -123,7 +124,7 @@ namespace ToDoListApp.MVVM.ViewModel
 
         private void ExecuteLoginCommand(object obj)
         {
-            var isValidUser = _userRepository.AuthenticateUser(new NetworkCredential(Username, Password));
+            var isValidUser = _userRepository.AuthenticateUser(new NetworkCredential(Username, HashPassword()));
 
             if (isValidUser)
             {
@@ -145,6 +146,15 @@ namespace ToDoListApp.MVVM.ViewModel
         private void ExecuteRecoverPasswordCommand(string username, string email)
         {
             throw new NotImplementedException();
+        }
+
+        private string HashPassword()
+        {
+            SHA256 hash = SHA256.Create();
+            var passwordBytes = Encoding.Default.GetBytes(Password.ToString());
+            var hashedPassword = hash.ComputeHash(passwordBytes);
+            return Convert.ToHexString(hashedPassword);
+
         }
     }
 }

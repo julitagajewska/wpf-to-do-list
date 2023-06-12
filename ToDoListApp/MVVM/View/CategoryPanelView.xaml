@@ -13,64 +13,92 @@
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <DataTemplate DataType="{x:Type mvvm:CategoryPanelViewModel}">
+            <local:CategoryPanelView />
+        </DataTemplate>
     </UserControl.Resources>
     
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="80"/>
         </Grid.ColumnDefinitions>
         
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="20"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1" Grid.Column="1">
+        <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="80"/>
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Column="0" Text="Name" Foreground="#80FFFFFF" HorizontalAlignment="Left" />
-            <TextBlock Grid.Column="2" Text="Action" Foreground="#80FFFFFF" HorizontalAlignment="Right" />
+            <TextBlock Grid.Column="0" Text="Name" Style="{StaticResource headerMedium}" HorizontalAlignment="Left" />
+            <TextBlock Grid.Column="2" Text="Action" Style="{StaticResource headerMedium}" HorizontalAlignment="Right" />
         </Grid>
 
 
-        <ItemsControl Grid.Row="2" Grid.Column="1" ItemsSource="{Binding UserCategories}">
+        <ItemsControl Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding UserCategories}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Grid Margin="0 0 0 10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="80"/>
                         </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="{Binding Name}" Grid.Column="0" Style="{StaticResource detailsLabel}" Foreground="#80FFFFFF" Width="Auto"/>
                         
-                        <TextBlock Text="{Binding Name}" Grid.Column="0" Foreground="#80FFFFFF" />
-                        <StackPanel Grid.Column="2" Orientation="Horizontal">
-                            <Button Style="{StaticResource categoriesEditButton}" Margin="0 0 10 0" Command="{Binding DataContext.EditCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}">
-                                <fa:IconImage Icon="Pen" Width="12"  Style="{StaticResource controlPanelButtonIcon}" />
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" FlowDirection="RightToLeft">
+                            <Button Style="{StaticResource iconOnlyButton}" Margin="0 0 10 0" Command="{Binding DataContext.DeleteCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}">
+                                <fa:IconImage Icon="Trash" Width="10"  Style="{StaticResource iconOnlyButtonIcon}" />
                             </Button>
-                            <Button Style="{StaticResource categoriesEditButton}" Command="{Binding DataContext.DeleteCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}">
-                                <fa:IconImage Icon="Trash" Width="12"  Style="{StaticResource controlPanelButtonIcon}" />
+                            
+                            <Button Style="{StaticResource iconOnlyButton}" Command="{Binding DataContext.EditCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}">
+                                <fa:IconImage Icon="Pen" Width="10"  Style="{StaticResource iconOnlyButtonIcon}" />
                             </Button>
                         </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        
+
+        <Grid Grid.Row="5" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBox x:Name="newCategoryInput" Grid.Row="0" Grid.Column="0" Style="{StaticResource inputWithIcon}" Text="{Binding NewCategoryName}" Margin="5" FontWeight="Regular" IsEnabled="{Binding IsAddCategoryChecked}" TextChanged="TextBox_TextChanged" Panel.ZIndex="1">
+                <TextBox.Background>
+                    <ImageBrush
+                                ImageSource="../../Images/pen.png"
+                                Stretch="None"
+                                AlignmentX="Left"/>
+                </TextBox.Background>
+            </TextBox>
+            <TextBlock x:Name="placeholder" Text="New category ..." Foreground="#40FFFFFF" VerticalAlignment="Center" Padding="25 0 0 2" Panel.ZIndex="0" FontSize="14"/>
+            <Button Grid.Row="0" Grid.Column="2" Style="{StaticResource iconOnlyButton}" Command="{Binding AddCategoryCommand}">
+                <fa:IconImage Icon="Plus" Width="10" Style="{StaticResource iconOnlyButtonIcon}" />
+            </Button>
+            <TextBlock Grid.Row="1" Grid.Column="0" Foreground="#ff8080" Margin="5" Text="{Binding ValidationString}"/>
+        </Grid>
         <!--<CheckBox Grid.Row="1" Grid.Column="1" Content="Add New Category" IsChecked="{Binding IsAddCategoryChecked}" Margin="5" Visibility="{Binding IsAddCategoryVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>-->
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding NewCategoryName}" Margin="5" IsEnabled="{Binding IsAddCategoryChecked}"/>
-        <Button Grid.Row="4" Grid.Column="1" Content="Add Category" Command="{Binding AddCategoryCommand}" Margin="5"/>
-        <TextBlock Grid.Row="5" Grid.Column="1"  Foreground="Red" Margin="5" Text="{Binding ValidationString}"/>
     </Grid>
 </UserControl>

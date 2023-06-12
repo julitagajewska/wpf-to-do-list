@@ -25,5 +25,18 @@ namespace ToDoListApp.MVVM.View
         {
             InitializeComponent();
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(newCategoryInput.Text))
+            {
+                placeholder.Visibility = Visibility.Visible;
+
+            }
+            else
+            {
+                placeholder.Visibility = Visibility.Hidden;
+            }
+        }
     }
 }

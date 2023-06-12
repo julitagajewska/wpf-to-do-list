@@ -11,16 +11,18 @@
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model.Converters" xmlns:ei1="http://schemas.microsoft.com/xaml/behaviors">
+             xmlns:converters="clr-namespace:ToDoListApp.MVVM.Model.Converters"
+             xmlns:ei1="http://schemas.microsoft.com/xaml/behaviors">
 
     <UserControl.Resources>
         <converters:CategoriesToStringConverter x:Key="CategoriesToStringConverter" />
+        <converters:EmptyToDashConverter x:Key="EmptyToDashConverter" />
         <DataTemplate DataType="{x:Type mvvm:CreateTaskViewModel}">
             <local:CreateTaskView />
         </DataTemplate>
-    </UserControl.Resources> 
+    </UserControl.Resources>
 
-    <Grid Margin="-10,0,10,0">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80" />
             <ColumnDefinition Width="463*" />
@@ -70,13 +72,13 @@
                     <TextBlock Text="Category" />
                 </StackPanel>
             </Button>-->
+
             <Button Grid.Column="2" Style="{StaticResource buttonWithIcon}" Visibility="{Binding addTaskVisibility}" Command="{Binding AllCategoriesButtonCommand}" Click="Button_Click">
                 <StackPanel  Orientation="Horizontal" VerticalAlignment="Center">
                     <fa:IconImage Icon="CheckDouble" Width="10" Height="10" Foreground="White" Margin="0 0 10 0" />
                     <TextBlock Text="All tasks" />
                 </StackPanel>
             </Button>
-
 
             <Grid Grid.Row="1" Grid.Column="3" VerticalAlignment="Center">
                 <ComboBox x:Name="categoryComboBox" ItemsSource="{Binding UserCategories}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory}" Style="{StaticResource msComboBox}" />
@@ -94,10 +96,37 @@
                 </TextBlock>
             </Grid>
 
-
-
             <StackPanel Grid.Column="5" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-                <customcontrols:FilteringTextBox PlaceholderText="Filter tasks ..."/>
+                <Grid>
+                    <Border x:Name="inputBackground" BorderBrush="#343c72" BorderThickness="16" CornerRadius="2" Panel.ZIndex="1"/>
+
+                    <TextBox
+                        x:Name="filteringInput"
+                        Style="{StaticResource serchTextBox}"
+                        Panel.ZIndex="2"
+                        TextChanged="filteringInput_TextChanged"
+                        GotFocus="filteringInput_GotFocus"
+                        LostFocus="filteringInput_LostFocus"/>
+
+                    <fa:IconImage
+                        Icon="MagnifyingGlass"
+                        Width="10"
+                        Height="10"
+                        Foreground="#80FFFFFF"
+                        HorizontalAlignment="Left"
+                        Margin="15 0 0 0"
+                        Panel.ZIndex="1"/>
+
+                    <TextBlock 
+                        x:Name="placeholder"
+                        Text="Filter tasks ..."
+                        Foreground="#80FFFFFF"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Left"
+                        Margin="35 0 0 0"
+                        Panel.ZIndex="1"/>
+
+                </Grid>
             </StackPanel>
 
         </Grid>
@@ -121,10 +150,10 @@
             </DataGrid.RowStyle>
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Status" Width="60" Binding="{Binding Status}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Priority" Width="60" Binding="{Binding Priority}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Status" Width="60" Binding="{Binding Status, Converter={StaticResource EmptyToDashConverter} }" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Priority" x:Name="PriorityColumn" Width="60" Binding="{Binding Priority}" IsReadOnly="True" CellStyle="{StaticResource priorityTaleCell}"/>
 
-                <DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
+                <!--<DataGridTemplateColumn Header="Name" Width="*" IsReadOnly="True">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button
@@ -134,9 +163,9 @@
                                 Style="{StaticResource cellButton}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                </DataGridTemplateColumn>-->
 
-                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}" IsReadOnly="True">
+                <DataGridTextColumn Header="Name" Width="120" Binding="{Binding Name, Converter={StaticResource EmptyToDashConverter}}" IsReadOnly="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -144,9 +173,17 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Header="Deadline" Width="70" Binding="{Binding Deadline, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="StartDate" Width="70" Binding="{Binding StartDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="EndDate" Width="70" Binding="{Binding EndDate, StringFormat=\{0:dd-MM-yyyy\}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description, Converter={StaticResource EmptyToDashConverter}}" IsReadOnly="True">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Deadline" Width="90" Binding="{Binding Deadline, StringFormat=\{0:dd-MM-yyyy\}, Converter={StaticResource EmptyToDashConverter}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="StartDate" Width="90" Binding="{Binding StartDate, StringFormat=\{0:dd-MM-yyyy\}, Converter={StaticResource EmptyToDashConverter}}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="EndDate" Width="90" Binding="{Binding EndDate, StringFormat=\{0:dd-MM-yyyy\}, Converter={StaticResource EmptyToDashConverter}}" IsReadOnly="True"/>
 
                 <DataGridTextColumn Header="Categories" Width="*" IsReadOnly="True">
                     <DataGridTextColumn.Binding>
