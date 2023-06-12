@@ -175,8 +175,8 @@
                         <!-- Log Out -->
                         <Button
                             Style="{StaticResource logOutButton}"
-                            Tag="{StaticResource Highlight}">
-                            <!--Command="{Binding LogOutCommand}">-->
+                            Tag="{StaticResource Highlight}"
+                            Click="logOutButton_Click">
 
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="RightFromBracket"  Style="{StaticResource logOutButtonIcon}" />

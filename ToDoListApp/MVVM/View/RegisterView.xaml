@@ -12,7 +12,7 @@
              Background="Transparent">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="20" />
             <!-- Username -->
@@ -37,8 +37,10 @@
 
             <!-- Register button  -->
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="10" />
             <RowDefinition Height="20" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <StackPanel
@@ -204,7 +206,55 @@
         </StackPanel>
 
         <!-- Register button -->
+        <Grid Grid.Row="15">
+            <Button
+                        x:Name="btnLogin"
+                        Command="{Binding RegisterCommand}"
+                        BorderThickness="0"
+                        Content="Register"
+                        Margin="0,10,0,0"
+                        Style="{StaticResource btnPrimary}">
 
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="150" Height="40"
+                                CornerRadius="20"
+                                Background="{TemplateBinding Background}">
 
+                            <ContentPresenter
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+
+            </Button>
+        </Grid>
+        <StackPanel
+                Grid.Row="16"
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                Margin="0 20 0 0">
+
+            <TextBlock
+                    Text="Already have an account?"
+                    Foreground="White"
+                    Opacity="0.7"
+                    FontSize="12"
+                    FontWeight="Light"/>
+
+            <Button
+                    BorderBrush="Transparent"
+                    Content="Log in"
+                    Foreground="White"
+                    Opacity="0.9"
+                    FontSize="12"
+                    FontWeight="Light"
+                    Margin="20 0 0 0"
+                    Background="Transparent" />
+
+        </StackPanel>
+
+        <TextBlock Grid.Row="18" Text="{Binding Message}" Style="{StaticResource successMessage}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

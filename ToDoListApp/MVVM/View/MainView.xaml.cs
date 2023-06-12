@@ -66,6 +66,11 @@ namespace ToDoListApp.MVVM.View
             this.WindowState = WindowState.Minimized;
         }
 
-
+        private void logOutButton_Click(object sender, RoutedEventArgs e)
+        {
+            WelcomeView newWindow = new WelcomeView();
+            newWindow.Show();
+            this.Close();
+        }
     }
 }

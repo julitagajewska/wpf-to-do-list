@@ -41,6 +41,9 @@
                     <!-- Priority -->
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="20"/>
+                    <!-- Status -->
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
                     <!-- Assign date -->
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="20"/>
@@ -119,28 +122,45 @@
                     </TextBlock>
                 </Grid>
 
-                <!-- Assign day -->
+                <!-- Status -->
                 <Grid Grid.Row="6">
+                    <ComboBox x:Name="statusComboBox" Grid.Row="6" Grid.Column="2" ItemsSource="{Binding statuses}" SelectedItem="{Binding SelectedTask.Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource msComboBox}"/>
+                    <TextBlock x:Name="statusComboBoxPlaceholder" Text="Status ..." VerticalAlignment="Center" Margin="10 0 0 0" Foreground="#80FFFFFF"  IsHitTestVisible="False" Opacity="0.5" >
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Hidden" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=statusComboBox,Path=SelectedItem}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+
+                <!-- Assign day -->
+                <Grid Grid.Row="8">
                     <DatePicker x:Name="assignDayDatePicker" Tag="Assign day ..." Style="{StaticResource inputDatePicker}" SelectedDate="{Binding SelectedTask.PlannerDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotKeyboardFocus="AssignDayDatePickerGotFocus" LostKeyboardFocus="AssignDayDatePickerLostFocus"/>
                 </Grid>
 
                 <!-- Deadline -->
-                <Grid Grid.Row="8">
+                <Grid Grid.Row="10">
                     <DatePicker x:Name="deadlineDatePicker" Tag="Deadline ..." Style="{StaticResource inputDatePicker}" SelectedDate="{Binding SelectedTask.Deadline, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotKeyboardFocus="DeadlinePickerGotFocus" LostKeyboardFocus="DeadlinePickerLostFocus" />
                 </Grid>
 
                 <!-- Start date -->
-                <Grid Grid.Row="10">
+                <Grid Grid.Row="12">
                     <DatePicker x:Name="startDatePicker" Tag="Start date ..." Style="{StaticResource inputDatePicker}" SelectedDate="{Binding SelectedTask.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotKeyboardFocus="StartDatePickerGotFocus" LostKeyboardFocus="StartDatePickerLostFocus" />
                 </Grid>
 
                 <!-- End date -->
-                <Grid Grid.Row="12">
+                <Grid Grid.Row="14">
                     <DatePicker x:Name="endDatePicker" Tag="End date ..." Style="{StaticResource inputDatePicker}" SelectedDate="{Binding SelectedTask.EndDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotKeyboardFocus="EndDatePickerGotFocus" LostKeyboardFocus="EndDatePickerLostFocus" />
                 </Grid>
 
                 <!-- Error messages -->
-                <Grid Grid.Row="14">
+                <Grid Grid.Row="16">
                     <StackPanel Orientation="Vertical">
                         <TextBlock Style="{StaticResource inputFieldValidationError}" Text="{Binding ValidationString}" Margin="0" />
 

@@ -57,7 +57,7 @@ namespace ToDoListApp.CustomControls
         private void OnPasswordChanged(object sender, RoutedEventArgs e)
         {
             Password = txtPassword.SecurePassword;
-            var viewModel = (RegisterViewModel)DataContext;
+            // var viewModel = (RegisterViewModel)DataContext;
             // viewModel.ValidatePasswordCommand.Execute(txtPassword.Password);
             if (Password.Length == 0)
             {

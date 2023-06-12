@@ -15,6 +15,9 @@ using Microsoft.EntityFrameworkCore;
 using ToDoListApp.Store;
 using System.Security;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using System.Net.Mail;
 
 namespace ToDoListApp.MVVM.ViewModel
 {
@@ -24,6 +27,8 @@ namespace ToDoListApp.MVVM.ViewModel
         private readonly IUserRepository _userRepository;
         private readonly WelcomePageVisibilityStore _visibilityStore;
         private string _errorMessage;
+
+        private string _message;
 
         private string _username;
         private string _usernameError;
@@ -39,6 +44,19 @@ namespace ToDoListApp.MVVM.ViewModel
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         static extern int lstrcmp(IntPtr lpString1, IntPtr lpString2);
+        public string Message
+        {
+            get
+            {
+                return _message;
+            }
+
+            set
+            {
+                _message = value;
+                OnPropertyChanged(nameof(Message));
+            }
+        }
         public string ErrorMessage
         {
             get
@@ -84,6 +102,15 @@ namespace ToDoListApp.MVVM.ViewModel
             {
                 UsernameError = "Username is required";
             }
+
+            var user = _userRepository.GetByUsername(Username);
+
+            if(user != null)
+            {
+                UsernameError = "Username is already taken";
+            }
+
+
         }
 
         public SecureString Password
@@ -151,10 +178,16 @@ namespace ToDoListApp.MVVM.ViewModel
         private void ValidateEmail()
         {
             EmailError = "";
-            if (Email.ToString().Length < 5)
+            //if (Email.ToString().Length < 5)
+            //{
+            //    // Change to regex
+            //    EmailError = "Username is too short";
+            //}
+
+            if (!MailAddress.TryCreate(Email, out var mailAddress))
             {
                 // Change to regex
-                EmailError = "Username is too short";
+                EmailError = "Invalid e-mail address";
             }
 
             if (Email.ToString().Length == 0)
@@ -163,8 +196,6 @@ namespace ToDoListApp.MVVM.ViewModel
             }
         }
 
-        public ICommand LoginCommand { get; set; }
-        public ICommand ValidatePasswordCommand { get; set; }
         public string PasswordError 
         { 
             get => _passwordError;
@@ -193,12 +224,15 @@ namespace ToDoListApp.MVVM.ViewModel
             }
         }
 
+        public ICommand RegisterCommand { get; set; }
+        public ICommand ValidatePasswordCommand { get; set; }
+
         public RegisterViewModel() 
         {
             _context = new ToDoDbContext();
             _userRepository = new UserRepository(_context);
 
-            LoginCommand = new ViewModelCommand(ExecuteLoginCommand);
+            RegisterCommand = new ViewModelCommand(ExecuteRegisterCommand);
             ValidatePasswordCommand = new ViewModelCommand(ExecuteValidatePasswordCommand);
         }
 
@@ -207,39 +241,52 @@ namespace ToDoListApp.MVVM.ViewModel
             // Console.WriteLine(obj);
             // ValidatePassword((String)obj);
         }
-
-        private void ExecuteLoginCommand(object obj)
+        private bool checkIfValidUser()
         {
+            bool isValid = false;
+            if(UsernameError == "" &&
+                EmailError == "" &&
+                PasswordError == "" &&
+                ConfirmPasswordError == "")
+                isValid = true;
 
-           
-            //if(Password==ConfirmPassword)//sprawdź zgodność haseł
-            var isValidUser = true; //tymczasowo
-                //można dać tu hashowanie hasła
-                if (isValidUser)
+            return isValid;
+        }
+        private void ExecuteRegisterCommand(object obj)
+        {
+                if (checkIfValidUser())
                 {
                     var planner = new Planner();
-                    //źle pobiera hasło i email
+
                     UserModel user = new UserModel
                     {
                         Id = Guid.NewGuid().ToString(),
                         Username = Username,
-                        Password = Password.ToString(),
+                        Password = HashPassword(),
                         Email = Email,
                         Planner = planner
                     };
+
                     _userRepository.Add(user);
                     Thread.CurrentPrincipal = new GenericPrincipal(
                         new GenericIdentity(Username), null);
 
-                    //_parent.IsViewVisible = false;
-                    _visibilityStore.ChangeVisibilty(false);
+                    Message = "Account created";
                 }
                 else
                 {
                     ErrorMessage = "Invalid username or password";
-                    //_parent.IsViewVisible = true;
                     _visibilityStore.ChangeVisibilty(true);
                 }
          }
+
+        private string HashPassword()
+        {
+            SHA256 hash = SHA256.Create();
+            var passwordBytes = Encoding.Default.GetBytes(Password.ToString());
+            var hashedPassword = hash.ComputeHash(passwordBytes);
+            return Convert.ToHexString(hashedPassword);
+
+        }
     }
 }
