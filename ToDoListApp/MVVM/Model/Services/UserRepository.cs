@@ -28,10 +28,10 @@ namespace ToDoListApp.MVVM.Model.Services
         public void Add(UserModel userModel)
         {
             //pakiet kategorii
-            new Category{ Name="School", IsCustom=false,Owner= userModel.Id};
-            new Category { Name = "Home", IsCustom = false, Owner = userModel.Id };
-            new Category { Name = "Work", IsCustom = false, Owner = userModel.Id };
-            
+            Category school=new Category{ Name="School", IsCustom=false,Owner= userModel.Id};
+            Category home=new Category { Name = "Home", IsCustom = false, Owner = userModel.Id };
+            Category work=new Category { Name = "Work", IsCustom = false, Owner = userModel.Id };
+            _context.Categories.AddRange(school, home, work);
             _context.Users.Add(userModel); 
             _context.Planners.Add(userModel.Planner);
             _context.SaveChanges();
